@@ -17,8 +17,6 @@ export interface IChapter {
   description?: string,
   tags?: string[],
   content: string,
-  parent_id?: string,
-  order: number,
   metas?: ICharacterExtraRead[]
 }
 

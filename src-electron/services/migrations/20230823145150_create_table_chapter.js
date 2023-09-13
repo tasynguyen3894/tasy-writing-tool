@@ -11,8 +11,6 @@ exports.up = function(knex) {
         table.string('status', 255).notNullable().defaultTo('draft');
         table.string('tags', 1000).nullable();
         table.text('content').nullable();
-        table.uuid('parent_id').nullable();
-        table.integer('order').nullable();
       }
     )
 };

@@ -13,9 +13,7 @@ export interface IChapter {
   status: string,
   description?: string,
   tags?: string[],
-  content: string,
-  parent_id?: string,
-  order?: number | undefined
+  content: string
 }
 
 export interface IChapterRead extends IChapter {

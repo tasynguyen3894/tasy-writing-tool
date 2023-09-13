@@ -52,7 +52,8 @@ function submit(data: ICharacterCreate) {
   } else {
     characterStore.createCharacter({...data}).then(() => {
       $q.notify('Created');
-    })
+      isShow.value = false;
+    });
   }
 }
 </script>

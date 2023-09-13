@@ -9,7 +9,7 @@ export class ChapterApi extends BaseApi {
     return new Promise((resolve) => {
       if(this.connection) {
         const { data } = payload;
-        this.connection('chapter').insert(data, ['id', 'title', 'status', 'description', 'tags', 'content', 'parent_id', 'order'])
+        this.connection('chapter').insert(data, ['id', 'title', 'status', 'description', 'tags', 'content'])
           .then((result: IChapterAfterCreated[])  => {
             if(result.length > 0) {
               resolve({
@@ -95,8 +95,6 @@ export class ChapterApi extends BaseApi {
                 description: item.get('description'),
                 content: item.get('content'),
                 tags: item.get('tags').split(','),
-                parent_id: item.get('parent_id'),
-                order: item.get('order') ? Number(item.get('order')) : undefined,
                 status: item.get('status')
               });
             });

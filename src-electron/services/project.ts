@@ -88,6 +88,8 @@ export function getProjectData(projectPath: string): Promise<IConfigRead[]> {
     });
     getAllConfig(connection).then(res => {
       resolve(res);
+    }).catch((error) => {
+      reject(error);
     })
   });
 }

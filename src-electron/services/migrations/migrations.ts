@@ -51,7 +51,6 @@ export const migrations: Migration[] = [
           table.string('name', 255).notNullable();
           table.string('type', 255).notNullable();
           table.string('description', 1000).nullable();
-          table.string('hint', 500).nullable();
         });
     },
     down(knex: Knex) {
@@ -101,8 +100,6 @@ export const migrations: Migration[] = [
             table.string('status', 255).notNullable().defaultTo('draft');
             table.string('tags', 1000).nullable();
             table.text('content').nullable();
-            table.uuid('parent_id').nullable();
-            table.integer('order').nullable();
           }
         )
     },
@@ -124,6 +121,22 @@ export const migrations: Migration[] = [
     },
     down(knex: Knex) {
       return knex.schema.dropTable('group');
+    }
+  },
+  {
+    name: '20230913150706_create_table_group_chapter',
+    up(knex: Knex) {
+      return knex.schema
+        .createTable('group_chapter', function (table) {
+            table.uuid('id').defaultTo(knex.fn.uuid()).primary();
+            table.uuid('group_id').notNullable();
+            table.uuid('chapter_id').notNullable();
+            table.integer('order').notNullable();
+          }
+        )
+    },
+    down(knex: Knex) {
+      return knex.schema.dropTable('group_chapter');
     }
   },
 ];

@@ -4,7 +4,6 @@ export interface IObject {
   name: string,
   type: string,
   description?: string,
-  hint?: string,
   metas?: IObjectExtra[]
 }
 
