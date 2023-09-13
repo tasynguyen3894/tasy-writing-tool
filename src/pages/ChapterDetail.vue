@@ -5,13 +5,14 @@
         <WriteChapterForm
           :data="chapterData"
           @submit="submit"
+          @remove="remove()"
         />
       </div>
     </div>
   </q-page>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -25,7 +26,7 @@ const route = useRoute();
 
 const chapterStore = useChapterStore();
 
-const chapterData = computed<Chapter | undefined>(() => {
+const chapterData = computed<Chapter & { id: string } | undefined>(() => {
   if(route.params.id) {
     const chapter = chapterStore.findChapter(route.params.id as string);
     if(chapter) {
@@ -41,6 +42,15 @@ const chapterData = computed<Chapter | undefined>(() => {
   }
   return undefined;
 });
+
+function remove() {
+  if(chapterData.value) {
+    chapterStore.remove(chapterData.value.id).then(() => {
+      $q.notify('Deleted');
+      router.push(({ name: RouterNames.ProjectChapterPage }));
+    });
+  }
+}
 
 function submit(data: Chapter) {
   if(route.params.id) {

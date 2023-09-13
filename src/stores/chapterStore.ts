@@ -27,6 +27,20 @@ export const useChapterStore = defineStore('chapter', () => {
     return chapters.value.find(chapter => chapter.id === id);
   }
 
+  function remove(id: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      window.Native.api({  method: Routes.RemoveChapter, payload: { id }, path: projectStore.projectPath})
+        .then((result: boolean) => {
+          if(result) {
+            chapters.value = chapters.value.filter(chapter => chapter.id !== id);
+            resolve(result);
+          } else {
+            resolve(false);
+          }
+        })
+    });
+  }
+
   function create(data: IChapter): Promise<void> {
     if(projectStore.projectPath) {
       return new Promise((resolve, reject) => {
@@ -82,6 +96,7 @@ export const useChapterStore = defineStore('chapter', () => {
     init,
     create,
     findChapter,
-    update
+    update,
+    remove
   }
 })

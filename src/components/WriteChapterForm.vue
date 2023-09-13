@@ -34,7 +34,7 @@
       </div>
     </q-card-section>
     <q-card-actions align="right" class="text-primary">
-      <q-btn flat label="Cancel" v-close-popup />
+      <q-btn v-if="props.data.id" @click="remove()" flat label="Remove" />
       <q-btn
         :label="chapterData.id ? 'Update' : 'Create'"
         color="primary"
@@ -47,6 +47,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useQuasar } from 'quasar';
 
 import ChapterEditor, { Character } from 'src/components/ChapterEditor.vue';
 import { useCharacterStore } from 'src/stores/characterStore';
@@ -61,6 +62,8 @@ export interface Chapter {
   tags: string[]
 }
 
+const $q = useQuasar();
+
 const props = withDefaults(defineProps<{
   data?: Chapter
 }>(), {
@@ -74,7 +77,8 @@ const props = withDefaults(defineProps<{
 });
 
 const emits = defineEmits<{
-  (e: 'submit', value: Chapter): void
+  (e: 'submit', value: Chapter): void,
+  (e: 'remove'): void,
 }>();
 
 const characterStore = useCharacterStore();
@@ -121,8 +125,31 @@ function addTag() {
 }
 
 function submit() {
-  emits('submit', chapterData.value);
+  if(props.data.id) {
+    $q.dialog({
+      title: 'Confirm',
+      message: 'Would you want to update this chapter?',
+      cancel: true,
+      persistent: true
+    }).onOk(() => {
+      emits('submit', chapterData.value);
+    });
+  } else {
+    emits('submit', chapterData.value);
+  }
+  
 };
+
+function remove() {
+  $q.dialog({
+    title: 'Confirm',
+    message: 'Would you want to delete this chapter?',
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    emits('remove');
+  });
+}
 
 </script>
 
