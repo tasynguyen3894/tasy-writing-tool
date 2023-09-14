@@ -5,10 +5,11 @@
     </q-card-section>
     <q-card-section class="q-pt-none">
       <q-input v-model="chapterData.title" label="Title" bottomSlots />
-      <q-input v-model="chapterData.description" label="Description" bottomSlots />
+      <q-input v-model="chapterData.description" type="textarea" label="Description" bottomSlots />
       <q-select
         :options="statusOptions"
         v-model="chapterData.status"
+        map-options
         emit-value
         label="Status"
         bottomSlots
