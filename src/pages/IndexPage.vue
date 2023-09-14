@@ -22,6 +22,7 @@ import { RouterNames } from 'src/router/routes';
 
 import { get } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
+import { detectProjectPath } from 'src/util/helper';
 
 const $q = useQuasar();
 const router = useRouter();
@@ -36,26 +37,18 @@ onMounted(() => {
   get(PROJECT_PATH_KEY)
     .then((projectPathInStore: any) => {
       if(projectPathInStore) {
-        detectProjectPath(projectPathInStore);
+        setupProject(projectPathInStore);
       }
     })
 })
 
-function detectProjectPath(projectPathToDetect: string) {
-  window.Native.project({ type: 'detect', payload: { path: projectPathToDetect } }).then((res: any) => {
+function setupProject(projectPathToDetect: string) {
+  detectProjectPath(projectPathToDetect).then((res: any) => {
     projectIsSetUp.value = res;
     if(res) {
-      window.Native.project({ type: 'getData', payload: { path: projectPathToDetect } })
-        .then((res: { key: string, value: string }[]) => {
-          const projectInStore = res.find(item => item.key === 'project');
-          const authorInStore = res.find(item => item.key === 'author');
-          projectStore.init(
-            projectPathToDetect,
-            projectInStore ? projectInStore.value : '',
-            authorInStore ? authorInStore.value : ''
-          );
-          router.push({ name: RouterNames.ProjectOverviewPage });
-        })
+      projectStore.getDataProject(projectPathToDetect).then(() => {
+        router.push({ name: RouterNames.ProjectOverviewPage });
+      });
     }
   })
 }
@@ -64,7 +57,7 @@ function openDialog() {
   window.Native.project({ type: 'select' }).then((data: any) => {
     if(data.filePaths && data.filePaths.length > 0) {
       projectPath.value = data.filePaths[0];
-      detectProjectPath(projectPath.value);
+      setupProject(projectPath.value);
     }
   })
 }

@@ -29,12 +29,29 @@ export const useProjectStore = defineStore('project', () => {
     project.value = '';
   }
 
+  function getDataProject(projectPathToDetect: string): Promise<void> {
+    return new Promise((resolve) => {
+      window.Native.project({ type: 'getData', payload: { path: projectPathToDetect } })
+        .then((res: { key: string, value: string }[]) => {
+          const projectInStore = res.find(item => item.key === 'project');
+          const authorInStore = res.find(item => item.key === 'author');
+          init(
+            projectPathToDetect,
+            projectInStore ? projectInStore.value : '',
+            authorInStore ? authorInStore.value : ''
+          );
+          resolve();
+        });
+    })
+  }
+
   return {
     project,
     author,
     projectPath,
     init,
-    reset
+    reset,
+    getDataProject
   }
 });
 

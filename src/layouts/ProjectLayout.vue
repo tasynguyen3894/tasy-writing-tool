@@ -57,6 +57,7 @@ import { RouterNames } from 'src/router/routes';
 import { useProjectStore } from 'src/stores/projectStore';
 import { get } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
+import { detectProjectPath } from 'src/util/helper';
 
 export interface MenuItem {
   router: RouterNames,
@@ -98,29 +99,17 @@ const items = ref<MenuItem[]>([
 onMounted(() => {
   get(PROJECT_PATH_KEY)
     .then((projectPathInStore: any) => {
-      if(projectPathInStore) {
-        detectProjectPath(projectPathInStore);
+      if(projectPathInStore && projectStore.project === '') {
+        detectProjectPath(projectPathInStore).then((res: any) => {
+          if(res) {
+            projectStore.getDataProject(projectPathInStore).then(() => {
+              router.push({ name: RouterNames.ProjectOverviewPage });
+            });
+          }
+        });
       }
     })
-})
-
-function detectProjectPath(projectPathToDetect: string) {
-  window.Native.project({ type: 'detect', payload: { path: projectPathToDetect } }).then((res: any) => {
-    if(res) {
-      window.Native.project({ type: 'getData', payload: { path: projectPathToDetect } })
-        .then((res: { key: string, value: string }[]) => {
-          const projectInStore = res.find(item => item.key === 'project');
-          const authorInStore = res.find(item => item.key === 'author');
-          projectStore.init(
-            projectPathToDetect,
-            projectInStore ? projectInStore.value : '',
-            authorInStore ? authorInStore.value : ''
-          );
-          router.push({ name: RouterNames.ProjectOverviewPage });
-        })
-    }
-  })
-}
+});
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value

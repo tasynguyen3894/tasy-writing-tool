@@ -88,17 +88,25 @@ type FetchObjectApi = ApiCalling<{
 
 type ObjectApi = FetchObjectApi;
 
-
-
 type CharacterApi = FetchCharacterApi | RemoveCharacterApi | CreateCharacterApi | UpdateCharacterApi | RemoveCharacterExtraApi | CreateCharacterExtraApi | ObjectApi;
 
-// type RemoveChapterApi = (args: {
-//   method: Routes.RemoveChapter,
-//   payload: {
-//     id: string
-//   },
-//   path: string
-// }) => Promise<IChapterReadItem[]>;
+type ProjectDetect = {
+  type: 'detect', payload: { path: string }
+}
+
+type ProjectSelect = {
+  type: 'select'
+}
+
+type ProjectSetup = {
+  type: 'setup', payload: { path: string, project: string, author: string }
+}
+
+type ProjectGetData = {
+  type: 'getData', payload: { path: string }
+}
+
+type ProjectType = ProjectDetect | ProjectSelect | ProjectSetup | ProjectGetData;
 
 export {};
 
@@ -106,7 +114,7 @@ declare global {
   interface Window {
     Native: {
       api: (a: ChapterApi | CharacterApi) => any,
-      project: any
+      project: (a: ProjectType) => any
     },
     Store: any
   }
