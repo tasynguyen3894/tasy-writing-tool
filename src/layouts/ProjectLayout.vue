@@ -50,11 +50,13 @@
   </q-layout>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { RouterNames } from 'src/router/routes';
 import { useProjectStore } from 'src/stores/projectStore';
+import { get } from 'src/util/storage';
+import { PROJECT_PATH_KEY } from 'src/util/constant';
 
 export interface MenuItem {
   router: RouterNames,
@@ -64,6 +66,8 @@ export interface MenuItem {
 
 const router = useRouter();
 const route = useRoute();
+
+const projectStore = useProjectStore();
 
 const leftDrawerOpen = ref(false);
 
@@ -90,6 +94,34 @@ const items = ref<MenuItem[]>([
   }
 ]);
 
+
+onMounted(() => {
+  get(PROJECT_PATH_KEY)
+    .then((projectPathInStore: any) => {
+      if(projectPathInStore) {
+        detectProjectPath(projectPathInStore);
+      }
+    })
+})
+
+function detectProjectPath(projectPathToDetect: string) {
+  window.Native.project({ type: 'detect', payload: { path: projectPathToDetect } }).then((res: any) => {
+    if(res) {
+      window.Native.project({ type: 'getData', payload: { path: projectPathToDetect } })
+        .then((res: { key: string, value: string }[]) => {
+          const projectInStore = res.find(item => item.key === 'project');
+          const authorInStore = res.find(item => item.key === 'author');
+          projectStore.init(
+            projectPathToDetect,
+            projectInStore ? projectInStore.value : '',
+            authorInStore ? authorInStore.value : ''
+          );
+          router.push({ name: RouterNames.ProjectOverviewPage });
+        })
+    }
+  })
+}
+
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
@@ -99,7 +131,7 @@ function redirectTo(routeName: RouterNames) {
 }
 
 function exitProject() {
-  useProjectStore().reset();
+  projectStore.reset();
   router.push({ name: RouterNames.HomePage });
 }
 </script>

@@ -12,13 +12,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 import DialogSetupProject, { ProjectInfo } from 'src/components/DialogSetupProject.vue';
 import { useProjectStore } from  'src/stores/projectStore';
 import { RouterNames } from 'src/router/routes';
+
+import { get } from 'src/util/storage';
+import { PROJECT_PATH_KEY } from 'src/util/constant';
 
 const $q = useQuasar();
 const router = useRouter();
@@ -29,26 +32,39 @@ const projectIsSetUp = ref<boolean>(false);
 const projectPath = ref<string>('');
 const isShowSetup = ref<boolean>(false);
 
+onMounted(() => {
+  get(PROJECT_PATH_KEY)
+    .then((projectPathInStore: any) => {
+      if(projectPathInStore) {
+        detectProjectPath(projectPathInStore);
+      }
+    })
+})
+
+function detectProjectPath(projectPathToDetect: string) {
+  window.Native.project({ type: 'detect', payload: { path: projectPathToDetect } }).then((res: any) => {
+    projectIsSetUp.value = res;
+    if(res) {
+      window.Native.project({ type: 'getData', payload: { path: projectPathToDetect } })
+        .then((res: { key: string, value: string }[]) => {
+          const projectInStore = res.find(item => item.key === 'project');
+          const authorInStore = res.find(item => item.key === 'author');
+          projectStore.init(
+            projectPathToDetect,
+            projectInStore ? projectInStore.value : '',
+            authorInStore ? authorInStore.value : ''
+          );
+          router.push({ name: RouterNames.ProjectOverviewPage });
+        })
+    }
+  })
+}
+
 function openDialog() {
   window.Native.project({ type: 'select' }).then((data: any) => {
     if(data.filePaths && data.filePaths.length > 0) {
       projectPath.value = data.filePaths[0];
-      window.Native.project({ type: 'detect', payload: { path: projectPath.value } }).then((res: any) => {
-        projectIsSetUp.value = res;
-        if(res) {
-          window.Native.project({ type: 'getData', payload: { path: projectPath.value } })
-            .then((res: { key: string, value: string }[]) => {
-              const projectInStore = res.find(item => item.key === 'project');
-              const authorInStore = res.find(item => item.key === 'author');
-              projectStore.init(
-                projectPath.value,
-                projectInStore ? projectInStore.value : '',
-                authorInStore ? authorInStore.value : ''
-              );
-              router.push({ name: RouterNames.ProjectOverviewPage });
-            })
-        }
-      })
+      detectProjectPath(projectPath.value);
     }
   })
 }

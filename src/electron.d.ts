@@ -2,6 +2,7 @@ export {};
 
 declare global {
   interface Window {
-    Native: any
+    Native: any,
+    Store: any
   }
 }

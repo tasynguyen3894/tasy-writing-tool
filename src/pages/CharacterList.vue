@@ -6,6 +6,7 @@
     <q-table
       :rows="characters"
       :columns="columns"
+      :pagination="pagination"
     >
       <template #body-cell-actions="props">
         <q-td :props="props">
@@ -25,6 +26,7 @@ import { useRouter } from 'vue-router';
 import { useCharacterStore } from 'src/stores/characterStore';
 import { RouterNames } from 'src/router/routes';
 import CharacterCreateModal from 'src/components/CharacterCreateModal.vue';
+import { pagination } from 'src/util/constant';
 
 const router = useRouter();
 

@@ -1,10 +1,10 @@
 import { app, BrowserWindow, nativeTheme, ipcMain, dialog } from 'electron';
 import path from 'path';
 import os from 'os';
-import sqlite3 from 'sqlite3';
 
 import { selectProject, projectIsSetup, setup, getProjectData } from './services/project';
 import { ApiHanlder } from './services/api';
+import { get, set, remove } from './services/storage';
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -38,6 +38,14 @@ type ProjectEvent = {
   payload?: any
 }
 
+type StorageEvent = {
+  type: 'get' | 'set' | 'remove'
+  payload: {
+    key: string,
+    value?: any
+  }
+}
+
 type ApiEvent = {
   path: string,
   method: string,
@@ -62,16 +70,33 @@ function createWindow() {
 
   mainWindow.loadURL(process.env.APP_URL);
 
+  ipcMain.handle('storage', (event, e: StorageEvent) => {
+    if(e.type === 'get') {
+      return get(e.payload.key);
+    }
+
+    if(e.type === 'set') {
+      return set(e.payload.key, e.payload.value || '');
+    }
+  
+    if(e.type === 'remove') {
+      return remove(e.payload.key);
+    }
+  });
+
   ipcMain.handle('project', (event, e: ProjectEvent) => {
     if(e.type === 'select') {
       return selectProject(mainWindow);
     }
+
     if(e.type === 'detect' && e.payload.path) {
       return projectIsSetup(e.payload.path)
     }
+
     if(e.type === 'setup' && e.payload.path && e.payload.project && e.payload.author) {
       return setup(e.payload.path, e.payload.project, e.payload.author);
     }
+
     if(e.type === 'getData' && e.payload.path) {
       return getProjectData(e.payload.path);
     }

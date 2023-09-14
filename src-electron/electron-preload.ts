@@ -40,4 +40,10 @@ contextBridge.exposeInMainWorld(
    project: (args: any) => ipcRenderer.invoke('project', args),
    api: (args: any) => ipcRenderer.invoke('api', args)
   }
+);
+
+contextBridge.exposeInMainWorld(
+  'Store', {
+   run: (args: any) => ipcRenderer.invoke('storage', args)
+  }
 )
