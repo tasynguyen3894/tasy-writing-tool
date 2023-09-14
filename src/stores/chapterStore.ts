@@ -10,17 +10,17 @@ export const useChapterStore = defineStore('chapter', () => {
   const projectStore = useProjectStore();
 
   function init(): Promise<void> {
-    if(projectStore.projectPath) {
-      return new Promise((resolve, reject) => {
-        window.Native.api({  method: Routes.FetchChapters, payload: {}, path: projectStore.projectPath})
+    return new Promise((resolve, reject) => {
+      if(projectStore.projectPath) {
+        window.Native.api({  method: Routes.FetchChapters, payload: {}, path: projectStore.projectPath })
           .then((result: IChapterReadItem[]) => {
             chapters.value = result;
             resolve();
           })
-      });
-    } else {
-      return Promise.resolve();
-    }
+      } else {
+        return Promise.resolve();
+      }
+    });
   }
 
   function findChapter(id: string): IChapterReadItem | undefined {
@@ -29,21 +29,25 @@ export const useChapterStore = defineStore('chapter', () => {
 
   function remove(id: string): Promise<boolean> {
     return new Promise((resolve) => {
-      window.Native.api({  method: Routes.RemoveChapter, payload: { id }, path: projectStore.projectPath})
-        .then((result: boolean) => {
-          if(result) {
-            chapters.value = chapters.value.filter(chapter => chapter.id !== id);
-            resolve(result);
-          } else {
-            resolve(false);
-          }
-        })
+      if(projectStore.projectPath) {
+        window.Native.api({  method: Routes.RemoveChapter, payload: { id }, path: projectStore.projectPath})
+          .then((result: boolean) => {
+            if(result) {
+              chapters.value = chapters.value.filter(chapter => chapter.id !== id);
+              resolve(result);
+            } else {
+              resolve(false);
+            }
+          });
+      } else {
+        return Promise.resolve();
+      }
     });
   }
 
   function create(data: IChapter): Promise<void> {
-    if(projectStore.projectPath) {
-      return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+      if(projectStore.projectPath) {
         window.Native.api({
           method: Routes.CreateChapter,
           payload: {
@@ -57,15 +61,15 @@ export const useChapterStore = defineStore('chapter', () => {
             chapters.value.push(result);
             resolve();
           })
-      });
-    } else {
-      return Promise.resolve();
-    }
+      } else {
+        return Promise.resolve();
+      }
+    });
   }
 
   function update(id: string, data: IChapter): Promise<void> {
-    if(projectStore.projectPath) {
-      return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+      if(projectStore.projectPath) {
         window.Native.api({
           method: Routes.UpdateChapter,
           payload: {
@@ -85,10 +89,10 @@ export const useChapterStore = defineStore('chapter', () => {
             })
             resolve();
           })
-      });
-    } else {
-      return Promise.resolve();
-    }
+      } else {
+        return Promise.resolve();
+      }
+    });
   }
 
   return {

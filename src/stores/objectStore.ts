@@ -10,17 +10,17 @@ export const useObjectrStore = defineStore('object', () => {
   const projectStore = useProjectStore();
 
   function init(): Promise<void> {
-    if(projectStore.projectPath) {
-      return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+      if(projectStore.projectPath) {
         window.Native.api({  method: Routes.FetchObjects, payload: {}, path: projectStore.projectPath})
           .then((result: IObjectRead[]) => {
             objects.value = result;
             resolve();
           })
-      });
-    } else {
-      return Promise.resolve();
-    }
+      } else {
+        return Promise.resolve();
+      }
+    });
   }
 
   return {
