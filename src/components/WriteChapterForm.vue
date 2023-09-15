@@ -19,7 +19,7 @@
         label="Content"
         :characters="editorCharacter"
         :toolbars="[
-          ['bold', 'italic', 'underline', 'strikeThrough']
+          ['bold', 'italic', 'underline', 'strikeThrough', 'subscript']
         ]"
       />
       <div>

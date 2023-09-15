@@ -16,7 +16,6 @@
           :key="variable.key"
           removable
           clickable
-          @paste="handlePaste"
           @click="addSavedVariable(variable.key)"
           @remove="removeSavedVariable(variable.key)"
           flat
@@ -27,6 +26,7 @@
     <div
       ref="editorRawRef"
       @input="changeHtml"
+      @paste="handlePaste"
       class="editor"
       contenteditable="true">
     </div>
@@ -204,9 +204,14 @@ watch(() => props.modelValue, () => {
 function handlePaste(e: ClipboardEvent) {
   if(e.clipboardData) {
     e.preventDefault();
-    const doc = parseHTMLString(e.clipboardData.getData('text/html')); 
-    doc.body.querySelectorAll(`[style]`).forEach(node => {
-      node.removeAttribute('style');
+    const doc = parseHTMLString(e.clipboardData.getData('text/html'));
+    doc.querySelectorAll(`body *`).forEach(node => {
+      for (let i = 0; i < node.attributes.length; i++) {
+        console.log(node.attributes[i].name)
+        if(!([VariableAttribute.content, VariableAttribute.variable] as string[]).includes(node.attributes[i].name)) {
+          node.removeAttribute(node.attributes[i].name);
+        }
+      }
     });
     const selection = window.getSelection();
     if (!selection || !selection.rangeCount) {
