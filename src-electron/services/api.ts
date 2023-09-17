@@ -4,6 +4,7 @@ import path from 'path';
 import { CharacterApi } from './api/character';
 import { ChapterApi } from './api/chapter';
 import { ObjectApi } from './api/object';
+import { GroupApi } from './api/group';
 import { ICharacterExtraCreate } from 'src/models/CharacterExtra';
 import { ICharacterCreate, ICharacterUpdate } from 'src/models/Character';
 import { IChapterCreate, IChapterUpdate } from 'src/models/Chapter';
@@ -27,6 +28,10 @@ export const ChapterMethods: string[] = [
 
 export const ObjectMethods: string[] = [
   Routes.FetchObjects
+];
+
+export const GroupMethods: string[] = [
+  Routes.FetchGroups
 ];
 
 export class ApiRouter {
@@ -86,6 +91,12 @@ export class ApiRouter {
         const ObjectApiInstance = new ObjectApi(connection);
         if(method === Routes.FetchObjects) {
           promise = ObjectApiInstance.fetch();
+        }
+      }
+      if(GroupMethods.includes(method)) {
+        const GroupApiInstance = new GroupApi(connection);
+        if(method === Routes.FetchGroups) {
+          promise = GroupApiInstance.fetch();
         }
       }
       promise.then(result => {

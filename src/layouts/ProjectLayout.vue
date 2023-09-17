@@ -92,6 +92,11 @@ const items = ref<MenuItem[]>([
     router: RouterNames.ProjectChapterPage,
     label: 'Chapter',
     icon: 'description'
+  },
+  {
+    router: RouterNames.ProjectGroupPage,
+    label: 'Group',
+    icon: 'apps'
   }
 ]);
 

@@ -7,6 +7,7 @@ import { getChapterModel } from './Chapter';
 import { getCharacterExtraModel } from './CharacterExtra';
 import { getObjectExtraModel } from './ObjectExtra';
 import { getObjectModel } from './Object';
+import { getGroupModel } from './Group';
 
 export enum ModelName {
   Migration = 'Migration',
@@ -15,7 +16,8 @@ export enum ModelName {
   Chapter = 'Chapter',
   CharacterExtra = 'CharacterExtra',
   Object = 'Object',
-  ObjectExtra = 'ObjectExtra'
+  ObjectExtra = 'ObjectExtra',
+  Group = 'Group'
 }
 
 export interface ModelDefine {
@@ -30,6 +32,7 @@ const Models: { [key: string]: (b: bookshelf) => any } = {
   [ModelName.Migration]: getMigrationModel,
   [ModelName.Object]: getObjectModel,
   [ModelName.ObjectExtra]: getObjectExtraModel,
+  [ModelName.Group]: getGroupModel
 }
 
 export function modelFactory(connection: any) {
