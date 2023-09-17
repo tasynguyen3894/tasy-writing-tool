@@ -143,7 +143,7 @@ export {};
 declare global {
   interface Window {
     Native: {
-      api: (a: ChapterApi | CharacterApi) => any,
+      api: (a: ChapterApi | CharacterApi) => Promise<any>,
       project: (a: ProjectType) => any
     },
     Store: any
