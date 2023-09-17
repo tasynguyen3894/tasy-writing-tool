@@ -3,6 +3,8 @@ import { IObjectExtra } from './ObjectExtra';
 export interface IObject {
   name: string,
   type: string,
+  alias: string,
+  hint?: string,
   description?: string,
   metas?: IObjectExtra[]
 }

@@ -17,6 +17,7 @@ export function getObjectModel(bookshelf: Bookshelf): Bookshelf.Model<any> {
 export interface IObject {
   name: string,
   type: string,
+  alias: string,
   description?: string,
   hint?: string,
   metas?: IObjectExtra[]

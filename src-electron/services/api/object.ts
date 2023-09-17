@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 
-import { IObjectRead } from '../models/Object';
-import { IObjectExtraRead } from '../models/ObjectExtra';
+import { IObjectRead } from 'src/models/Object';
+import { IObjectExtraRead } from 'src/models/ObjectExtra';
 import { modelFactory, ModelName } from '../models';
 import { BaseApi } from './base';
 
@@ -27,6 +27,7 @@ export class ObjectApi extends BaseApi {
                 id: item.get('id'),
                 name: item.get('name'),
                 type: item.get('type'),
+                alias: item.get('alias'),
                 description: item.get('description'),
                 hint: item.get('hint'),
                 metas
@@ -34,6 +35,8 @@ export class ObjectApi extends BaseApi {
             });
           }
           resolve(result)
+        }).catch(error => {
+          reject(error)
         })
       } else {
         resolve([]);
