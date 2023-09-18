@@ -21,11 +21,11 @@
 <script setup lang="ts">
 import { useCharacterStore } from 'src/stores/characterStore';
 import { useChapterStore } from 'src/stores/chapterStore';
-import { useObjectrStore } from 'src/stores/objectStore';
+import { useObjectStore } from 'src/stores/objectStore';
 import { useGroupStore } from 'src/stores/groupStore';
 
 const characterStore = useCharacterStore();
 const chapterStore = useChapterStore();
-const objectrStore = useObjectrStore();
+const objectrStore = useObjectStore();
 const groupStore = useGroupStore();
 </script>

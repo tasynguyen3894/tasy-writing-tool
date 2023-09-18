@@ -5,7 +5,7 @@ import { IOBjectUpdate, IObjectCreate, IObjectRead } from 'src/models/Object';
 import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
 
-export const useObjectrStore = defineStore('object', () => {
+export const useObjectStore = defineStore('object', () => {
   const objects = ref<IObjectRead[]>([]);
   const projectStore = useProjectStore();
 
@@ -21,6 +21,10 @@ export const useObjectrStore = defineStore('object', () => {
         return Promise.resolve();
       }
     });
+  }
+
+  function findObject(id: string): IObjectRead | undefined {
+    return objects.value.find(object => object.id === id);
   }
 
   function createObject(data: IObjectCreate): Promise<boolean> {
@@ -65,11 +69,31 @@ export const useObjectrStore = defineStore('object', () => {
     });
   }
 
+  function removeObject(id: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      if(projectStore.projectPath) {
+        window.Native.api({  method: Routes.RemoveObject, payload: { id }, path: projectStore.projectPath})
+          .then((result: boolean) => {
+            if(result) {
+              objects.value = objects.value.filter(object => object.id !== id);
+              resolve(result);
+            } else {
+              resolve(false);
+            }
+          });
+      } else {
+        return Promise.resolve();
+      }
+    });
+  }
+
   return {
     objects,
     init,
     createObject,
     updateObject,
-    aliasIsExisted
+    aliasIsExisted,
+    findObject,
+    removeObject
   }
 })

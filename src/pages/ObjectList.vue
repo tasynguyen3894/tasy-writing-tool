@@ -6,7 +6,13 @@
     <q-table
       :rows="objects"
       :columns="columns"
-    />
+    >
+      <template #body-cell-actions="props">
+        <q-td :props="props">
+          <q-btn icon="edit" flat size="0.7em" @click="edit(props.row.id)" />
+        </q-td>
+      </template>
+    </q-table>
   </q-page>
   <ObjectCreateModal v-model="isShowCreateModal" />
 </template>
@@ -14,11 +20,15 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { QTableColumn } from 'quasar';
+import { useRouter } from 'vue-router';
 
-import { useObjectrStore } from 'src/stores/objectStore';
+import { useObjectStore } from 'src/stores/objectStore';
 import ObjectCreateModal from 'src/components/ObjectCreateModal.vue';
+import { RouterNames } from 'src/router/routes';
 
-const objectrStore = useObjectrStore();
+
+const router = useRouter();
+const objectrStore = useObjectStore();
 const { objects } = storeToRefs(objectrStore);
 
 const columns: QTableColumn[] = [
@@ -46,4 +56,12 @@ const columns: QTableColumn[] = [
 
 const isShowCreateModal = ref<boolean>(false);
 
+function edit(id: string) {
+  router.push({
+    name: RouterNames.ProjectObjectDetailPage,
+    params: {
+      id
+    }
+  })
+}
 </script>

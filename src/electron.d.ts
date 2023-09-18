@@ -110,7 +110,14 @@ type UpdateObjectApi = ApiCalling<{
   }
 }, IObjectRead>;
 
-type ObjectApi = FetchObjectApi | CreateObjectApi | UpdateObjectApi;
+type RemoveObjectApi = ApiCalling<{
+  method: Routes.RemoveObject,
+  payload: {
+    id: string
+  }
+}, boolean>;
+
+type ObjectApi = FetchObjectApi | CreateObjectApi | UpdateObjectApi | RemoveObjectApi;
 
 type CharacterApi = FetchCharacterApi | RemoveCharacterApi | CreateCharacterApi | UpdateCharacterApi | RemoveCharacterExtraApi | CreateCharacterExtraApi | ObjectApi | GroupApi;
 

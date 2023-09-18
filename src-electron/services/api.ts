@@ -30,7 +30,8 @@ export const ChapterMethods: string[] = [
 export const ObjectMethods: string[] = [
   Routes.FetchObjects,
   Routes.CreateObject,
-  Routes.UpdateObject
+  Routes.UpdateObject,
+  Routes.RemoveObject
 ];
 
 export const GroupMethods: string[] = [
@@ -100,6 +101,9 @@ export class ApiRouter {
         }
         if(method === Routes.UpdateObject) {
           promise = ObjectApiInstance.update(payload as { id: string, data: IOBjectUpdate });
+        }
+        if(method === Routes.RemoveObject) {
+          promise = ObjectApiInstance.remove(payload as { id: string });
         }
       }
       if(GroupMethods.includes(method)) {

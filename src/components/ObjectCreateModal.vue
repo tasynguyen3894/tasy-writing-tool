@@ -13,7 +13,7 @@
 import { ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
 
-import { useObjectrStore } from 'src/stores/objectStore';
+import { useObjectStore } from 'src/stores/objectStore';
 import { IObjectCreate } from 'src/models/Object';
 import ObjectForm from 'src/components/ObjectForm.vue';
 
@@ -29,7 +29,7 @@ const emits = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>();
 
-const objectStore = useObjectrStore();
+const objectStore = useObjectStore();
 
 const isShow = ref<boolean>(props.modelValue);
 

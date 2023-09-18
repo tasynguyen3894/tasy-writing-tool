@@ -126,4 +126,29 @@ export class ObjectApi extends BaseApi {
       }
     })
   }
+
+  public remove(data: { id: string }): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if(this.connection) {
+        const connection = this.connection;
+        connection('object_extra')
+          .where('object_id', data.id)
+          .del()
+          .then(() => {
+            connection('object')
+            .where('id', data.id)
+            .del()
+            .then(() => {
+              resolve(true)
+            }).catch(error => {
+              reject(error);
+            });
+          }).catch(error => {
+            reject(error);
+          });
+      } else {
+        resolve(false);
+      }
+    })
+  }
 }

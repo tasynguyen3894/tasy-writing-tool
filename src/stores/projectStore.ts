@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 import { useCharacterStore } from './characterStore';
 import { useChapterStore } from './chapterStore';
-import { useObjectrStore } from './objectStore';
+import { useObjectStore } from './objectStore';
 import { useGroupStore } from './groupStore';
 import { set, remove } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
@@ -20,7 +20,7 @@ export const useProjectStore = defineStore('project', () => {
     project.value = newProject;
     useCharacterStore().init();
     useChapterStore().init();
-    useObjectrStore().init();
+    useObjectStore().init();
     useGroupStore().init();
   }
 
