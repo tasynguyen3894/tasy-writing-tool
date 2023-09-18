@@ -9,6 +9,7 @@ import { ICharacterExtraCreate } from 'src/models/CharacterExtra';
 import { ICharacterCreate, ICharacterUpdate } from 'src/models/Character';
 import { IChapterCreate, IChapterUpdate } from 'src/models/Chapter';
 import { Routes } from 'src/models/Api'
+import { IOBjectUpdate, IObjectCreate } from 'src/models/Object';
 
 export const CharacterMethods: string[] = [
   Routes.FetchCharacters,
@@ -27,7 +28,9 @@ export const ChapterMethods: string[] = [
 ];
 
 export const ObjectMethods: string[] = [
-  Routes.FetchObjects
+  Routes.FetchObjects,
+  Routes.CreateObject,
+  Routes.UpdateObject
 ];
 
 export const GroupMethods: string[] = [
@@ -91,6 +94,12 @@ export class ApiRouter {
         const ObjectApiInstance = new ObjectApi(connection);
         if(method === Routes.FetchObjects) {
           promise = ObjectApiInstance.fetch();
+        }
+        if(method === Routes.CreateObject) {
+          promise = ObjectApiInstance.create(payload as { data: IObjectCreate });
+        }
+        if(method === Routes.UpdateObject) {
+          promise = ObjectApiInstance.update(payload as { id: string, data: IOBjectUpdate });
         }
       }
       if(GroupMethods.includes(method)) {

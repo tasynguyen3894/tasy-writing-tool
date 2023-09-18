@@ -5,7 +5,7 @@ import { IObjectExtra, getObjectExtraModel } from './ObjectExtra';
 export function getObjectModel(bookshelf: Bookshelf): Bookshelf.Model<any> {
   class ObjectModel extends bookshelf.Model<any> {
     get tableName() {
-      return 'object_extra';
+      return 'object';
     }
     metas() {
       return this.hasMany(getObjectExtraModel(bookshelf))

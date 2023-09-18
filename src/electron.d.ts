@@ -4,7 +4,7 @@ import { IChapterReadItem, IChapterCreate, IChapterUpdate } from 'src/models/Cha
 import { ICharacterCreate, ICharacterRead, ICharacterUpdate } from 'src/models/Character';
 import { ICharacterExtraCreate, ICharacterExtraRead } from 'src/models/CharacterExtra';
 import { IGroupRead } from './models/Group';
-import { IObjectRead } from 'src/models/Object';
+import { IOBjectUpdate, IObjectCreate, IObjectRead } from 'src/models/Object';
 
 type ApiMessage = {
   path: string
@@ -46,27 +46,6 @@ type FetchGroupApi = ApiCalling<{
   payload: {}
 }, IGroupRead[]>;
 
-// type RemoveChapterApi = ApiCalling<{
-//   method: Routes.RemoveChapter,
-//   payload: {
-//     id: string
-//   }
-// }, boolean>;
-
-// type CreateChapterApi = ApiCalling<{
-//   method: Routes.CreateChapter,
-//   payload: {
-//     data: IChapterCreate
-//   }
-// }, IChapterReadItem>;
-
-// type UpdateChapterApi = ApiCalling<{
-//   method: Routes.UpdateChapter,
-//   payload: {
-//     id: string,
-//     data: IChapterUpdate
-//   }
-// }, IChapterReadItem>;
 
 type GroupApi = FetchGroupApi;
 
@@ -116,7 +95,22 @@ type FetchObjectApi = ApiCalling<{
   payload: {}
 }, IObjectRead[]>;
 
-type ObjectApi = FetchObjectApi;
+type CreateObjectApi = ApiCalling<{
+  method: Routes.CreateObject,
+  payload: {
+    data: IObjectCreate
+  }
+}, IObjectRead>;
+
+type UpdateObjectApi = ApiCalling<{
+  method: Routes.UpdateObject,
+  payload: {
+    id: string,
+    data: IOBjectUpdate
+  }
+}, IObjectRead>;
+
+type ObjectApi = FetchObjectApi | CreateObjectApi | UpdateObjectApi;
 
 type CharacterApi = FetchCharacterApi | RemoveCharacterApi | CreateCharacterApi | UpdateCharacterApi | RemoveCharacterExtraApi | CreateCharacterExtraApi | ObjectApi | GroupApi;
 

@@ -10,5 +10,8 @@ export enum Routes {
   UpdateChapter = 'UpdateChapter',
   RemoveChapter = 'RemoveChapter',
   FetchObjects = 'FetchObjects',
+  CreateObject = 'CreateObject',
+  RemoveObject = 'RemoveObject',
+  UpdateObject = 'UpdateObject',
   FetchGroups = 'FetchGroups',
 }

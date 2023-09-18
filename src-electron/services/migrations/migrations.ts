@@ -48,9 +48,11 @@ export const migrations: Migration[] = [
       return knex.schema
         .createTable('object', function (table) {
           table.uuid('id').defaultTo(knex.fn.uuid()).primary();
+          table.string('alias', 255).notNullable();
           table.string('name', 255).notNullable();
           table.string('type', 255).notNullable();
           table.string('description', 1000).nullable();
+          table.string('hint', 1000).nullable();
         });
     },
     down(knex: Knex) {

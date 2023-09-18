@@ -12,3 +12,7 @@ export interface IObject {
 export interface IObjectRead extends IObject {
   id: string
 }
+
+export type IObjectCreate = Omit<IObject, 'metas'>;
+
+export type IOBjectUpdate = Partial<IObjectCreate>;
