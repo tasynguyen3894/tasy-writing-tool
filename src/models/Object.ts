@@ -1,4 +1,4 @@
-import { IObjectExtra } from './ObjectExtra';
+import { IObjectExtraRead } from './ObjectExtra';
 
 export interface IObject {
   name: string,
@@ -6,7 +6,7 @@ export interface IObject {
   alias: string,
   hint?: string,
   description?: string,
-  metas?: IObjectExtra[]
+  metas?: IObjectExtraRead[]
 }
 
 export interface IObjectRead extends IObject {

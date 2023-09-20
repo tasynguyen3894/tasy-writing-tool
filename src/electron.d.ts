@@ -5,6 +5,7 @@ import { ICharacterCreate, ICharacterRead, ICharacterUpdate } from 'src/models/C
 import { ICharacterExtraCreate, ICharacterExtraRead } from 'src/models/CharacterExtra';
 import { IGroupRead } from './models/Group';
 import { IOBjectUpdate, IObjectCreate, IObjectRead } from 'src/models/Object';
+import { IObjectExtraCreate } from './models/ObjectExtra';
 
 type ApiMessage = {
   path: string
@@ -117,7 +118,21 @@ type RemoveObjectApi = ApiCalling<{
   }
 }, boolean>;
 
-type ObjectApi = FetchObjectApi | CreateObjectApi | UpdateObjectApi | RemoveObjectApi;
+type RemoveObjectExtraApi = ApiCalling<{
+  method: Routes.RemoveObjectExtra,
+  payload: {
+    id: string
+  }
+}, boolean>;
+
+type CreateObjectExtraApi = ApiCalling<{
+  method: Routes.CreateObjectExtra,
+  payload: {
+    data: IObjectExtraCreate
+  }
+}, ICharacterExtraRead>;
+
+type ObjectApi = FetchObjectApi | CreateObjectApi | UpdateObjectApi | RemoveObjectApi | RemoveObjectExtraApi | CreateObjectExtraApi;
 
 type CharacterApi = FetchCharacterApi | RemoveCharacterApi | CreateCharacterApi | UpdateCharacterApi | RemoveCharacterExtraApi | CreateCharacterExtraApi | ObjectApi | GroupApi;
 

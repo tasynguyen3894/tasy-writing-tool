@@ -4,6 +4,7 @@ import { defineStore } from 'pinia';
 import { IOBjectUpdate, IObjectCreate, IObjectRead } from 'src/models/Object';
 import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
+import { IObjectExtraCreate, IObjectExtraRead } from 'src/models/ObjectExtra';
 
 export const useObjectStore = defineStore('object', () => {
   const objects = ref<IObjectRead[]>([]);
@@ -87,6 +88,71 @@ export const useObjectStore = defineStore('object', () => {
     });
   }
 
+  function updateExtra(data: IObjectExtraRead) {
+    objects.value = objects.value.map(object => {
+      if(object.id !== data.object_id) {
+        return object;
+      }
+      const newObject = object;
+      if(!newObject.metas) {
+        newObject.metas = [data];
+      } else {
+        let existedExtra = false;
+        newObject.metas = newObject.metas.map(meta => {
+          if(meta.id !== data.id) {
+            return meta
+          }
+          existedExtra = true;
+          return data;
+        });
+        if(!existedExtra) {
+          newObject.metas.push(data);
+        }
+      }
+      return newObject;
+    })
+  }
+
+  function removeExtra(characterId: string, id: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      if(projectStore.projectPath) {
+        window.Native.api({  method: Routes.RemoveObjectExtra, payload: { id }, path: projectStore.projectPath})
+          .then((result: boolean) => {
+            objects.value = objects.value.map(object => {
+              if(object.id !== characterId || !object.metas) {
+                return object;
+              }
+              return {
+                ...object,
+                metas: object.metas.filter(meta => meta.id !== id)
+              }
+            });
+            resolve(result);
+          });
+      } else {
+        return Promise.resolve();
+      }
+    });
+  }
+
+  function createExtra(data: IObjectExtraCreate): Promise<void> {
+    return new Promise((resolve) => {
+      if(projectStore.projectPath) {
+        window.Native.api({  method: Routes.CreateObjectExtra, payload: { data }, path: projectStore.projectPath})
+          .then((result: IObjectExtraRead | boolean) => {
+            if(result instanceof Boolean) {
+              resolve();
+            } else {
+              updateExtra(result as IObjectExtraRead);
+              resolve();
+            }
+          })
+      } else {
+        return Promise.resolve();
+      }
+    });
+  }
+
   return {
     objects,
     init,
@@ -94,6 +160,8 @@ export const useObjectStore = defineStore('object', () => {
     updateObject,
     aliasIsExisted,
     findObject,
-    removeObject
+    removeObject,
+    removeExtra,
+    createExtra
   }
 })

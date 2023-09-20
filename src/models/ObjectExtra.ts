@@ -7,3 +7,12 @@ export interface IObjectExtra {
 export interface IObjectExtraRead extends IObjectExtra {
   id: string
 }
+
+export interface IObjectExtraCreate extends IObjectExtra {
+}
+
+export interface IObjectExtraModify {
+  id?: string,
+  key: string,
+  value: string
+}

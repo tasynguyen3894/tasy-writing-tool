@@ -1,5 +1,5 @@
 import { IObjectRead, IObjectCreate, IOBjectUpdate } from 'src/models/Object';
-import { IObjectExtraRead } from 'src/models/ObjectExtra';
+import { IObjectExtraRead, IObjectExtraCreate } from 'src/models/ObjectExtra';
 import { modelFactory, ModelName } from '../models';
 import { BaseApi } from './base';
 
@@ -143,6 +143,78 @@ export class ObjectApi extends BaseApi {
             }).catch(error => {
               reject(error);
             });
+          }).catch(error => {
+            reject(error);
+          });
+      } else {
+        resolve(false);
+      }
+    })
+  }
+
+  public createExtra(payload: {
+    data: IObjectExtraCreate
+  }): Promise<IObjectExtraRead | boolean> {
+    return new Promise((resolve) => {
+      const ObjectModel = modelFactory(this.connection).getModel(ModelName.Object);
+      const ObjectExtraModel = modelFactory(this.connection).getModel(ModelName.ObjectExtra);
+      if(ObjectModel && ObjectExtraModel) {
+        const { data } = payload;
+        ObjectModel
+          .where('id', data.object_id)
+          .count()
+          .then((count: number) => {
+            if(count > 0) {
+              ObjectExtraModel
+                .where({
+                  object_id: data.object_id,
+                  key: data.key
+                }).fetch({ require: false }).then((existedExtra: any) => {
+                  if(existedExtra) {
+                    existedExtra.save({
+                      value: data.value
+                    }).then(() => {
+                      resolve({
+                        id: existedExtra.get('id'),
+                        key: data.key,
+                        value: data.value,
+                        object_id: data.object_id
+                      })
+                    });
+                  } else {
+                    if(this.connection) {
+                      this.connection('object_extra')
+                      .insert(data, ['id', 'object_id', 'key', 'value'])
+                        .then((result: IObjectExtraRead[])  => {
+                          if(result.length > 0) {
+                            resolve(result[0])
+                          }else {
+                            resolve(false)
+                          }
+                        }).catch(e => {
+                          console.log(e)
+                        })
+                    }
+                  }
+                })
+            } else {
+              resolve(false);
+            }
+          });
+      } else {
+        resolve(false);
+      }
+    })
+  }
+
+  public removeExtra(payload: { id: string }): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if(this.connection) {
+        this.connection('object_extra')
+          .where('id', payload.id)
+          .del()
+          .then(() => {
+            resolve(true);
           }).catch(error => {
             reject(error);
           });

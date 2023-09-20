@@ -11,10 +11,10 @@
       </div>
       <div class="col-1"></div>
       <div class="col-6">
-        <!-- <objectMeta
+        <ObjectMeta
           v-model="object.metas"
           :object-id="object.id"
-        /> -->
+        />
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@ import { useQuasar } from 'quasar';
 
 import { useObjectStore } from 'src/stores/objectStore';
 import { IOBjectUpdate, IObjectRead } from 'src/models/Object';
-// import objectMeta from 'src/components/objectMeta.vue';
+import ObjectMeta from 'src/components/ObjectMeta.vue';
 import ObjectForm from 'src/components/ObjectForm.vue';
 import { RouterNames } from 'src/router/routes';
 
