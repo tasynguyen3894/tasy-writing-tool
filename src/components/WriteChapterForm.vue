@@ -18,6 +18,7 @@
         v-model="chapterData.content"
         label="Content"
         :characters="editorCharacter"
+        :objects="editorObject"
         :toolbars="[
           ['bold', 'italic', 'underline', 'strikeThrough', 'subscript']
         ]"
@@ -50,8 +51,9 @@ import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 
-import ChapterEditor, { Character } from 'src/components/ChapterEditor.vue';
+import ChapterEditor, { Variable } from 'src/components/ChapterEditor.vue';
 import { useCharacterStore } from 'src/stores/characterStore';
+import { useObjectStore } from 'src/stores/objectStore';
 import { Status } from 'src/models/Chapter';
 
 export interface Chapter {
@@ -82,8 +84,10 @@ const emits = defineEmits<{
   (e: 'remove'): void,
 }>();
 
+const objectStore = useObjectStore();
 const characterStore = useCharacterStore();
 const { characters } = storeToRefs(characterStore);
+const { objects } = storeToRefs(objectStore);
 
 const statusOptions = [
   {
@@ -103,13 +107,24 @@ const statusOptions = [
 const chapterData = ref<Chapter>(props.data);
 const tagContent = ref<string>('');
 
-const editorCharacter = computed<Character[]>(() => {
+const editorCharacter = computed<Variable[]>(() => {
   return characters.value.map(character => {
     return {
       id: character.id, 
       alias: character.alias,
       name: character.name,
       metas: character.metas || []
+    }
+  });
+});
+
+const editorObject = computed<Variable[]>(() => {
+  return objects.value.map(object => {
+    return {
+      id: object.id, 
+      alias: object.alias,
+      name: object.name,
+      metas: object.metas || []
     }
   });
 });

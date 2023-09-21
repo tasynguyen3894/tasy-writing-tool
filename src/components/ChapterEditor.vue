@@ -34,16 +34,21 @@
   <q-dialog v-model="isShowCharacter">
     <q-card style="min-width: 350px">
       <q-card-section>
-        <div class="text-h6">Add character info</div>
+        <div class="text-h6">Add variable info</div>
       </q-card-section>
       <q-card-section class="q-pt-none">
         <q-select
-          v-model="characterSelected"
-          :options="props.characters"
+          v-model="variableType"
+          :options="[VariableType.character, VariableType.object]"
+          label="Variable type"
+        />
+        <q-select
+          v-model="variableSelected"
+          :options="variableType === VariableType.character ? props.characters : props.objects"
           label="Character"
           option-label="name"
         />
-        <template v-if="characterSelected">
+        <template v-if="variableSelected">
           <q-select
             label="Meta"
             v-model="metaSelected"
@@ -51,7 +56,7 @@
             option-value="value"
           >
             <template v-slot:append>
-              <q-btn @click="saveVariable()" flat icon="save" />
+              <q-btn @click="saveVariable()" flat icon="push_pin" />
             </template>
           </q-select>
         </template>
@@ -59,7 +64,7 @@
 
     <q-card-actions align="right" class="text-primary">
       <q-btn flat label="Cancel" v-close-popup />
-      <q-btn flat label="Add" v-close-popup @click="addCharacter()" />
+      <q-btn flat label="Add" v-close-popup @click="selectVariable()" />
     </q-card-actions>
   </q-card>
 </q-dialog>
@@ -72,15 +77,16 @@ import { VariableAttribute } from 'src/util/helper';
 export type Formatter = 'bold' | 'italic' | 'underline' | 'strikeThrough' 
 | 'justifyLeft' | 'justifyCenter' | 'justifyRight' | 'justifyFull' 
 | 'insertUnorderedList' | 'insertOrderedList' | 'subscript' | 'superscript';
-export interface CharacterMeta {
+
+export interface VariableMeta {
   key: string,
   value: string
 }
-export interface Character {
+export interface Variable {
   id: string,
   alias: string,
   name: string,
-  metas: CharacterMeta[]
+  metas: VariableMeta[]
 }
 export type Toolbar = Array<Formatter[]>;
 export interface ToolbarConfig {
@@ -96,9 +102,15 @@ export interface SavedVariable {
 
 export interface ChapterEditorProps {
   modelValue: string,
-  characters: Character[],
+  characters: Variable[],
+  objects: Variable[],
   toolbars?: Toolbar,
   label?: string
+}
+
+enum VariableType {
+  character = 'character',
+  object = 'object'
 }
 
 const toolbarConfig: ToolbarConfig = {
@@ -143,6 +155,7 @@ const toolbarConfig: ToolbarConfig = {
 const props = withDefaults(defineProps<ChapterEditorProps>(), {
   modelValue: '<div>Type somethings</div>',
   characters: () => [],
+  objects: () => [],
   toolbars: () => []
 });
 const emits = defineEmits<{
@@ -153,12 +166,14 @@ const editor = ref<string>('');
 const editorRawRef = ref<HTMLElement | null>(null);
 const isShowCharacter = ref<boolean>(false);
 const currentRange = ref<Range | null>(null);
-const characterSelected = ref<Character | undefined>(undefined);
+const variableType = ref<string>(VariableType.character);
+const variableSelected = ref<Variable | undefined>(undefined);
 const metaSelected = ref<{ label: string, value: string } | undefined>(undefined);
 const savedVariables = ref<SavedVariable[]>([]);
+
 const metaOptions = computed<{ label: string, value: string }[]>(() => {
-  if(characterSelected.value) {
-    return characterSelected.value.metas.map(({ key, value }) => {
+  if(variableSelected.value) {
+    return variableSelected.value.metas.map(({ key, value }) => {
       return {
         label: key + ': ' + value,
         value: key
@@ -168,8 +183,8 @@ const metaOptions = computed<{ label: string, value: string }[]>(() => {
   return [];
 });
 
-watch(characterSelected, () => {
-  if(characterSelected.value) {
+watch(variableSelected, () => {
+  if(variableSelected.value) {
     metaSelected.value = undefined;
   }
 });
@@ -199,6 +214,10 @@ watch(() => props.modelValue, () => {
   if(editorRawRef.value && props.modelValue != editor.value) {
     editorRawRef.value.innerHTML = formatContentFromProps(props.modelValue);
   }
+});
+
+watch(variableType, () => {
+  variableSelected.value = undefined;
 });
 
 function handlePaste(e: ClipboardEvent) {
@@ -265,10 +284,10 @@ function convertEditorContent(content: string): string {
 }
 
 function saveVariable() {
-  if(characterSelected.value) {
+  if(variableSelected.value) {
     const variables = [
-      'character',
-      characterSelected.value.id
+      variableType.value === VariableType.character ? 'character' : 'object',
+      variableSelected.value.id
     ];
     if(metaSelected.value) {
       variables.push('meta');
@@ -320,11 +339,11 @@ function changeHtml(e: Event) {
   }
 }
 
-function addCharacter() {
-  if(characterSelected.value) {
+function selectVariable() {
+  if(variableSelected.value) {
     const variables = [
-      'character',
-      characterSelected.value.id
+      variableType.value === VariableType.character ? 'character' : 'object',
+      variableSelected.value.id
     ];
     if(metaSelected.value) {
       variables.push('meta');
@@ -377,6 +396,16 @@ function findVariableValue(variable: string): string {
           return findCharacterValue(parts[1], false, parts[3]);
         }
       }
+    } else {
+      if(parts[0] === 'object') {
+        if(parts.length > 2) {
+          if(parts[2] === 'name') {
+            return findObjectValue(parts[1], true);
+          } else if (parts.length > 3) {
+            return findObjectValue(parts[1], false, parts[3]);
+          }
+        }
+      }
     }
   }
   return '';
@@ -389,6 +418,18 @@ function findCharacterValue(id: string, name: boolean, meta?: string): string {
       return character.name;
     } else if(meta) {
       return character.metas.find(item => item.key == meta)?.value || '';
+    }
+  }
+  return '';
+}
+
+function findObjectValue(id: string, name: boolean, meta?: string): string {
+  const object = props.objects.find(item => item.id === id);
+  if(object) {
+    if(name) {
+      return object.name;
+    } else if(meta) {
+      return object.metas.find(item => item.key == meta)?.value || '';
     }
   }
   return '';
