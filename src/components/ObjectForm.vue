@@ -36,7 +36,7 @@
       type="textarea"
       lazy-rules
     />
-    <div class="q-pt-md">
+    <div class="q-pt-md" align="right">
       <q-btn
         v-if="props.hasRemove"
         label="Remove"

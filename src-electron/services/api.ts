@@ -5,12 +5,14 @@ import { CharacterApi } from './api/character';
 import { ChapterApi } from './api/chapter';
 import { ObjectApi } from './api/object';
 import { GroupApi } from './api/group';
+import { ConfigApi } from './api/config';
 import { ICharacterExtraCreate } from 'src/models/CharacterExtra';
 import { ICharacterCreate, ICharacterUpdate } from 'src/models/Character';
 import { IChapterCreate, IChapterUpdate } from 'src/models/Chapter';
 import { Routes } from 'src/models/Api'
 import { IOBjectUpdate, IObjectCreate } from 'src/models/Object';
 import { IObjectExtraCreate } from 'src/models/ObjectExtra';
+import { IConfig } from 'src/models/Config';
 
 export const CharacterMethods: string[] = [
   Routes.FetchCharacters,
@@ -39,6 +41,12 @@ export const ObjectMethods: string[] = [
 
 export const GroupMethods: string[] = [
   Routes.FetchGroups
+];
+
+export const ConfigMethods: string[] = [
+  Routes.FetchConfig,
+  Routes.CreateConfig,
+  Routes.RemoveConfig
 ];
 
 export class ApiRouter {
@@ -119,6 +127,18 @@ export class ApiRouter {
         const GroupApiInstance = new GroupApi(connection);
         if(method === Routes.FetchGroups) {
           promise = GroupApiInstance.fetch();
+        }
+      }
+      if(ConfigMethods.includes(method)) {
+        const ConfigApiInstance = new ConfigApi(connection);
+        if(method === Routes.FetchConfig) {
+          promise = ConfigApiInstance.fetch();
+        }
+        if(method === Routes.CreateConfig) {
+          promise = ConfigApiInstance.create(payload as { data: IConfig });
+        }
+        if(method === Routes.RemoveConfig) {
+          promise = ConfigApiInstance.remove(payload as { id: string });
         }
       }
       promise.then(result => {

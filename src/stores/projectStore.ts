@@ -7,6 +7,13 @@ import { useObjectStore } from './objectStore';
 import { useGroupStore } from './groupStore';
 import { set, remove } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
+import { ConfigKey, IConfigRead } from 'src/models/Config';
+import { Routes } from 'src/models/Api';
+
+const configTitleByKey = {
+  [ConfigKey.author]: 'author',
+  [ConfigKey.project]: 'project',
+}
 
 export const useProjectStore = defineStore('project', () => {
   const project = ref<string>('');
@@ -47,13 +54,37 @@ export const useProjectStore = defineStore('project', () => {
     })
   }
 
+  function updateConfig(key: ConfigKey, value: string) {
+    return new Promise<void>((resolve) => {
+      if(projectPath.value && configTitleByKey[key]) {
+        window.Native.api({ 
+          method: Routes.CreateConfig,
+          payload: { 
+            data: { key, value, title: configTitleByKey[key] }
+          },
+          path: projectPath.value 
+        })
+          .then((res: IConfigRead) => {
+            if(key === ConfigKey.author) {
+              author.value = res.value;
+            }
+            if(key === ConfigKey.project) {
+              project.value = res.value;
+            }
+            resolve();
+          });
+      }
+    })
+  }
+
   return {
     project,
     author,
     projectPath,
     init,
     reset,
-    getDataProject
+    getDataProject,
+    updateConfig
   }
 });
 

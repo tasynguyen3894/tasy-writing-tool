@@ -6,6 +6,7 @@ import { ICharacterExtraCreate, ICharacterExtraRead } from 'src/models/Character
 import { IGroupRead } from './models/Group';
 import { IOBjectUpdate, IObjectCreate, IObjectRead } from 'src/models/Object';
 import { IObjectExtraCreate } from './models/ObjectExtra';
+import { IConfig, IConfigRead } from 'src/models/Config';
 
 type ApiMessage = {
   path: string
@@ -134,7 +135,30 @@ type CreateObjectExtraApi = ApiCalling<{
 
 type ObjectApi = FetchObjectApi | CreateObjectApi | UpdateObjectApi | RemoveObjectApi | RemoveObjectExtraApi | CreateObjectExtraApi;
 
-type CharacterApi = FetchCharacterApi | RemoveCharacterApi | CreateCharacterApi | UpdateCharacterApi | RemoveCharacterExtraApi | CreateCharacterExtraApi | ObjectApi | GroupApi;
+type FetchConfigApi = ApiCalling<{
+  method: Routes.FetchConfig,
+  payload: {
+    id: string
+  }
+}, IConfigRead[]>;
+
+type RemoveConfigApi = ApiCalling<{
+  method: Routes.RemoveConfig,
+  payload: {
+    id: string
+  }
+}, boolean>;
+
+type CreateConfigApi = ApiCalling<{
+  method: Routes.CreateConfig,
+  payload: {
+    data: IConfig
+  }
+}, IConfigRead>;
+
+type ConfigApi = FetchConfigApi | CreateConfigApi | RemoveConfigApi;
+
+type Api = ChapterApi | FetchCharacterApi | RemoveCharacterApi | CreateCharacterApi | UpdateCharacterApi | RemoveCharacterExtraApi | CreateCharacterExtraApi | ObjectApi | GroupApi | ConfigApi;
 
 type ProjectDetect = {
   type: 'detect', payload: { path: string }
@@ -159,7 +183,7 @@ export {};
 declare global {
   interface Window {
     Native: {
-      api: (a: ChapterApi | CharacterApi) => Promise<any>,
+      api: (a: Api) => Promise<any>,
       project: (a: ProjectType) => any
     },
     Store: any

@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 
 import { modelFactory, ModelName } from './models';
 import { migrations, createMigrationTable, Migration } from './migrations/migrations';
+import { ConfigKey } from 'src/models/Config';
 import { IConfig } from './models/Config';
 import { ICharacter } from './models/Character';
 
@@ -90,12 +91,12 @@ export function runSeeder(connection: Knex): Promise<void> {
 export function initConfig(connection: Knex, project: string, author: string): Promise<void> {
   return connection<IConfig>('config').insert([
     {
-      key: 'project',
+      key: ConfigKey.project,
       title: 'Project',
       value: project
     },
     {
-      key: 'author',
+      key: ConfigKey.author,
       title: 'Author',
       value: author
     },
