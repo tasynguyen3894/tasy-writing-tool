@@ -3,7 +3,7 @@ import path from 'path';
 import os from 'os';
 
 import { selectProject, projectIsSetup, setup, getProjectData } from './services/project';
-import { ApiHanlder } from './services/api';
+import { ApiHandler } from './services/api';
 import { get, set, remove } from './services/storage';
 
 // needed in case process is undefined under Linux
@@ -104,7 +104,7 @@ function createWindow() {
 
   ipcMain.handle('api', (event, e: ApiEvent) => {
     if(e.path && e.method && e.payload) {
-      return ApiHanlder(e.path, e.method, e.payload)
+      return ApiHandler(e.path, e.method, e.payload)
     }
   })
 

@@ -142,21 +142,28 @@ export class ApiRouter {
         }
       }
       promise.then(result => {
-        connection.destroy();
+                connection.destroy();
         resolve(result)
       })
     })
   }
 }
 
-export function ApiHanlder(projectPath: string, method: string, payload: object): Promise<any> {
-  const connection = knex({
+export function ApiHandler(projectPath: string, method: string, payload: object): Promise<any> {
+    const connection = knex({
     client: 'sqlite',
     connection: {
       filename: path.resolve(projectPath, 'db.sqlite')
     }
   });
 
-  const apiRouterInstance = new ApiRouter(connection);
-  return apiRouterInstance.runApi(method, payload);
+  return new Promise((resolve, reject) => {
+    const apiRouterInstance = new ApiRouter(connection);
+    apiRouterInstance.runApi(method, payload).then(result => {
+      connection.destroy();
+      resolve(result);
+    }).catch(error => {
+      reject(error);
+    })
+  });
 }
