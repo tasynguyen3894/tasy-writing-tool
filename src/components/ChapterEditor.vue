@@ -30,6 +30,9 @@
       class="editor"
       contenteditable="true">
     </div>
+    <div v-if="props.wordCount">
+      <i>Letter: {{ numberOfWord.letters }}, words: {{ numberOfWord.words }}</i>
+    </div>
   </div>
   <q-dialog v-model="isShowCharacter">
     <q-card style="min-width: 350px">
@@ -73,6 +76,7 @@
 import { computed, ref, watch } from 'vue';
 
 import { VariableAttribute } from 'src/util/helper';
+import { Console } from 'console';
 
 export type Formatter = 'bold' | 'italic' | 'underline' | 'strikeThrough' 
 | 'justifyLeft' | 'justifyCenter' | 'justifyRight' | 'justifyFull' 
@@ -100,12 +104,18 @@ export interface SavedVariable {
   label: string
 }
 
+export interface WordCount {
+  letters: number,
+  words: number
+} 
+
 export interface ChapterEditorProps {
   modelValue: string,
   characters: Variable[],
   objects: Variable[],
   toolbars?: Toolbar,
-  label?: string
+  label?: string,
+  wordCount?: boolean
 }
 
 enum VariableType {
@@ -156,7 +166,8 @@ const props = withDefaults(defineProps<ChapterEditorProps>(), {
   modelValue: '<div>Type somethings</div>',
   characters: () => [],
   objects: () => [],
-  toolbars: () => []
+  toolbars: () => [],
+  wordCount: false
 });
 const emits = defineEmits<{
   (e: 'update:modelValue', value: string): void
@@ -170,6 +181,7 @@ const variableType = ref<string>(VariableType.character);
 const variableSelected = ref<Variable | undefined>(undefined);
 const metaSelected = ref<{ label: string, value: string } | undefined>(undefined);
 const savedVariables = ref<SavedVariable[]>([]);
+const numberOfWord = ref<WordCount>({ letters: 0, words: 0 });
 
 const metaOptions = computed<{ label: string, value: string }[]>(() => {
   if(variableSelected.value) {
@@ -196,6 +208,7 @@ watch(editor, () => {
 watch(editorRawRef, () => {
   if(editorRawRef.value) {
     editorRawRef.value.innerHTML = formatContentFromProps(props.modelValue);
+    editor.value = formatContent(editorRawRef.value.innerHTML);
     const observer = new MutationObserver((_, __) => {
       if (editorRawRef.value) {
         editor.value = formatContent(editorRawRef.value.innerHTML);
@@ -219,6 +232,38 @@ watch(() => props.modelValue, () => {
 watch(variableType, () => {
   variableSelected.value = undefined;
 });
+
+watch(editor, () => {
+  numberOfWord.value = getNumberOfWord();
+});
+
+function getNumberOfWord(): WordCount {
+  if(editorRawRef.value && editor.value) {
+    let baseText = editorRawRef.value.textContent;
+    if(baseText) {
+      let letters = baseText.length;
+      let words = baseText.split(' ').filter(word => word.length > 0).length;
+
+      const doc = parseHTMLString(editorRawRef.value.innerHTML);
+      doc.body.querySelectorAll(`[${VariableAttribute.content}]`).forEach(node => {
+        const content = node.getAttribute(VariableAttribute.content);
+        if(content) {
+          letters += content.length;
+          words += content.split(' ').filter(word => word.length > 0).length
+        }
+      });
+      return {
+        words,
+        letters
+      }
+    }
+  }
+  return {
+    words: 0,
+    letters: 0
+  }
+}
+
 
 function handlePaste(e: ClipboardEvent) {
   if(e.clipboardData) {
@@ -256,8 +301,8 @@ function parseHTMLString(content: string): Document {
 
 function formatContent(content: string): string {
   const doc = parseHTMLString(content);
-  doc.body.querySelectorAll('[data-content]').forEach(node => {
-    node.removeAttribute('data-content');
+  doc.body.querySelectorAll(`[${VariableAttribute.content}]`).forEach(node => {
+    node.removeAttribute(VariableAttribute.content);
   });
   return doc.body.innerHTML;
 }
@@ -265,10 +310,10 @@ function formatContent(content: string): string {
 function formatContentFromProps(content: string): string {
   const parser = new DOMParser();
   const doc = parser.parseFromString(content, 'text/html');
-  doc.body.querySelectorAll('[data-variable]').forEach(node => {
-    const variable = node.getAttribute('data-variable');
+  doc.body.querySelectorAll(`[${VariableAttribute.variable}]`).forEach(node => {
+    const variable = node.getAttribute(VariableAttribute.variable);
     if(variable != null) {
-      node.setAttribute('data-content', findVariableValue(variable));
+      node.setAttribute(VariableAttribute.content, findVariableValue(variable));
     }
   });
   return doc.body.innerHTML;

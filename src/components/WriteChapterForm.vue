@@ -19,6 +19,7 @@
         label="Content"
         :characters="editorCharacter"
         :objects="editorObject"
+        word-count
         :toolbars="[
           ['bold', 'italic', 'underline', 'strikeThrough', 'subscript']
         ]"
