@@ -19,4 +19,5 @@ export enum Routes {
   FetchConfig = 'FetchConfig',
   CreateConfig = 'CreateConfig',
   RemoveConfig = 'CreateConfig',
+  ExportChapter = 'ExportChapter'
 }

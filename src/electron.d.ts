@@ -41,7 +41,15 @@ type UpdateChapterApi = ApiCalling<{
   }
 }, IChapterReadItem>;
 
-type ChapterApi = FetchChapterApi | RemoveChapterApi | CreateChapterApi | UpdateChapterApi;
+type ExportChapterApi = ApiCalling<{
+  method: Routes.ExportChapter,
+  payload: {
+    id: string,
+    pathExport: string
+  }
+}, boolean>;
+
+type ChapterApi = FetchChapterApi | RemoveChapterApi | CreateChapterApi | UpdateChapterApi | ExportChapterApi;
 
 type FetchGroupApi = ApiCalling<{
   method: Routes.FetchGroups,
@@ -184,7 +192,8 @@ declare global {
   interface Window {
     Native: {
       api: (a: Api) => Promise<any>,
-      project: (a: ProjectType) => any
+      project: (a: ProjectType) => any,
+      export: () => Promise<any>
     },
     Store: any
   }

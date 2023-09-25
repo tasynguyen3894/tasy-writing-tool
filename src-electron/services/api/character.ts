@@ -2,6 +2,7 @@ import { ICharacterExtra, ICharacterExtraRead } from 'src/models/CharacterExtra'
 import { ICharacterCreate, ICharacterRead, ICharacterUpdate } from 'src/models/Character';
 import { modelFactory, ModelName } from '../models';
 import { BaseApi } from './base';
+import { fetchCharacter } from './db/character';
 
 export class CharacterApi extends BaseApi {
   public create(payload: {
@@ -187,37 +188,9 @@ export class CharacterApi extends BaseApi {
   }
 
   public fetch(): Promise<ICharacterRead[]> {
-    return new Promise((resolve, reject) => {
-      const CharacterModel = modelFactory(this.connection).getModel(ModelName.Character);
-      if(CharacterModel) {
-        CharacterModel.fetchAll({ withRelated: ['metas'] }).then(res => {
-          const result: ICharacterRead[] = [];
-          if(res.models.length > 0) {
-            res.models.forEach(item => {
-              const metas: ICharacterExtraRead[] = [];
-              item.related('metas').models.forEach((meta: any) => {
-                metas.push({
-                  id: meta.get('id'),
-                  key: meta.get('key'),
-                  value: meta.get('value'),
-                  character_id: meta.get('character_id'),
-                })
-              })
-              result.push({
-                id: item.get('id'),
-                name: item.get('name'),
-                alias: item.get('alias'),
-                description: item.get('description'),
-                hint: item.get('hint'),
-                metas
-              });
-            });
-          }
-          resolve(result)
-        })
-      } else {
-        resolve([]);
-      }
-    });
+    if(!this.connection) {
+      return Promise.resolve([]);
+    }
+    return fetchCharacter(this.connection);
   }
 }

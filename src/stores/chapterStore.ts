@@ -67,6 +67,25 @@ export const useChapterStore = defineStore('chapter', () => {
     });
   }
 
+  function exportChapter(id: string, url: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if(projectStore.projectPath) {
+        window.Native.api({
+          method: Routes.ExportChapter,
+          payload: {
+            id,
+            pathExport: url
+          },
+          path: projectStore.projectPath
+        }).then((result: boolean) => {
+            resolve(result);
+          })
+      } else {
+        return Promise.resolve();
+      }
+    });
+  }
+
   function update(id: string, data: IChapter): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
@@ -101,6 +120,7 @@ export const useChapterStore = defineStore('chapter', () => {
     create,
     findChapter,
     update,
-    remove
+    remove,
+    exportChapter
   }
 })

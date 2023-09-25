@@ -38,7 +38,8 @@ contextBridge.exposeInMainWorld(
 contextBridge.exposeInMainWorld(
   'Native', {
    project: (args: any) => ipcRenderer.invoke('project', args),
-   api: (args: any) => ipcRenderer.invoke('api', args)
+   api: (args: any) => ipcRenderer.invoke('api', args),
+   export: () => ipcRenderer.invoke('export'),
   }
 );
 

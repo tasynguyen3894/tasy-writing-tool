@@ -28,6 +28,7 @@ export const ChapterMethods: string[] = [
   Routes.CreateChapter,
   Routes.UpdateChapter,
   Routes.RemoveChapter,
+  Routes.ExportChapter
 ];
 
 export const ObjectMethods: string[] = [
@@ -100,6 +101,9 @@ export class ApiRouter {
         }
         if(method === Routes.UpdateChapter) {
           promise = ChapterApiInstance.update(payload as { id: string, data: IChapterUpdate });
+        }
+        if(method === Routes.ExportChapter) {
+          promise = ChapterApiInstance.export(payload as { id: string, pathExport: string });
         }
       }
       if(ObjectMethods.includes(method)) {

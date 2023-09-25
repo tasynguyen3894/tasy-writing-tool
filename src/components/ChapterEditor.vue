@@ -76,7 +76,7 @@
 import { computed, ref, watch } from 'vue';
 
 import { VariableAttribute } from 'src/util/helper';
-import { Console } from 'console';
+import { findVariableValue, VariableType } from 'src/util/editor';
 
 export type Formatter = 'bold' | 'italic' | 'underline' | 'strikeThrough' 
 | 'justifyLeft' | 'justifyCenter' | 'justifyRight' | 'justifyFull' 
@@ -86,6 +86,7 @@ export interface VariableMeta {
   key: string,
   value: string
 }
+
 export interface Variable {
   id: string,
   alias: string,
@@ -93,12 +94,14 @@ export interface Variable {
   metas: VariableMeta[]
 }
 export type Toolbar = Array<Formatter[]>;
+
 export interface ToolbarConfig {
   [key: string]: {
     label?: string;
     icon?: string;
   }
 }
+
 export interface SavedVariable {
   key: string,
   label: string
@@ -116,11 +119,6 @@ export interface ChapterEditorProps {
   toolbars?: Toolbar,
   label?: string,
   wordCount?: boolean
-}
-
-enum VariableType {
-  character = 'character',
-  object = 'object'
 }
 
 const toolbarConfig: ToolbarConfig = {
@@ -308,20 +306,18 @@ function formatContent(content: string): string {
 }
 
 function formatContentFromProps(content: string): string {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(content, 'text/html');
+  const doc = parseHTMLString(content);
   doc.body.querySelectorAll(`[${VariableAttribute.variable}]`).forEach(node => {
     const variable = node.getAttribute(VariableAttribute.variable);
     if(variable != null) {
-      node.setAttribute(VariableAttribute.content, findVariableValue(variable));
+      node.setAttribute(VariableAttribute.content, findVariable(variable));
     }
   });
   return doc.body.innerHTML;
 }
 
 function convertEditorContent(content: string): string {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(content, "text/html");
+  const doc = parseHTMLString(content);
   doc.body.querySelectorAll(`[${VariableAttribute.content}]`).forEach(node => {
     node.removeAttribute(VariableAttribute.content);
   });
@@ -342,7 +338,7 @@ function saveVariable() {
     if(!savedVariables.value.some(({ key }) => key === variableKey)) {
       savedVariables.value.push({
         key: variableKey,
-        label: findVariableValue(variableKey)
+        label: findVariable(variableKey)
       })
     }
   }
@@ -412,7 +408,7 @@ function removeSavedVariable(variable: string) {
 
 function addVariable(variable: string) {
   const edit = editorRawRef.value;
-  const name = findVariableValue(variable);
+  const name = findVariable(variable);
   const selection = window.getSelection();
   if(edit && currentRange.value && selection) {
     currentRange.value.deleteContents();
@@ -430,54 +426,8 @@ function addVariable(variable: string) {
   }
 }
 
-function findVariableValue(variable: string): string {
-  const parts = variable.split('.');
-  if(parts.length > 1) {
-    if(parts[0] === 'character') {
-      if(parts.length > 2) {
-        if(parts[2] === 'name') {
-          return findCharacterValue(parts[1], true);
-        } else if (parts.length > 3) {
-          return findCharacterValue(parts[1], false, parts[3]);
-        }
-      }
-    } else {
-      if(parts[0] === 'object') {
-        if(parts.length > 2) {
-          if(parts[2] === 'name') {
-            return findObjectValue(parts[1], true);
-          } else if (parts.length > 3) {
-            return findObjectValue(parts[1], false, parts[3]);
-          }
-        }
-      }
-    }
-  }
-  return '';
-}
-
-function findCharacterValue(id: string, name: boolean, meta?: string): string {
-  const character = props.characters.find(item => item.id === id);
-  if(character) {
-    if(name) {
-      return character.name;
-    } else if(meta) {
-      return character.metas.find(item => item.key == meta)?.value || '';
-    }
-  }
-  return '';
-}
-
-function findObjectValue(id: string, name: boolean, meta?: string): string {
-  const object = props.objects.find(item => item.id === id);
-  if(object) {
-    if(name) {
-      return object.name;
-    } else if(meta) {
-      return object.metas.find(item => item.key == meta)?.value || '';
-    }
-  }
-  return '';
+function findVariable(variable: string): string {
+  return findVariableValue(props.characters, props.objects, variable);
 }
 </script>
 <style lang="scss" scoped>

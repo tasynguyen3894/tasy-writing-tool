@@ -3,6 +3,7 @@ import path from 'path';
 import os from 'os';
 
 import { selectProject, projectIsSetup, setup, getProjectData } from './services/project';
+import { selectExportDirectory } from './services/export';
 import { ApiHandler } from './services/api';
 import { get, set, remove } from './services/storage';
 
@@ -83,6 +84,10 @@ function createWindow() {
       return remove(e.payload.key);
     }
   });
+
+  ipcMain.handle('export', (event, e: any) => {
+    return selectExportDirectory(mainWindow);
+  })
 
   ipcMain.handle('project', (event, e: ProjectEvent) => {
     if(e.type === 'select') {
