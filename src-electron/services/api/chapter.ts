@@ -134,7 +134,24 @@ export class ChapterApi extends BaseApi {
               const dom = new JSDOM(`<!DOCTYPE html>` + chapter.get('content'))
               dom.window.document.querySelectorAll(`[data-variable]`).forEach((node: Element) => {
                 node.textContent = findVariableValue(characters, objects, node.getAttribute('data-variable'));
-              })
+              });
+              const lines: string[] = [];
+              const firstLine: string[] = [];
+
+              dom.window.document.body.childNodes.forEach((node: Element) => {
+                if(node.tagName === 'DIV') {
+                  lines.push(node.innerHTML)
+                } else {
+                  if(node.nodeType === 3 && node.nodeValue) {
+                    firstLine.push(node.nodeValue);
+                  } else {
+                    firstLine.push(node.outerHTML);
+                  }
+                }
+              });
+              const chapterHtmlContent: string = [firstLine.join(''), ...lines].map(line => {
+                return '<p>' + line + '</p>';
+              }).join('');
               const HTMLtoDOCX = require('html-to-docx');
               const docxContent = `<!DOCTYPE html>
                 <html lang="en">
@@ -143,7 +160,7 @@ export class ChapterApi extends BaseApi {
                       <title>Document</title>
                   </head>
                   <body>
-                    ${dom.window.document.body.innerHTML.replaceAll('<div>', '<p>').replaceAll('</div>', '</p>')}
+                    ${chapterHtmlContent}
                   </body>
                 </html>`
               HTMLtoDOCX(docxContent, null, {
@@ -153,14 +170,15 @@ export class ChapterApi extends BaseApi {
               }).then((fileBuffer: any) => {
                 fs.writeFile(path.resolve(pathExport, 'example.docx'), fileBuffer, (error) => {
                   if (error) {
-                    console.log('Docx file creation failed');
-                    return;
+                    resolve(false);
+                  } else {
+                    resolve(true);
                   }
-                  console.log('Docx file created successfully');
                 });
               })
+            } else {
+              resolve(false);
             }
-            resolve(true)
           })
         })
       })
