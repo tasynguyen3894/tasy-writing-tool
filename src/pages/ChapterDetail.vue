@@ -75,7 +75,9 @@ function submit(data: Chapter) {
 
 function exportChapter(url: string) {
   if(route.params.id) {
-    chapterStore.exportChapter(route.params.id as string, url);
+    chapterStore.exportChapter(route.params.id as string, url).then(result => {
+      $q.notify('Updated');
+    })
   }
 }
 </script>

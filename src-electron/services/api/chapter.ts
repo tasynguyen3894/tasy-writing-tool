@@ -168,7 +168,7 @@ export class ChapterApi extends BaseApi {
                 footer: true,
                 pageNumber: true,
               }).then((fileBuffer: any) => {
-                fs.writeFile(path.resolve(pathExport, 'example.docx'), fileBuffer, (error) => {
+                fs.writeFile(path.resolve(pathExport), fileBuffer, (error) => {
                   if (error) {
                     resolve(false);
                   } else {

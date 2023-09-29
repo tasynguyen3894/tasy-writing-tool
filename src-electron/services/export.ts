@@ -3,8 +3,12 @@ import { BrowserWindow, dialog } from 'electron';
 export function selectExportDirectory(mainWindow: BrowserWindow | undefined) {
   return new Promise((resolve, reject) => {
     if(mainWindow) {
-      dialog.showOpenDialog(mainWindow, {
-        properties: ['openFile', 'openDirectory']
+      dialog.showSaveDialog(mainWindow, {
+        filters: [
+          {
+            name: 'Documents', extensions: ['docx']
+          }
+        ]
       }).then(result => {
         resolve(result)
       }).catch(err => {

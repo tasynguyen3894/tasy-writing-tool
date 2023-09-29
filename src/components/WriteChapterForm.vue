@@ -174,8 +174,8 @@ function remove() {
 
 function openExportDialog() {
   window.Native.export().then((data: any) => {
-    if(data.filePaths && data.filePaths.length > 0) {
-      emits('export', data.filePaths[0]);
+    if(data.filePath) {
+      emits('export', data.filePath);
     }
   })
 }
