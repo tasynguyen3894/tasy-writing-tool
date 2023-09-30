@@ -6,7 +6,6 @@
           :data="chapterData"
           @submit="submit"
           @remove="remove()"
-          @export="exportChapter"
         />
       </div>
     </div>
@@ -69,14 +68,6 @@ function submit(data: Chapter) {
       router.push({
         name: RouterNames.ProjectChapterPage
       })
-    })
-  }
-}
-
-function exportChapter(url: string) {
-  if(route.params.id) {
-    chapterStore.exportChapter(route.params.id as string, url).then(result => {
-      $q.notify('Updated');
     })
   }
 }

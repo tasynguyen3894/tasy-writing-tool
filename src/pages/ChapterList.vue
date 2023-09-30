@@ -10,6 +10,7 @@
       <template #body-cell-actions="props">
         <q-td :props="props">
           <q-btn icon="edit" flat size="0.7em" @click="edit(props.row.id)" />
+          <q-btn icon="description" flat size="0.7em" @click="exportChapter(props.row.id)" />
         </q-td>
       </template>
     </q-table>
@@ -17,12 +18,13 @@
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { QTableColumn } from 'quasar';
+import { QTableColumn, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 import { useChapterStore } from 'src/stores/chapterStore';
 import { RouterNames } from 'src/router/routes';
 
+const $q = useQuasar();
 const router = useRouter();
 
 const chapterStore = useChapterStore();
@@ -57,6 +59,26 @@ function edit(id: string) {
     params: {
       id
     }
+  })
+}
+
+function openExportDialog(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    window.Native.export().then((data: any) => {
+      if(data.filePath) {
+        resolve(data.filePath);
+      }
+    }).catch(error => {
+      reject(error);
+    })
+  });
+}
+
+function exportChapter(id: string) {
+  openExportDialog().then(url => {
+    chapterStore.exportChapter(id, url).then(result => {
+      $q.notify('Updated');
+    })
   })
 }
 </script>

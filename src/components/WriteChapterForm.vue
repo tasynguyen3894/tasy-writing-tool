@@ -38,7 +38,6 @@
     </q-card-section>
     <q-card-actions align="right" class="text-primary">
       <template v-if="props.data.id" >
-        <q-btn @click="openExportDialog()" flat label="Export" />
         <q-btn @click="remove()" flat label="Remove" />
       </template>
       <q-btn
@@ -85,8 +84,7 @@ const props = withDefaults(defineProps<{
 
 const emits = defineEmits<{
   (e: 'submit', value: Chapter): void,
-  (e: 'remove'): void,
-  (e: 'export', value: string): void
+  (e: 'remove'): void
 }>();
 
 const objectStore = useObjectStore();
@@ -170,14 +168,6 @@ function remove() {
   }).onOk(() => {
     emits('remove');
   });
-}
-
-function openExportDialog() {
-  window.Native.export().then((data: any) => {
-    if(data.filePath) {
-      emits('export', data.filePath);
-    }
-  })
 }
 
 </script>
