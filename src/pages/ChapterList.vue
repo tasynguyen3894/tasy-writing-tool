@@ -10,21 +10,23 @@
       <template #body-cell-actions="props">
         <q-td :props="props">
           <q-btn icon="edit" flat size="0.7em" @click="edit(props.row.id)" />
-          <q-btn icon="description" flat size="0.7em" @click="exportChapter(props.row.id)" />
+          <q-btn icon="description" flat size="0.7em" @click="openExportConfigDialog(props.row.id)" />
         </q-td>
       </template>
     </q-table>
   </q-page>
+  <ChapterExportModal v-model="isShow" :chapter-id="chapterId" />
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { QTableColumn, useQuasar } from 'quasar';
+import { QTableColumn } from 'quasar';
 import { useRouter } from 'vue-router';
 
 import { useChapterStore } from 'src/stores/chapterStore';
 import { RouterNames } from 'src/router/routes';
+import ChapterExportModal from 'src/components/ChapterExportModal.vue';
 
-const $q = useQuasar();
 const router = useRouter();
 
 const chapterStore = useChapterStore();
@@ -53,6 +55,9 @@ const columns: QTableColumn[] = [
   }
 ];
 
+const isShow = ref<boolean>(false);
+const chapterId = ref<string>();
+
 function edit(id: string) {
   router.push({
     name: RouterNames.ProjectChapterDetailPage,
@@ -62,23 +67,8 @@ function edit(id: string) {
   })
 }
 
-function openExportDialog(): Promise<string> {
-  return new Promise((resolve, reject) => {
-    window.Native.export().then((data: any) => {
-      if(data.filePath) {
-        resolve(data.filePath);
-      }
-    }).catch(error => {
-      reject(error);
-    })
-  });
-}
-
-function exportChapter(id: string) {
-  openExportDialog().then(url => {
-    chapterStore.exportChapter(id, url).then(result => {
-      $q.notify('Updated');
-    })
-  })
+function openExportConfigDialog(id: string) {
+  isShow.value = true;
+  chapterId.value = id;
 }
 </script>

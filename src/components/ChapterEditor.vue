@@ -76,7 +76,7 @@
 import { computed, ref, watch } from 'vue';
 
 import { VariableAttribute } from 'src/util/helper';
-import { findVariableValue, VariableType } from 'src/util/editor';
+import { findVariableValue, VariableType, parseHTMLString } from 'src/util/editor';
 
 export type Formatter = 'bold' | 'italic' | 'underline' | 'strikeThrough' 
 | 'justifyLeft' | 'justifyCenter' | 'justifyRight' | 'justifyFull' 
@@ -290,11 +290,6 @@ function handlePaste(e: ClipboardEvent) {
     })
     selection.collapseToEnd();
   }
-}
-
-function parseHTMLString(content: string): Document {
-  const parser = new DOMParser();
-  return parser.parseFromString(content, 'text/html');
 }
 
 function formatContent(content: string): string {

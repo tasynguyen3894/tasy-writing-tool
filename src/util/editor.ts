@@ -13,7 +13,23 @@ export interface VariableMeta {
 export interface Variable {
   id: string;
   name: string;
-  metas: VariableMeta[];
+  metas?: VariableMeta[];
+}
+
+export function parseHTMLString(content: string): Document {
+  const parser = new DOMParser();
+  return parser.parseFromString(content, 'text/html');
+}
+
+export function formatChapterContent(characters: Variable[], objects: Variable[], content: string): string {
+  const doc = parseHTMLString(content);
+  doc.body.querySelectorAll(`[${VariableAttribute.variable}]`).forEach(node => {
+    const variable = node.getAttribute(VariableAttribute.variable);
+    if(variable != null) {
+      node.textContent = findVariableValue(characters, objects, variable);
+    }
+  });
+  return doc.body.innerHTML;
 }
 
 export function findVariableValue(characters: Variable[], objects: Variable[], variable: string): string {
@@ -47,7 +63,7 @@ function findMetaValue(variables: Variable[], id: string, name: boolean, meta?: 
   if(variable) {
     if(name) {
       return variable.name;
-    } else if(meta) {
+    } else if(variable.metas && meta) {
       return variable.metas.find(item => item.key == meta)?.value || '';
     }
   }
