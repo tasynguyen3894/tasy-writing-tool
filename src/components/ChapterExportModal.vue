@@ -14,7 +14,7 @@
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Cancel" v-close-popup />
-        <q-btn flat label="Export" @click="exportChapter()" />
+        <q-btn flat label="Export" @click="exportChapter()" :loading="isExporting" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -48,6 +48,7 @@ const chapterStore = useChapterStore();
 
 const isShow = ref<boolean>(props.modelValue);
 const content = ref<string>('');
+const isExporting = ref<boolean>(false);
 
 onMounted(() => {
   updateContent();
@@ -90,9 +91,12 @@ function exportChapter() {
   if(props.chapterId) {
     const id = props.chapterId;
     openExportDialog().then(url => {
+      isExporting.value = true;
       chapterStore.exportChapter(id, url).then(result => {
         isShow.value = false;
         $q.notify('Updated');
+      }).finally(() => {
+        isExporting.value = false;
       })
     })
   }
