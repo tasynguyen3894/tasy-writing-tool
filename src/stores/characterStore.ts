@@ -5,23 +5,26 @@ import { ICharacterCreate, ICharacterRead, ICharacterUpdate } from 'src/models/C
 import { ICharacterExtraCreate, ICharacterExtraRead } from 'src/models/CharacterExtra';
 import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
+import { useService } from 'src/services/useService';
 
 export const useCharacterStore = defineStore('character', () => {
   const characters = ref<ICharacterRead[]>([]);
   const projectStore = useProjectStore();
+  const characterService = useService().getCharacterService();
 
   function init(): Promise<void> {
-    return new Promise((resolve) => {
-      if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.FetchCharacters, payload: {}, path: projectStore.projectPath})
+    if(projectStore.projectPath) {
+      const projectId = projectStore.projectPath;
+      return new Promise((resolve) => {
+        characterService.getCharacters(projectId)
           .then((result: ICharacterRead[]) => {
             characters.value = result;
             resolve();
           })
-      } else {
-        return Promise.resolve();
-      }
-    });
+      });
+    } else {
+      return Promise.resolve();
+    }
   }
 
   function findCharacter(id: string): ICharacterRead | undefined {
@@ -31,7 +34,7 @@ export const useCharacterStore = defineStore('character', () => {
   function createCharacter(data: ICharacterCreate): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.CreateCharacter, payload: { data }, path: projectStore.projectPath})
+        characterService.createCharacter(projectStore.projectPath, data)
           .then((result: ICharacterRead) => {
             characters.value.push(result);
             resolve(true);
@@ -45,7 +48,7 @@ export const useCharacterStore = defineStore('character', () => {
   function updateCharacter(id: string, data: ICharacterUpdate): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.UpdateCharacter, payload: { id, data }, path: projectStore.projectPath})
+        characterService.updateCharacter(projectStore.projectPath, id, data)
           .then((result: ICharacterRead) => {
             characters.value = characters.value.map(character => {
               if(character.id !== id) {
@@ -67,7 +70,7 @@ export const useCharacterStore = defineStore('character', () => {
   function removeCharacter(id: string): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.RemoveCharacter, payload: { id }, path: projectStore.projectPath})
+        characterService.removeCharacter(projectStore.projectPath, id)
           .then((result: boolean) => {
             if(result) {
               characters.value = characters.value.filter(character => character.id !== id);
@@ -110,7 +113,7 @@ export const useCharacterStore = defineStore('character', () => {
   function removeExtra(characterId: string, id: string): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.RemoveCharacterExtra, payload: { id }, path: projectStore.projectPath})
+        characterService.removeCharacterExtra(projectStore.projectPath, id)
           .then((result: boolean) => {
             characters.value = characters.value.map(character => {
               if(character.id !== characterId || !character.metas) {
@@ -132,7 +135,7 @@ export const useCharacterStore = defineStore('character', () => {
   function createExtra(data: ICharacterExtraCreate): Promise<void> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.CreateCharacterExtra, payload: { data }, path: projectStore.projectPath})
+        characterService.createCharacterExtra(projectStore.projectPath, data)
           .then((result: ICharacterExtraRead | boolean) => {
             if(result instanceof Boolean) {
               resolve();

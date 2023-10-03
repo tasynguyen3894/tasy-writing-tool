@@ -5,15 +5,17 @@ import { IOBjectUpdate, IObjectCreate, IObjectRead } from 'src/models/Object';
 import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
 import { IObjectExtraCreate, IObjectExtraRead } from 'src/models/ObjectExtra';
+import { useService } from 'src/services/useService';
 
 export const useObjectStore = defineStore('object', () => {
   const objects = ref<IObjectRead[]>([]);
   const projectStore = useProjectStore();
+  const objectService = useService().getObjectService();
 
   function init(): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.FetchObjects, payload: {}, path: projectStore.projectPath})
+        objectService.getObjects(projectStore.projectPath)
           .then((result: IObjectRead[]) => {
             objects.value = result;
             resolve();
@@ -31,7 +33,7 @@ export const useObjectStore = defineStore('object', () => {
   function createObject(data: IObjectCreate): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.CreateObject, payload: { data }, path: projectStore.projectPath})
+        objectService.createObject(projectStore.projectPath, data)
           .then((result: IObjectRead) => {
             objects.value.push(result);
             resolve(true);
@@ -45,7 +47,7 @@ export const useObjectStore = defineStore('object', () => {
   function updateObject(id: string, data: IOBjectUpdate): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.UpdateObject, payload: { id, data }, path: projectStore.projectPath})
+        objectService.updateObject(projectStore.projectPath, id, data)
           .then((result: IObjectRead) => {
             objects.value = objects.value.map(object => {
               if(object.id !== id) {
@@ -73,7 +75,7 @@ export const useObjectStore = defineStore('object', () => {
   function removeObject(id: string): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.RemoveObject, payload: { id }, path: projectStore.projectPath})
+        objectService.removeObject(projectStore.projectPath, id)
           .then((result: boolean) => {
             if(result) {
               objects.value = objects.value.filter(object => object.id !== id);
@@ -116,7 +118,7 @@ export const useObjectStore = defineStore('object', () => {
   function removeExtra(characterId: string, id: string): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.RemoveObjectExtra, payload: { id }, path: projectStore.projectPath})
+        objectService.removeObjectExtra(projectStore.projectPath, id)
           .then((result: boolean) => {
             objects.value = objects.value.map(object => {
               if(object.id !== characterId || !object.metas) {
@@ -138,7 +140,7 @@ export const useObjectStore = defineStore('object', () => {
   function createExtra(data: IObjectExtraCreate): Promise<void> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.CreateObjectExtra, payload: { data }, path: projectStore.projectPath})
+        objectService.createObjectExtra(projectStore.projectPath, data)
           .then((result: IObjectExtraRead | boolean) => {
             if(result instanceof Boolean) {
               resolve();
