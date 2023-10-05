@@ -13,6 +13,7 @@ import { Routes } from 'src/models/Api'
 import { IOBjectUpdate, IObjectCreate } from 'src/models/Object';
 import { IObjectExtraCreate } from 'src/models/ObjectExtra';
 import { IConfig } from 'src/models/Config';
+import { IGroupCreate, IGroupUpdate } from 'src/models/Group';
 
 export const CharacterMethods: string[] = [
   Routes.FetchCharacters,
@@ -41,7 +42,10 @@ export const ObjectMethods: string[] = [
 ];
 
 export const GroupMethods: string[] = [
-  Routes.FetchGroups
+  Routes.FetchGroups,
+  Routes.CreateGroup,
+  Routes.RemoveGroup,
+  Routes.UpdateGroup
 ];
 
 export const ConfigMethods: string[] = [
@@ -131,6 +135,15 @@ export class ApiRouter {
         const GroupApiInstance = new GroupApi(connection);
         if(method === Routes.FetchGroups) {
           promise = GroupApiInstance.fetch();
+        }
+        if(method === Routes.CreateGroup) {
+          promise = GroupApiInstance.create(payload as { data: IGroupCreate });
+        }
+        if(method === Routes.UpdateGroup) {
+          promise = GroupApiInstance.update(payload as { data: IGroupUpdate, id: string });
+        }
+        if(method === Routes.RemoveGroup) {
+          promise = GroupApiInstance.remove(payload as { id: string });
         }
       }
       if(ConfigMethods.includes(method)) {

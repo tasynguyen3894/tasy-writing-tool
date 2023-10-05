@@ -3,7 +3,7 @@ import { Routes } from 'src/models/Api';
 import { IChapterReadItem, IChapterCreate, IChapterUpdate } from 'src/models/Chapter';
 import { ICharacterCreate, ICharacterRead, ICharacterUpdate } from 'src/models/Character';
 import { ICharacterExtraCreate, ICharacterExtraRead } from 'src/models/CharacterExtra';
-import { IGroupRead } from './models/Group';
+import { IGroupCreate, IGroupRead, IGroupUpdate } from './models/Group';
 import { IOBjectUpdate, IObjectCreate, IObjectRead } from 'src/models/Object';
 import { IObjectExtraCreate } from './models/ObjectExtra';
 import { IConfig, IConfigRead } from 'src/models/Config';
@@ -56,8 +56,29 @@ type FetchGroupApi = ApiCalling<{
   payload: {}
 }, IGroupRead[]>;
 
+type CreateGroupApi = ApiCalling<{
+  method: Routes.CreateGroup,
+  payload: {
+    data: IGroupCreate
+  }
+}, IGroupRead[]>;
 
-type GroupApi = FetchGroupApi;
+type RemoveGroupApi = ApiCalling<{
+  method: Routes.RemoveGroup,
+  payload: {
+    id: string
+  }
+}, boolean>;
+
+type UpdateGroupApi = ApiCalling<{
+  method: Routes.UpdateGroup,
+  payload: {
+    id: string,
+    data: IGroupUpdate
+  }
+}, IGroupRead>;
+
+type GroupApi = FetchGroupApi | CreateGroupApi | RemoveGroupApi | UpdateGroupApi;
 
 type FetchCharacterApi = ApiCalling<{
   method: Routes.FetchCharacters,

@@ -11,6 +11,7 @@ export enum RouterNames {
   ProjectChapterDetailPage = 'ProjectChapterDetailPage',
   ProjectGroupPage = 'ProjectGroupPage',
   ProjectObjectDetailPage = 'ProjectObjectDetailPage',
+  ProjectGroupDetailPage = 'ProjectGroupDetailPage'
 }
 
 const routes: RouteRecordRaw[] = [
@@ -73,6 +74,11 @@ const routes: RouteRecordRaw[] = [
         path: '/groups',
         component: () => import('pages/GroupList.vue'),
         name: RouterNames.ProjectGroupPage
+      },
+      {
+        path: '/groups/:id',
+        component: () => import('pages/GroupDetail.vue'),
+        name: RouterNames.ProjectGroupDetailPage
       },
     ],
   },

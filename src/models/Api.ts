@@ -19,5 +19,8 @@ export enum Routes {
   FetchConfig = 'FetchConfig',
   CreateConfig = 'CreateConfig',
   RemoveConfig = 'CreateConfig',
-  ExportChapter = 'ExportChapter'
+  ExportChapter = 'ExportChapter',
+  CreateGroup = 'CreateGroup',
+  UpdateGroup = 'UpdateGroup',
+  RemoveGroup = 'RemoveGroup'
 }

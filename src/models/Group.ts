@@ -5,7 +5,7 @@ export const Migration = {
 export interface IGroup {
   title: string,
   description: string,
-  parent_id?: string[],
+  parent_id?: string,
 }
 
 export interface IGroupRead extends IGroup {
