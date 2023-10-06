@@ -1,18 +1,20 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
-import { IChapterReadItem, IChapter } from 'src/models/Chapter';
+import { IChapterReadItem, IChapter, IChapterCreate, IChapterUpdate } from 'src/models/Chapter';
 import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
+import { useService } from 'src/services/useService';
 
 export const useChapterStore = defineStore('chapter', () => {
   const chapters = ref<IChapterReadItem[]>([]);
   const projectStore = useProjectStore();
+  const chapterService = useService().getChapterService();
 
   function init(): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.FetchChapters, payload: {}, path: projectStore.projectPath })
+        chapterService.getChapters(projectStore.projectPath)
           .then((result: IChapterReadItem[]) => {
             chapters.value = result;
             resolve();
@@ -30,7 +32,7 @@ export const useChapterStore = defineStore('chapter', () => {
   function remove(id: string): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.RemoveChapter, payload: { id }, path: projectStore.projectPath})
+        chapterService.removeChapter(projectStore.projectPath, id)
           .then((result: boolean) => {
             if(result) {
               chapters.value = chapters.value.filter(chapter => chapter.id !== id);
@@ -45,19 +47,11 @@ export const useChapterStore = defineStore('chapter', () => {
     });
   }
 
-  function create(data: IChapter): Promise<void> {
+  function create(data: IChapterCreate): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
-        window.Native.api({
-          method: Routes.CreateChapter,
-          payload: {
-            data: {
-              ...data,
-              tags: data.tags ? data.tags.join(',') : ''
-            },
-          },
-          path: projectStore.projectPath
-        }).then((result: IChapterReadItem) => {
+        chapterService.createChapter(projectStore.projectPath, data)
+          .then((result: IChapterReadItem) => {
             chapters.value.push(result);
             resolve();
           })
@@ -86,20 +80,11 @@ export const useChapterStore = defineStore('chapter', () => {
     });
   }
 
-  function update(id: string, data: IChapter): Promise<void> {
+  function update(id: string, data: IChapterUpdate): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
-        window.Native.api({
-          method: Routes.UpdateChapter,
-          payload: {
-            id,
-            data: {
-              ...data,
-              tags: data.tags ? data.tags.join(',') : ''
-            },
-          },
-          path: projectStore.projectPath
-        }).then((result: IChapterReadItem) => {
+        chapterService.updateChapter(projectStore.projectPath, id, data)
+         .then((result: IChapterReadItem) => {
             chapters.value = chapters.value.map(chapter => {
               if(chapter.id === result.id) {
                 return result;
@@ -123,4 +108,4 @@ export const useChapterStore = defineStore('chapter', () => {
     remove,
     exportChapter
   }
-})
+});

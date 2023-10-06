@@ -4,15 +4,17 @@ import { defineStore } from 'pinia';
 import { IGroupCreate, IGroupRead, IGroupUpdate } from 'src/models/Group';
 import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
+import { useService } from 'src/services/useService';
 
 export const useGroupStore = defineStore('group', () => {
   const groups = ref<IGroupRead[]>([]);
   const projectStore = useProjectStore();
+  const groupService = useService().getGroupService();
 
   function init(): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.FetchGroups, payload: {}, path: projectStore.projectPath })
+        groupService.getGroups(projectStore.projectPath)
           .then((result: IGroupRead[]) => {
             groups.value = result;
             resolve();
@@ -26,16 +28,11 @@ export const useGroupStore = defineStore('group', () => {
   function create(data: IGroupCreate): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
-        window.Native.api({
-          method: Routes.CreateGroup,
-          payload: {
-            data
-          },
-          path: projectStore.projectPath
-        }).then((result: IGroupRead) => {
+        groupService.createGroup(projectStore.projectPath, data)
+          .then((result: IGroupRead) => {
             groups.value.push(result);
             resolve();
-          })
+          });
       } else {
         return Promise.resolve();
       }
@@ -49,7 +46,7 @@ export const useGroupStore = defineStore('group', () => {
   function remove(id: string): Promise<boolean> {
     return new Promise((resolve) => {
       if(projectStore.projectPath) {
-        window.Native.api({  method: Routes.RemoveGroup, payload: { id }, path: projectStore.projectPath})
+        groupService.removeGroup(projectStore.projectPath, id)
           .then((result: boolean) => {
             if(result) {
               groups.value = groups.value.filter(group => group.id !== id);
@@ -67,16 +64,8 @@ export const useGroupStore = defineStore('group', () => {
   function update(id: string, data: IGroupUpdate): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
-        window.Native.api({
-          method: Routes.UpdateGroup,
-          payload: {
-            id,
-            data: {
-              ...data
-            },
-          },
-          path: projectStore.projectPath
-        }).then((result: IGroupRead) => {
+        groupService.updateGroup(projectStore.projectPath, id, data)
+          .then((result: IGroupRead) => {
             groups.value = groups.value.map(group => {
               if(group.id === result.id) {
                 return result;

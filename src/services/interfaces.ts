@@ -2,6 +2,8 @@ import { ICharacterRead, ICharacterCreate, ICharacterUpdate } from 'src/models/C
 import { ICharacterExtraRead, ICharacterExtraCreate } from 'src/models/CharacterExtra';
 import { IObjectRead, IObjectCreate, IOBjectUpdate } from 'src/models/Object';
 import { IObjectExtraRead, IObjectExtraCreate } from 'src/models/ObjectExtra';
+import { IGroupCreate, IGroupRead, IGroupUpdate } from 'src/models/Group';
+import { IChapterCreate, IChapterRead, IChapterUpdate } from 'src/models/Chapter';
 
 export type Fetch<T> = (projectId: string) => Promise<T[]>;
 export type Remove = (projectId: string, id: string) => Promise<boolean>;
@@ -26,8 +28,24 @@ export type IGetObjectService = () => {
   removeObjectExtra: Remove
 }
 
+export type IGetGroupService = () => {
+  getGroups: Fetch<IGroupRead>;
+  removeGroup: Remove;
+  createGroup: Create<IGroupCreate, IGroupRead>;
+  updateGroup: Update<IGroupUpdate, IGroupRead>;
+}
+
+export type IGetChapterService = () => {
+  getChapters: Fetch<IChapterRead>;
+  removeChapter: Remove;
+  createChapter: Create<IChapterCreate, IChapterRead>;
+  updateChapter: Update<IChapterUpdate, IChapterRead>;
+}
+
 export type IService = {
   getCharacterService: IGetCharacterService,
   getObjectService: IGetObjectService
+  getGroupService: IGetGroupService,
+  getChapterService: IGetChapterService
 }
 

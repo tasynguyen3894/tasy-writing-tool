@@ -1,9 +1,11 @@
 import { Routes } from 'src/models/Api';
-import { IService, IGetCharacterService, IGetObjectService } from './interfaces';
+import { IService, IGetCharacterService, IGetObjectService, IGetGroupService, IGetChapterService } from './interfaces';
 import { ICharacterCreate, ICharacterUpdate } from 'src/models/Character';
 import { ICharacterExtraCreate } from 'src/models/CharacterExtra';
 import { IObjectCreate, IOBjectUpdate } from 'src/models/Object';
 import { IObjectExtraCreate } from 'src/models/ObjectExtra';
+import { IGroupCreate, IGroupUpdate } from 'src/models/Group';
+import { IChapterCreate, IChapterUpdate } from 'src/models/Chapter';
 
 export const getCharacterService: IGetCharacterService = () => {
   return {
@@ -51,9 +53,45 @@ export const getObjectService: IGetObjectService = () => {
   }
 }
 
+export const getGroupService: IGetGroupService = () => {
+  return {
+    getGroups(projectId: string) {
+      return window.Native.api({  method: Routes.FetchGroups, payload: {}, path: projectId })
+    },
+    removeGroup(projectId: string, id: string) {
+      return window.Native.api({  method: Routes.RemoveGroup, payload: { id }, path: projectId })
+    },
+    createGroup(projectId: string, data: IGroupCreate) {
+      return window.Native.api({  method: Routes.CreateGroup, payload: { data }, path: projectId })
+    },
+    updateGroup(projectId: string, id: string, data: IGroupUpdate) {
+      return window.Native.api({  method: Routes.UpdateObject, payload: { data, id }, path: projectId })
+    }
+  }
+}
+
+export const getChapterService: IGetChapterService = () => {
+  return {
+    getChapters(projectId: string) {
+      return window.Native.api({  method: Routes.FetchChapters, payload: {}, path: projectId })
+    },
+    removeChapter(projectId: string, id: string) {
+      return window.Native.api({  method: Routes.RemoveChapter, payload: { id }, path: projectId })
+    },
+    createChapter(projectId: string, data: IChapterCreate) {
+      return window.Native.api({  method: Routes.CreateChapter, payload: { data }, path: projectId })
+    },
+    updateChapter(projectId: string, id: string, data: IChapterUpdate) {
+      return window.Native.api({  method: Routes.UpdateChapter, payload: { data, id }, path: projectId })
+    }
+  }
+}
+
 export function getElectronService(): IService {
   return {
     getCharacterService,
-    getObjectService
+    getObjectService,
+    getGroupService,
+    getChapterService
   }
 }
