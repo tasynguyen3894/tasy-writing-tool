@@ -20,14 +20,13 @@ export interface IChapterRead extends IChapter {
   id: string
 }
 
-export type IChapterCreate = Omit<IChapter, 'tags'> & {
-  tags?: string
-}
+export type IChapterCreate = IChapter
 
 export type IChapterUpdate = Partial<IChapterCreate>;
 
-export interface IChapterAfterCreated extends IChapterCreate {
-  id: string
+export interface IChapterAfterCreated extends Omit<IChapterCreate, 'tags'> {
+  id: string,
+  tags?: string
 }
 
 export type IChapterReadItem = IChapterRead;

@@ -70,7 +70,11 @@ export class ChapterApi extends BaseApi {
           .fetch({ require: false })
           .then((existedCharacter: any) => {
             if(existedCharacter) {
-              existedCharacter.save(data).then(() => {
+              const updatedData: any = data;
+              if(data.tags) {
+                updatedData.tags = data.tags.join(',');
+              }
+              existedCharacter.save(updatedData).then(() => {
                 resolve({
                   id,
                   title: data.title || existedCharacter.get('title'),

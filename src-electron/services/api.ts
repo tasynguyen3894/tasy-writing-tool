@@ -69,100 +69,99 @@ export class ApiRouter {
   }
 
   public excute(connection: Knex, method: string, payload: object): Promise<any> {
-    return new Promise((resolve, rejects) => {
-      let promise: Promise<any> = Promise.resolve(null)
-      if(CharacterMethods.includes(method)) {
-        const CharacterApiInstance = new CharacterApi(connection);
-        if(method === Routes.FetchCharacters) {
-          promise = CharacterApiInstance.fetch();
-        }
-        if(method === Routes.CreateCharacterExtra) {
-          promise = CharacterApiInstance.createExtra(payload as { data: ICharacterExtraCreate });
-        }
-        if(method === Routes.CreateCharacter) {
-          promise = CharacterApiInstance.create(payload as { data: ICharacterCreate });
-        }
-        if(method === Routes.RemoveCharacter) {
-          promise = CharacterApiInstance.remove(payload as { id: string });
-        }
-        if(method === Routes.RemoveCharacterExtra) {
-          promise = CharacterApiInstance.removeExtra(payload as { id: string });
-        }
-        if(method === Routes.UpdateCharacter) {
-          promise = CharacterApiInstance.update(payload as { id: string, data: ICharacterUpdate });
-        }
+    if(CharacterMethods.includes(method)) {
+      const CharacterApiInstance = new CharacterApi(connection);
+      switch (method) {
+        case Routes.FetchCharacters:
+          return CharacterApiInstance.fetch();
+        
+        case Routes.CreateCharacterExtra:
+          return CharacterApiInstance.createExtra(payload as { data: ICharacterExtraCreate });
+        
+        case Routes.CreateCharacter:
+          return CharacterApiInstance.create(payload as { data: ICharacterCreate });
+        
+        case Routes.RemoveCharacter:
+          return CharacterApiInstance.remove(payload as { id: string });
+        
+        case Routes.RemoveCharacterExtra:
+          return CharacterApiInstance.removeExtra(payload as { id: string });
+        
+        case Routes.UpdateCharacter:
+          return CharacterApiInstance.update(payload as { id: string, data: ICharacterUpdate });
       }
-      if(ChapterMethods.includes(method)) {
-        const ChapterApiInstance = new ChapterApi(connection);
-        if(method === Routes.FetchChapters) {
-          promise = ChapterApiInstance.fetch();
-        }
-        if(method === Routes.CreateChapter) {
-          promise = ChapterApiInstance.create(payload as { data: IChapterCreate });
-        }
-        if(method === Routes.RemoveChapter) {
-          promise = ChapterApiInstance.remove(payload as { id: string });
-        }
-        if(method === Routes.UpdateChapter) {
-          promise = ChapterApiInstance.update(payload as { id: string, data: IChapterUpdate });
-        }
-        if(method === Routes.ExportChapter) {
-          promise = ChapterApiInstance.export(payload as { id: string, pathExport: string });
-        }
+    }
+    if(ChapterMethods.includes(method)) {
+      const ChapterApiInstance = new ChapterApi(connection);
+      switch (method) {
+        case Routes.FetchChapters:
+          return ChapterApiInstance.fetch();
+        
+        case Routes.CreateChapter:
+          return ChapterApiInstance.create(payload as { data: IChapterCreate });
+        
+        case Routes.RemoveChapter:
+          return ChapterApiInstance.remove(payload as { id: string });
+        
+        case Routes.UpdateChapter:
+          return ChapterApiInstance.update(payload as { id: string, data: IChapterUpdate });
+        
+        case Routes.ExportChapter:
+          return ChapterApiInstance.export(payload as { id: string, pathExport: string });
       }
-      if(ObjectMethods.includes(method)) {
-        const ObjectApiInstance = new ObjectApi(connection);
-        if(method === Routes.FetchObjects) {
-          promise = ObjectApiInstance.fetch();
-        }
-        if(method === Routes.CreateObject) {
-          promise = ObjectApiInstance.create(payload as { data: IObjectCreate });
-        }
-        if(method === Routes.UpdateObject) {
-          promise = ObjectApiInstance.update(payload as { id: string, data: IOBjectUpdate });
-        }
-        if(method === Routes.RemoveObject) {
-          promise = ObjectApiInstance.remove(payload as { id: string });
-        }
-        if(method === Routes.CreateObjectExtra) {
-          promise = ObjectApiInstance.createExtra(payload as { data: IObjectExtraCreate });
-        }
-        if(method === Routes.RemoveObjectExtra) {
-          promise = ObjectApiInstance.removeExtra(payload as { id: string });
-        }
+    }
+    if(ObjectMethods.includes(method)) {
+      const ObjectApiInstance = new ObjectApi(connection);
+      switch (method) {
+        case Routes.FetchObjects:
+          return ObjectApiInstance.fetch();
+        
+        case Routes.CreateObject:
+          return ObjectApiInstance.create(payload as { data: IObjectCreate });
+        
+        case Routes.UpdateObject:
+          return ObjectApiInstance.update(payload as { id: string, data: IOBjectUpdate });
+        
+        case Routes.RemoveObject:
+          return ObjectApiInstance.remove(payload as { id: string });
+        
+        case Routes.CreateObjectExtra:
+          return ObjectApiInstance.createExtra(payload as { data: IObjectExtraCreate });
+        
+        case Routes.RemoveObjectExtra:
+          return ObjectApiInstance.removeExtra(payload as { id: string });
       }
-      if(GroupMethods.includes(method)) {
-        const GroupApiInstance = new GroupApi(connection);
-        if(method === Routes.FetchGroups) {
-          promise = GroupApiInstance.fetch();
-        }
-        if(method === Routes.CreateGroup) {
-          promise = GroupApiInstance.create(payload as { data: IGroupCreate });
-        }
-        if(method === Routes.UpdateGroup) {
-          promise = GroupApiInstance.update(payload as { data: IGroupUpdate, id: string });
-        }
-        if(method === Routes.RemoveGroup) {
-          promise = GroupApiInstance.remove(payload as { id: string });
-        }
+    }
+    if(GroupMethods.includes(method)) {
+      const GroupApiInstance = new GroupApi(connection);
+      switch (method) {
+        case Routes.FetchGroups:
+          return GroupApiInstance.fetch();
+        
+        case Routes.CreateGroup:
+          return GroupApiInstance.create(payload as { data: IGroupCreate });
+        
+        case Routes.UpdateGroup:
+          return GroupApiInstance.update(payload as { data: IGroupUpdate, id: string });
+        
+        case Routes.RemoveGroup:
+          return GroupApiInstance.remove(payload as { id: string });
       }
-      if(ConfigMethods.includes(method)) {
-        const ConfigApiInstance = new ConfigApi(connection);
-        if(method === Routes.FetchConfig) {
-          promise = ConfigApiInstance.fetch();
-        }
-        if(method === Routes.CreateConfig) {
-          promise = ConfigApiInstance.create(payload as { data: IConfig });
-        }
-        if(method === Routes.RemoveConfig) {
-          promise = ConfigApiInstance.remove(payload as { id: string });
-        }
+    }
+    if(ConfigMethods.includes(method)) {
+      const ConfigApiInstance = new ConfigApi(connection);
+      switch (method) {
+        case Routes.FetchConfig:
+          return ConfigApiInstance.fetch();
+        
+        case Routes.CreateConfig:
+          return ConfigApiInstance.create(payload as { data: IConfig });
+        
+        case Routes.RemoveConfig:
+          return ConfigApiInstance.remove(payload as { id: string });
       }
-      promise.then(result => {
-                connection.destroy();
-        resolve(result)
-      })
-    })
+    }
+    return Promise.resolve(null)
   }
 }
 
