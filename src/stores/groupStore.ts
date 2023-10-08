@@ -2,9 +2,9 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import { IGroupCreate, IGroupRead, IGroupUpdate } from 'src/models/Group';
-import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
 import { useService } from 'src/services/useService';
+import { findItem } from 'src/util/helper';
 
 export const useGroupStore = defineStore('group', () => {
   const groups = ref<IGroupRead[]>([]);
@@ -40,7 +40,7 @@ export const useGroupStore = defineStore('group', () => {
   }
 
   function findGroup(id: string): IGroupRead | undefined {
-    return groups.value.find(group => group.id === id);
+    return findItem<IGroupRead>(groups.value, id);
   }
 
   function remove(id: string): Promise<boolean> {

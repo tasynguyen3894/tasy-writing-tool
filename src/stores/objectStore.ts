@@ -6,6 +6,7 @@ import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
 import { IObjectExtraCreate, IObjectExtraRead } from 'src/models/ObjectExtra';
 import { useService } from 'src/services/useService';
+import { findItem } from 'src/util/helper';
 
 export const useObjectStore = defineStore('object', () => {
   const objects = ref<IObjectRead[]>([]);
@@ -27,7 +28,7 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   function findObject(id: string): IObjectRead | undefined {
-    return objects.value.find(object => object.id === id);
+    return findItem<IObjectRead>(objects.value, id);
   }
 
   function createObject(data: IObjectCreate): Promise<boolean> {

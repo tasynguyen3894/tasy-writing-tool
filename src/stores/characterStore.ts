@@ -3,9 +3,9 @@ import { defineStore } from 'pinia';
 
 import { ICharacterCreate, ICharacterRead, ICharacterUpdate } from 'src/models/Character';
 import { ICharacterExtraCreate, ICharacterExtraRead } from 'src/models/CharacterExtra';
-import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
 import { useService } from 'src/services/useService';
+import { findItem } from 'src/util/helper';
 
 export const useCharacterStore = defineStore('character', () => {
   const characters = ref<ICharacterRead[]>([]);
@@ -28,7 +28,7 @@ export const useCharacterStore = defineStore('character', () => {
   }
 
   function findCharacter(id: string): ICharacterRead | undefined {
-    return characters.value.find(character => character.id === id);
+    return findItem<ICharacterRead>(characters.value, id);
   }
 
   function createCharacter(data: ICharacterCreate): Promise<boolean> {

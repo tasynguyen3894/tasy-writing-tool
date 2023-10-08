@@ -5,6 +5,7 @@ import { IChapterReadItem, IChapter, IChapterCreate, IChapterUpdate } from 'src/
 import { Routes } from 'src/models/Api';
 import { useProjectStore } from './projectStore';
 import { useService } from 'src/services/useService';
+import { findItem } from 'src/util/helper';
 
 export const useChapterStore = defineStore('chapter', () => {
   const chapters = ref<IChapterReadItem[]>([]);
@@ -26,7 +27,7 @@ export const useChapterStore = defineStore('chapter', () => {
   }
 
   function findChapter(id: string): IChapterReadItem | undefined {
-    return chapters.value.find(chapter => chapter.id === id);
+    return findItem<IChapterReadItem>(chapters.value, id);
   }
 
   function remove(id: string): Promise<boolean> {
