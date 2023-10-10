@@ -13,6 +13,8 @@ export interface IConfig {
   value: string
 }
 
+export type IConfigCreate = Omit<IConfig, 'title'>;
+
 export interface IConfigRead extends IConfig {
   id: string
 }

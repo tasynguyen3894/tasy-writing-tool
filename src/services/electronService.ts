@@ -1,11 +1,12 @@
 import { Routes } from 'src/models/Api';
-import { IService, IGetCharacterService, IGetObjectService, IGetGroupService, IGetChapterService } from './interfaces';
+import { IService, IGetCharacterService, IGetObjectService, IGetGroupService, IGetChapterService, IGetConfigService } from './interfaces';
 import { ICharacterCreate, ICharacterUpdate } from 'src/models/Character';
 import { ICharacterExtraCreate } from 'src/models/CharacterExtra';
 import { IObjectCreate, IOBjectUpdate } from 'src/models/Object';
 import { IObjectExtraCreate } from 'src/models/ObjectExtra';
 import { IGroupCreate, IGroupUpdate } from 'src/models/Group';
 import { IChapterCreate, IChapterUpdate } from 'src/models/Chapter';
+import { IConfigCreate, IConfigRead } from 'src/models/Config';
 
 export const getCharacterService: IGetCharacterService = () => {
   return {
@@ -87,11 +88,20 @@ export const getChapterService: IGetChapterService = () => {
   }
 }
 
+export const getConfigService: IGetConfigService = () => {
+  return {
+    updateConfig(projectId: string, data: IConfigCreate) {
+      return window.Native.api({  method: Routes.CreateConfig, payload: { data }, path: projectId })
+    }
+  }
+}
+
 export function getElectronService(): IService {
   return {
     getCharacterService,
     getObjectService,
     getGroupService,
-    getChapterService
+    getChapterService,
+    getConfigService
   }
 }

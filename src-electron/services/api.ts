@@ -12,7 +12,7 @@ import { IChapterCreate, IChapterUpdate } from 'src/models/Chapter';
 import { Routes } from 'src/models/Api'
 import { IOBjectUpdate, IObjectCreate } from 'src/models/Object';
 import { IObjectExtraCreate } from 'src/models/ObjectExtra';
-import { IConfig } from 'src/models/Config';
+import { IConfigCreate } from 'src/models/Config';
 import { IGroupCreate, IGroupUpdate } from 'src/models/Group';
 
 export const CharacterMethods: string[] = [
@@ -155,7 +155,7 @@ export class ApiRouter {
           return ConfigApiInstance.fetch();
         
         case Routes.CreateConfig:
-          return ConfigApiInstance.create(payload as { data: IConfig });
+          return ConfigApiInstance.create(payload as { data: IConfigCreate });
         
         case Routes.RemoveConfig:
           return ConfigApiInstance.remove(payload as { id: string });

@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 
 import { modelFactory, ModelName } from '../models';
-import { IConfigRead, IConfig } from 'src/models/Config';
+import { IConfigRead, IConfigCreate } from 'src/models/Config';
 import { BaseApi } from './base';
 
 export function getAllConfig(connection: Knex): Promise<IConfigRead[]> {
@@ -28,7 +28,7 @@ export function getAllConfig(connection: Knex): Promise<IConfigRead[]> {
 
 export class ConfigApi extends BaseApi {
   public create(payload: {
-    data: IConfig
+    data: IConfigCreate
   }): Promise<IConfigRead | boolean> {
     return new Promise((resolve) => {
       const ConfigModel = modelFactory(this.connection).getModel(ModelName.Config);
@@ -40,12 +40,12 @@ export class ConfigApi extends BaseApi {
           }).fetch({ require: false }).then((existedConfig: any) => {
             if(existedConfig) {
               existedConfig.save({
-                title: data.title,
+                title: '',
                 value: data.value
               }).then(() => {
                 resolve({
                   id: existedConfig.get('id'),
-                  title: data.title,
+                  title: '',
                   key: data.key,
                   value: data.value
                 })

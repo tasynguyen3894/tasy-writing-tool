@@ -3,9 +3,11 @@
     <div class="row">
       <div class="col-12">
         <div class="text-h3">
-          <EditableText :text="project" />
+          <EditableConfig :text="project" :config-key="ConfigKey.project" />
         </div>
-        <div class="text-h6">{{ author }}</div>
+        <div class="text-h6">
+          <EditableConfig :text="author" :config-key="ConfigKey.author" />
+        </div>
       </div>
     </div>
     <ProjectStats />
@@ -15,8 +17,9 @@
 import { storeToRefs } from 'pinia';
 
 import { useProjectStore } from 'src/stores/projectStore';
-import EditableText from 'src/components/EditableText.vue';
+import EditableConfig from 'src/components/EditableConfig.vue';
 import ProjectStats from 'src/components/ProjectStats.vue';
+import { ConfigKey } from 'src/models/Config';
 
 const projectStore = useProjectStore();
 const { project, author } = storeToRefs(projectStore);

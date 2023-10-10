@@ -6,7 +6,7 @@ import { ICharacterExtraCreate, ICharacterExtraRead } from 'src/models/Character
 import { IGroupCreate, IGroupRead, IGroupUpdate } from './models/Group';
 import { IOBjectUpdate, IObjectCreate, IObjectRead } from 'src/models/Object';
 import { IObjectExtraCreate } from './models/ObjectExtra';
-import { IConfig, IConfigRead } from 'src/models/Config';
+import { IConfigCreate, IConfigRead } from 'src/models/Config';
 
 type ApiMessage = {
   path: string
@@ -181,7 +181,7 @@ type RemoveConfigApi = ApiCalling<{
 type CreateConfigApi = ApiCalling<{
   method: Routes.CreateConfig,
   payload: {
-    data: IConfig
+    data: IConfigCreate
   }
 }, IConfigRead>;
 

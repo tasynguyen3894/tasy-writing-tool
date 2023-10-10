@@ -9,6 +9,7 @@ import { set, remove } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
 import { ConfigKey, IConfigRead } from 'src/models/Config';
 import { Routes } from 'src/models/Api';
+import { useService } from 'src/services/useService';
 
 const configTitleByKey = {
   [ConfigKey.author]: 'author',
@@ -19,6 +20,7 @@ export const useProjectStore = defineStore('project', () => {
   const project = ref<string>('');
   const author = ref<string>('');
   const projectPath = ref<string | null>(null);
+  const configService = useService().getConfigService();
 
   function init(newProjectPath: string, newProject: string, newAuthor: string) {
     set(PROJECT_PATH_KEY, newProjectPath);
@@ -56,14 +58,8 @@ export const useProjectStore = defineStore('project', () => {
 
   function updateConfig(key: ConfigKey, value: string) {
     return new Promise<void>((resolve) => {
-      if(projectPath.value && configTitleByKey[key]) {
-        window.Native.api({ 
-          method: Routes.CreateConfig,
-          payload: { 
-            data: { key, value, title: configTitleByKey[key] }
-          },
-          path: projectPath.value 
-        })
+      if(projectPath.value) {
+        configService.updateConfig(projectPath.value, { key, value })
           .then((res: IConfigRead) => {
             if(key === ConfigKey.author) {
               author.value = res.value;
