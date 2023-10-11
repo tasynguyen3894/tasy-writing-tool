@@ -8,9 +8,11 @@ export interface IGroup {
   parent_id?: string
 }
 
-export interface IGroupRead extends IGroup {
-  id: string,
-  chapters?: string[]
+export interface IGroupReadDB extends IGroup {
+  id: string
+}
+export interface IGroupRead extends IGroupReadDB {
+  chapterIds: string[]
 }
 
 export type IGroupCreate = IGroup;

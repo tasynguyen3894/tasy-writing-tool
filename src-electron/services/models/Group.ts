@@ -7,7 +7,7 @@ export function getGroupModel(bookshelf: Bookshelf): Bookshelf.Model<any> {
     get tableName() {
       return 'group';
     }
-    chapters() {
+    chapterIds() {
       return this.hasMany(getGroupChapterModel(bookshelf))
     }
   }

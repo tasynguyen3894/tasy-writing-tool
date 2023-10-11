@@ -1,4 +1,4 @@
-import { IGroupRead, IGroupCreate, IGroupUpdate } from 'src/models/Group';
+import { IGroupRead, IGroupCreate, IGroupUpdate, IGroupReadDB } from 'src/models/Group';
 import { modelFactory, ModelName } from '../models';
 import { BaseApi } from './base';
 import { getChapter } from './db/chapter';
@@ -49,7 +49,7 @@ export class GroupApi extends BaseApi {
   public update(payload: {
     data: IGroupUpdate,
     id: string
-  }): Promise<IGroupRead | false> {
+  }): Promise<IGroupReadDB | false> {
     return new Promise((resolve) => {
       const GroupModel = modelFactory(this.connection).getModel(ModelName.Group);
       if(GroupModel) {
@@ -132,15 +132,20 @@ export class GroupApi extends BaseApi {
     return new Promise((resolve, reject) => {
       const GroupModel = modelFactory(this.connection).getModel(ModelName.Group);
       if(GroupModel) {
-        GroupModel.fetchAll().then(res => {
+        GroupModel.fetchAll({ withRelated: ['chapterIds'] }).then(res => {
           const result: IGroupRead[] = [];
           if(res.models.length > 0) {
             res.models.forEach(item => {
+              const chapterIds: string[] = [];
+              item.related('chapterIds').models.forEach((chapter: any) => {
+                chapterIds.push(chapter.get('chapter_id'))
+              })
               result.push({
                 id: item.get('id'),
                 title: item.get('title'),
                 description: item.get('description'),
-                parent_id: item.get('parent_id') || null
+                parent_id: item.get('parent_id') || null,
+                chapterIds
               });
             });
           }

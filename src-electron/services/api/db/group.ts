@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
 
 import { modelFactory, ModelName } from 'src-electron/services/models';
-import { IGroupRead } from 'src/models/Group';
+import { IGroupReadDB } from 'src/models/Group';
 
-export function getGroup(connection: Knex, id: string): Promise<IGroupRead | undefined> {
+export function getGroup(connection: Knex, id: string): Promise<IGroupReadDB | undefined> {
   const GroupModel = modelFactory(connection).getModel(ModelName.Group);
 
   if(!GroupModel) {

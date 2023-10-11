@@ -9,6 +9,12 @@
           @submit="submit"
         />
       </div>
+      <div class="col-1"></div>
+      <div class="col-6">
+        <GroupChapter
+          :group-id="group.id"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -18,10 +24,10 @@ import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
 import { useGroupStore } from 'src/stores/groupStore';
-import CharacterMeta from 'src/components/CharacterMeta.vue';
 import GroupForm from 'src/components/GroupForm.vue';
 import { RouterNames } from 'src/router/routes';
 import { IGroupCreate, IGroupRead } from 'src/models/Group';
+import GroupChapter from 'src/components/GroupChapter.vue';
 
 const $q = useQuasar();
 const route = useRoute();
@@ -31,6 +37,7 @@ const groupStore = useGroupStore();
 
 const group = computed<IGroupRead | undefined>(() => {
   if(route.params.id) {
+    console.log(route.params.id)
     return groupStore.findGroup(route.params.id as string);
   }
   return undefined;
