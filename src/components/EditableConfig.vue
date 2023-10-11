@@ -6,10 +6,10 @@
     </span>
     <span class="editable__button">
       <template v-if="isEditing" >
-        <q-btn flat icon="save" @click="updateConfigKey()" />
+        <q-btn size="small" flat :disable="content.length === 0" icon="save" @click="updateConfigKey()" />
         <q-btn flat icon="close" @click="stopEdit()" />
       </template>
-      <q-btn v-else flat icon="edit" @click="startToEdit()" />
+      <q-btn v-else flat size="0.5rem" icon="edit" @click="startToEdit()" />
     </span>
   </div>
 </template>
