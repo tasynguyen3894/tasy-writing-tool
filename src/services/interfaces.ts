@@ -6,6 +6,7 @@ import { IGroupCreate, IGroupRead, IGroupUpdate } from 'src/models/Group';
 import { IChapterCreate, IChapterRead, IChapterUpdate } from 'src/models/Chapter';
 import { IConfigCreate, IConfigRead } from 'src/models/Config';
 
+export type Custom<T extends any[], K> = (projectId: string, ...args: T) => Promise<K>
 export type Fetch<T> = (projectId: string) => Promise<T[]>;
 export type Remove = (projectId: string, id: string) => Promise<boolean>;
 export type Create<T, K> = (projectId: string, payload: T) => Promise<K>;
@@ -34,6 +35,7 @@ export type IGetGroupService = () => {
   removeGroup: Remove;
   createGroup: Create<IGroupCreate, IGroupRead>;
   updateGroup: Update<IGroupUpdate, IGroupRead>;
+  addChapter: Custom<[groupId: string, chapter: string], boolean>;
 }
 
 export type IGetChapterService = () => {

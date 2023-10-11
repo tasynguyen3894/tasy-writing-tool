@@ -61,6 +61,23 @@ export const useGroupStore = defineStore('group', () => {
     });
   }
 
+  function addChapter(groupId: string, chapterId: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      if(projectStore.projectPath) {
+        groupService.addChapter(projectStore.projectPath, groupId, chapterId)
+          .then((result: boolean) => {
+            if(result) {
+              resolve(result);
+            } else {
+              resolve(false);
+            }
+          });
+      } else {
+        return Promise.resolve();
+      }
+    });
+  }
+
   function update(id: string, data: IGroupUpdate): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
@@ -86,6 +103,7 @@ export const useGroupStore = defineStore('group', () => {
     create,
     findGroup,
     remove,
-    update
+    update,
+    addChapter
   }
 })

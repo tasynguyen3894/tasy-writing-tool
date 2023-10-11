@@ -1,6 +1,9 @@
 import { IGroupRead, IGroupCreate, IGroupUpdate } from 'src/models/Group';
 import { modelFactory, ModelName } from '../models';
 import { BaseApi } from './base';
+import { getChapter } from './db/chapter';
+import { getGroup } from './db/group';
+import { IGroupChapterRead } from 'src/models/GroupChapter';
 
 export class GroupApi extends BaseApi {
   public create(payload: {
@@ -72,6 +75,56 @@ export class GroupApi extends BaseApi {
       } else {
         resolve(false);
       }
+    })
+  }
+
+  public addChapter(payload: {
+    groupId: string,
+    chapterId: string
+  }): Promise<boolean> {
+    if(!this.connection) {
+      return Promise.resolve(false);
+    }
+
+    const connection = this.connection;
+    return new Promise((resolve) => {
+      const { chapterId, groupId } = payload;
+      Promise.all([
+        getChapter(connection, chapterId),
+        getGroup(connection, groupId)
+      ]).then(([chapter, group]) => {
+        if(chapter && group) {
+          const GroupChapterModel = modelFactory(this.connection).getModel(ModelName.GroupChapter);
+          if(GroupChapterModel) {
+            GroupChapterModel.where({
+              group_id: groupId,
+              chapter_id: chapterId
+            })
+            .count()
+            .then((total: number) => {
+              if(total > 0) {
+                resolve(true)
+              } else {
+                connection('group_chapter').insert({ 
+                    chapter_id: chapterId,
+                    group_id: groupId,
+                    order: -1
+                  }, 
+                  ['id', 'chapter_id', 'group_id', 'order']
+                ).then((result: IGroupChapterRead[]) => {
+                  if(result.length > 0) {
+                    resolve(true)
+                  } else {
+                    resolve(false)
+                  }
+                })
+              }
+            })
+          }
+        } else {
+          resolve(false);
+        }
+      })
     })
   }
 

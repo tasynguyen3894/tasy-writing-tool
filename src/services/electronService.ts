@@ -67,6 +67,9 @@ export const getGroupService: IGetGroupService = () => {
     },
     updateGroup(projectId: string, id: string, data: IGroupUpdate) {
       return window.Native.api({  method: Routes.UpdateObject, payload: { data, id }, path: projectId })
+    },
+    addChapter(projectId: string, groupId: string, chapterId: string) {
+      return window.Native.api({  method: Routes.GroupAddChapter, payload: { groupId, chapterId }, path: projectId });
     }
   }
 }
