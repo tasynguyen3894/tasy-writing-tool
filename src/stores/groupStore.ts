@@ -67,7 +67,44 @@ export const useGroupStore = defineStore('group', () => {
         groupService.addChapter(projectStore.projectPath, groupId, chapterId)
           .then((result: boolean) => {
             if(result) {
-              resolve(result);
+              groups.value = groups.value.map(group => {
+                if(group.id !== groupId) {
+                  return group;
+                }
+
+                return {
+                  ...group,
+                  chapterIds: [...group.chapterIds, chapterId]
+                }
+              })
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
+      } else {
+        return Promise.resolve();
+      }
+    });
+  }
+
+  function removeChapter(groupId: string, chapterId: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      if(projectStore.projectPath) {
+        groupService.removeChapter(projectStore.projectPath, groupId, chapterId)
+          .then((result: boolean) => {
+            if(result) {
+              groups.value = groups.value.map(group => {
+                if(group.id !== groupId) {
+                  return group;
+                }
+
+                return {
+                  ...group,
+                  chapterIds: group.chapterIds.filter(id => id !== chapterId)
+                }
+              })
+              resolve(true);
             } else {
               resolve(false);
             }
@@ -104,6 +141,7 @@ export const useGroupStore = defineStore('group', () => {
     findGroup,
     remove,
     update,
-    addChapter
+    addChapter,
+    removeChapter
   }
 })

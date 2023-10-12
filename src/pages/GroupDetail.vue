@@ -37,7 +37,6 @@ const groupStore = useGroupStore();
 
 const group = computed<IGroupRead | undefined>(() => {
   if(route.params.id) {
-    console.log(route.params.id)
     return groupStore.findGroup(route.params.id as string);
   }
   return undefined;

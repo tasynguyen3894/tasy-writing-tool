@@ -86,7 +86,15 @@ type GroupAddChapterApi = ApiCalling<{
   }
 }, boolean>;
 
-type GroupApi = FetchGroupApi | CreateGroupApi | RemoveGroupApi | UpdateGroupApi | GroupAddChapterApi;
+type GroupRemoveChapterApi = ApiCalling<{
+  method: Routes.GroupRemoveChapter,
+  payload: {
+    groupId: string,
+    chapterId: string
+  }
+}, boolean>;
+
+type GroupApi = FetchGroupApi | CreateGroupApi | RemoveGroupApi | UpdateGroupApi | GroupAddChapterApi | GroupRemoveChapterApi;
 
 type FetchCharacterApi = ApiCalling<{
   method: Routes.FetchCharacters,

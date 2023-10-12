@@ -78,6 +78,30 @@ export class GroupApi extends BaseApi {
     })
   }
 
+  public removeChapter(payload: {
+    groupId: string,
+    chapterId: string
+  }): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if(this.connection) {
+        const { groupId, chapterId } = payload;
+        this.connection('group_chapter')
+            .where({
+              group_id: groupId,
+              chapter_id: chapterId
+            })
+            .del()
+            .then(() => {
+              resolve(true)
+            }).catch(error => {
+              reject(error);
+            });
+      } else {
+        resolve(false);
+      }
+    })
+  }
+
   public addChapter(payload: {
     groupId: string,
     chapterId: string

@@ -70,7 +70,10 @@ export const getGroupService: IGetGroupService = () => {
     },
     addChapter(projectId: string, groupId: string, chapterId: string) {
       return window.Native.api({  method: Routes.GroupAddChapter, payload: { groupId, chapterId }, path: projectId });
-    }
+    },
+    removeChapter(projectId: string, groupId: string, chapterId: string) {
+      return window.Native.api({  method: Routes.GroupRemoveChapter, payload: { groupId, chapterId }, path: projectId });
+    },
   }
 }
 
