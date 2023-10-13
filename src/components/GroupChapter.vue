@@ -1,7 +1,7 @@
 <template>
   <div v-if="group">
     <div>Chapter</div>
-    <div><q-btn icon="add" flat /></div>
+    <div><q-btn icon="add" flat @click="isShow = true" /></div>
     <q-table
       :rows="groupChapters"
       :columns="columns"
@@ -12,17 +12,22 @@
         </q-td>
       </template>
     </q-table>
+    <AddChapterIntoGroupModal
+      v-model="isShow"
+      :group-id="props.groupId"
+    />
   </div>
 </template>
 <script setup lang="ts">
 import { QTableColumn, useQuasar } from 'quasar';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { IChapterRead } from 'src/models/Chapter';
 import { useChapterStore } from 'src/stores/chapterStore';
 import { useGroupStore } from 'src/stores/groupStore';
 import { IGroupRead } from 'src/models/Group';
+import AddChapterIntoGroupModal from 'src/components/AddChapterIntoGroupModal.vue';
 
 const props = defineProps<{
   groupId: string
@@ -56,6 +61,8 @@ const columns: QTableColumn[] = [
     name: 'actions'
   }
 ];
+
+const isShow = ref<boolean>(false);
 
 const group = computed<IGroupRead | undefined>(() => {
   return groupStore.findGroup(props.groupId);
