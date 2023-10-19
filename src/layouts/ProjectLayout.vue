@@ -3,7 +3,7 @@
     <q-header elevated :class="$q.dark.isActive ? 'bg-primary' : 'bg-black'">
       <q-toolbar>
         <q-btn flat @click="leftDrawerOpen = !leftDrawerOpen" round dense icon="menu" />
-        <q-toolbar-title>Header</q-toolbar-title>
+        <q-toolbar-title style="text-transform: capitalize;">{{ title }}</q-toolbar-title>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -27,7 +27,7 @@
             </q-item-section>
 
             <q-item-section>
-              {{ item.label }}
+              {{ t('common.' + item.label, item.label) }}
             </q-item-section>
           </q-item>
 
@@ -37,7 +37,7 @@
             </q-item-section>
 
             <q-item-section>
-              Exit
+              {{ t('common.exit') }}
             </q-item-section>
           </q-item>
         </q-list>
@@ -50,8 +50,9 @@
   </q-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import { RouterNames } from 'src/router/routes';
 import { useProjectStore } from 'src/stores/projectStore';
@@ -65,6 +66,7 @@ export interface MenuItem {
   icon: string
 }
 
+const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 
@@ -72,30 +74,31 @@ const projectStore = useProjectStore();
 
 const leftDrawerOpen = ref(false);
 
+const title = ref<string>('Application');
 const items = ref<MenuItem[]>([
   {
     router: RouterNames.ProjectOverviewPage,
-    label: 'Overview',
+    label: 'overview',
     icon: 'folder'
   },
   {
     router: RouterNames.ProjectCharacterPage,
-    label: 'Character',
+    label: 'character',
     icon: 'people'
   },
   {
     router: RouterNames.ProjectObjectPage,
-    label: 'Object',
+    label: 'object',
     icon: 'data_object'
   },
   {
     router: RouterNames.ProjectChapterPage,
-    label: 'Chapter',
+    label: 'chapter',
     icon: 'description'
   },
   {
     router: RouterNames.ProjectGroupPage,
-    label: 'Group',
+    label: 'group',
     icon: 'apps'
   }
 ]);
@@ -116,6 +119,10 @@ onMounted(() => {
     })
 });
 
+watch(() => route.name, () => {
+  title.value = t('common.' + (items.value.find(item => item.router === route.name)?.label || ''));
+});
+
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
@@ -129,3 +136,10 @@ function exitProject() {
   router.push({ name: RouterNames.HomePage });
 }
 </script>
+<style scoped lang="scss">
+.menu-list {
+  .q-item__section--main {
+    text-transform: capitalize;
+  }
+}
+</style>
