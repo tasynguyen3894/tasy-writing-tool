@@ -3,7 +3,14 @@
     <q-header elevated :class="$q.dark.isActive ? 'bg-primary' : 'bg-black'">
       <q-toolbar>
         <q-btn flat @click="leftDrawerOpen = !leftDrawerOpen" round dense icon="menu" />
-        <q-toolbar-title style="text-transform: capitalize;">{{ title }}</q-toolbar-title>
+        <q-toolbar-title >
+          <div class="title-container">
+            <div class="title-container__title">{{ title }}</div>
+            <div class="title-container__dropdown">
+              <LanguageChooser />
+            </div>
+          </div>
+        </q-toolbar-title>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -59,6 +66,7 @@ import { useProjectStore } from 'src/stores/projectStore';
 import { get } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
 import { detectProjectPath } from 'src/util/helper';
+import LanguageChooser from 'src/components/LanguageChooser.vue';
 
 export interface MenuItem {
   router: RouterNames,
@@ -137,6 +145,16 @@ function exitProject() {
 }
 </script>
 <style scoped lang="scss">
+.title-container {
+  text-transform: capitalize;
+  &__title {
+    display: inline-block;
+    width: calc(100% - 95px);
+  }
+  &__dropdown {
+    display: inline-block;
+  }
+}
 .menu-list {
   .q-item__section--main {
     text-transform: capitalize;
