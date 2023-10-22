@@ -4,5 +4,15 @@ export default {
   object: 'object',
   chapter: 'chapter',
   group: 'group',
-  exit: 'exit'
+  exit: 'exit',
+  character_detail: 'character detail',
+  chapter_detail: 'chapter detail',
+  object_detail: 'object detail',
+  group_detail: 'group detail',
+  write_chapter: 'Write a chapter',
+  form: {
+    create: 'Create',
+    update: 'Update',
+    delete: 'Delete'
+  }
 }

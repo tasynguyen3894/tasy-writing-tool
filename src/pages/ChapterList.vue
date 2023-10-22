@@ -18,34 +18,36 @@
   <ChapterExportModal v-model="isShow" :chapter-id="chapterId" />
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { QTableColumn } from 'quasar';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import { useChapterStore } from 'src/stores/chapterStore';
 import { RouterNames } from 'src/router/routes';
 import ChapterExportModal from 'src/components/ChapterExportModal.vue';
 
+const { t } = useI18n();
 const router = useRouter();
 
 const chapterStore = useChapterStore();
 const { chapters } = storeToRefs(chapterStore);
 
-const columns: QTableColumn[] = [
+const columns = computed<QTableColumn[]>(() => [
   {
     field: 'title',
-    label: 'Title',
+    label: t('chapter.attribute.title'),
     name: 'title'
   },
   {
     field: 'status',
-    label: 'Status',
+    label: t('chapter.attribute.status'),
     name: 'status'
   },
   {
     field: 'description',
-    label: 'Description',
+    label: t('chapter.attribute.description'),
     name: 'description',
   },
   {
@@ -53,7 +55,7 @@ const columns: QTableColumn[] = [
     label: 'Action',
     name: 'actions'
   }
-];
+]);
 
 const isShow = ref<boolean>(false);
 const chapterId = ref<string>();

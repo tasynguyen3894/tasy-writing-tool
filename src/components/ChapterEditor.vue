@@ -31,7 +31,7 @@
       contenteditable="true">
     </div>
     <div v-if="props.wordCount">
-      <i>Letter: {{ numberOfWord.letters }}, words: {{ numberOfWord.words }}</i>
+      <i>{{ t('chapter.editor.letter') }}: {{ numberOfWord.letters }}, {{ t('chapter.editor.word') }}: {{ numberOfWord.words }}</i>
     </div>
   </div>
   <q-dialog v-model="isShowCharacter">
@@ -74,6 +74,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { VariableAttribute } from 'src/util/helper';
 import { findVariableValue, VariableType, parseHTMLString } from 'src/util/editor';
@@ -170,6 +171,8 @@ const props = withDefaults(defineProps<ChapterEditorProps>(), {
 const emits = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>();
+
+const { t } = useI18n();
 
 const editor = ref<string>('');
 const editorRawRef = ref<HTMLElement | null>(null);

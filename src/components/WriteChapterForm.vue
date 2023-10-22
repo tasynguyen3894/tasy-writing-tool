@@ -1,22 +1,22 @@
 <template>
   <q-card>
     <q-card-section>
-      <div class="text-h6">{{ chapterData.id ? 'Update' : 'Create' }} chapter</div>
+      <div class="text-h6">{{ chapterData.id ? t('chapter.title.update') : t('chapter.title.create') }}</div>
     </q-card-section>
     <q-card-section class="q-pt-none">
-      <q-input v-model="chapterData.title" label="Title" bottomSlots />
-      <q-input v-model="chapterData.description" type="textarea" label="Description" bottomSlots />
+      <q-input v-model="chapterData.title" :label="t('chapter.attribute.title')" bottomSlots />
+      <q-input v-model="chapterData.description" type="textarea" :label="t('chapter.attribute.description')" bottomSlots />
       <q-select
         :options="statusOptions"
         v-model="chapterData.status"
         map-options
         emit-value
-        label="Status"
+        :label="t('chapter.attribute.status')"
         bottomSlots
       />
       <ChapterEditor
         v-model="chapterData.content"
-        label="Content"
+        :label="t('chapter.attribute.content')"
         :characters="editorCharacter"
         :objects="editorObject"
         word-count
@@ -25,7 +25,7 @@
         ]"
       />
       <div>
-        <q-input v-model="tagContent" @keyup.enter="addTag()" label="Tags" />
+        <q-input v-model="tagContent" @keyup.enter="addTag()" :label="t('chapter.attribute.tags')" />
         <q-chip
           v-for="tag in chapterData.tags"
           :key="tag"
@@ -53,6 +53,7 @@
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import ChapterEditor, { Variable } from 'src/components/ChapterEditor.vue';
 import { useCharacterStore } from 'src/stores/characterStore';
@@ -68,6 +69,7 @@ export interface Chapter {
   tags: string[]
 }
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const props = withDefaults(defineProps<{
@@ -92,20 +94,20 @@ const characterStore = useCharacterStore();
 const { characters } = storeToRefs(characterStore);
 const { objects } = storeToRefs(objectStore);
 
-const statusOptions = [
+const statusOptions = computed<{ label: string, value: string }[]>(() => [
   {
-    label: 'Publish',
+    label: t('chapter.status.publish'),
     value: Status.PUBLISH
   },
   {
-    label: 'Draft',
+    label: t('chapter.status.draft'),
     value: Status.DRAFT
   },
   {
-    label: 'Hide',
+    label: t('chapter.status.hide'),
     value: Status.HIDE
   },
-];
+]);
 
 const chapterData = ref<Chapter>(props.data);
 const tagContent = ref<string>('');

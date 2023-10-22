@@ -5,7 +5,7 @@
         <q-btn flat @click="leftDrawerOpen = !leftDrawerOpen" round dense icon="menu" />
         <q-toolbar-title >
           <div class="title-container">
-            <div class="title-container__title">{{ title }}</div>
+            <div class="title-container__title">{{ pageTitle }}</div>
             <div class="title-container__dropdown">
               <LanguageChooser />
             </div>
@@ -57,7 +57,7 @@
   </q-layout>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
@@ -67,6 +67,7 @@ import { get } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
 import { detectProjectPath } from 'src/util/helper';
 import LanguageChooser from 'src/components/LanguageChooser.vue';
+import { usePageTitle } from 'src/hooks/usePageTitle';
 
 export interface MenuItem {
   router: RouterNames,
@@ -75,6 +76,7 @@ export interface MenuItem {
 }
 
 const { t } = useI18n();
+const { pageTitle } = usePageTitle();
 const router = useRouter();
 const route = useRoute();
 
@@ -125,10 +127,6 @@ onMounted(() => {
         });
       }
     })
-});
-
-watch(() => route.name, () => {
-  title.value = t('common.' + (items.value.find(item => item.router === route.name)?.label || ''));
 });
 
 function toggleLeftDrawer() {
