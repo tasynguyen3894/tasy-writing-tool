@@ -3,7 +3,7 @@
     <div>
       <q-btn icon="add" flat @click="isShowCreateModal = true" />
     </div>
-    <q-table
+    <CustomTable
       :rows="objects"
       :columns="columns"
     >
@@ -12,7 +12,7 @@
           <q-btn icon="edit" flat size="0.7em" @click="edit(props.row.id)" />
         </q-td>
       </template>
-    </q-table>
+    </CustomTable>
   </q-page>
   <ObjectCreateModal v-model="isShowCreateModal" />
 </template>
@@ -25,7 +25,7 @@ import { useRouter } from 'vue-router';
 import { useObjectStore } from 'src/stores/objectStore';
 import ObjectCreateModal from 'src/components/ObjectCreateModal.vue';
 import { RouterNames } from 'src/router/routes';
-
+import CustomTable from 'src/components/CustomTable.vue';
 
 const router = useRouter();
 const objectrStore = useObjectStore();

@@ -14,5 +14,9 @@ export default {
     create: 'Create',
     update: 'Update',
     delete: 'Delete'
+  },
+  table: {
+    action: 'Action',
+    record_per_page: 'Records per page:'
   }
 }

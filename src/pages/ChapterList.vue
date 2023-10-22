@@ -3,7 +3,7 @@
     <div>
       <q-btn icon="add" :to="{ name: RouterNames.ProjectWriteChapterPage }" />
     </div>
-    <q-table
+    <CustomTable
       :rows="chapters"
       :columns="columns"
     >
@@ -13,7 +13,7 @@
           <q-btn icon="description" flat size="0.7em" @click="openExportConfigDialog(props.row.id)" />
         </q-td>
       </template>
-    </q-table>
+    </CustomTable>
   </q-page>
   <ChapterExportModal v-model="isShow" :chapter-id="chapterId" />
 </template>
@@ -27,6 +27,7 @@ import { useI18n } from 'vue-i18n';
 import { useChapterStore } from 'src/stores/chapterStore';
 import { RouterNames } from 'src/router/routes';
 import ChapterExportModal from 'src/components/ChapterExportModal.vue';
+import CustomTable from 'src/components/CustomTable.vue';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -52,7 +53,7 @@ const columns = computed<QTableColumn[]>(() => [
   },
   {
     field: '',
-    label: 'Action',
+    label: t('common.table.action'),
     name: 'actions'
   }
 ]);

@@ -2,7 +2,7 @@
   <div>
     <div>Meta</div>
     <div><q-btn icon="add" flat @click="startCreateExtra()" /></div>
-    <q-table
+    <CustomTable
       :rows="metas"
       :columns="columns"
     >
@@ -12,7 +12,7 @@
           <q-btn icon="delete" flat size="0.7em" @click="remove(props.row.id)" />
         </q-td>
       </template>
-    </q-table>
+    </CustomTable>
   </div>
   <ModifyCharacterExtra
     v-model="isShowModal"
@@ -28,6 +28,7 @@ import { useQuasar } from 'quasar';
 import { IObjectExtraRead, IObjectExtraModify } from 'src/models/ObjectExtra';
 import ModifyCharacterExtra from './ModifyCharacterExtra.vue';
 import { useObjectStore } from 'src/stores/objectStore';
+import CustomTable from 'src/components/CustomTable.vue';
 
 const $q = useQuasar();
 

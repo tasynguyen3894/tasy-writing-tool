@@ -3,7 +3,7 @@
     <div>
       <q-btn icon="add" flat @click="isShowCreateModal = true" />
     </div>
-    <q-table
+    <CustomTable
       :rows="groups"
       :columns="columns"
     >
@@ -12,7 +12,7 @@
           <q-btn icon="edit" flat size="0.7em" @click="edit(props.row.id)" />
         </q-td>
       </template>
-    </q-table>
+    </CustomTable>
   </q-page>
   <GroupCreateModal v-model="isShowCreateModal" />
 </template>
@@ -25,6 +25,7 @@ import { QTableColumn } from 'quasar';
 import { useGroupStore } from 'src/stores/groupStore';
 import GroupCreateModal from 'src/components/GroupCreateModal.vue';
 import { RouterNames } from 'src/router/routes';
+import CustomTable from 'src/components/CustomTable.vue';
 
 const router = useRouter();
 
