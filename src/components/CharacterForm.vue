@@ -1,31 +1,31 @@
 <template>
   <div>
-    <div>Information</div>
+    <div>{{ t('character.information') }}</div>
     <q-input
       filled
       v-model="character.name"
-      label="Character name"
+      :label="t('character.name')"
       lazy-rules
       :rules="[ val => val && val.length > 0 || 'Please type something']"
     />
     <q-input
       filled
       v-model="character.alias"
-      label="Character alias"
+      :label="t('character.alias')"
       lazy-rules
       :rules="[ val => val && val.length > 0 || 'Please type something']"
     />
     <q-input
       filled
       v-model="character.hint"
-      label="Character hint"
+      :label="t('character.hint')"
       lazy-rules
       bottom-slots
     />
     <q-input
       filled
       v-model="character.description"
-      label="Character description"
+      :label="t('character.description')"
       type="textarea"
       lazy-rules
     />

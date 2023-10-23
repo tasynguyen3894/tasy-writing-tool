@@ -2,12 +2,12 @@
   <q-dialog v-model="isShow">
     <q-card style="min-width: 350px">
       <q-card-section class="row items-center">
-        Character Extra
+        {{ t('character.character_extra') }}
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <q-input :disable="extra.id ? true : false" :rules="[required]" dense v-model="extra.key" label="Key" />
-        <q-input dense v-model="extra.value" label="Value" type="textarea" />
+        <q-input :disable="extra.id ? true : false" :rules="[required]" dense v-model="extra.key" :label="t('character.key')" />
+        <q-input dense v-model="extra.value" :label="t('character.value')" type="textarea" />
       </q-card-section>
 
       <q-card-actions align="right">

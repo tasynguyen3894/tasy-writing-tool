@@ -18,42 +18,44 @@
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { QTableColumn } from 'quasar';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import { useCharacterStore } from 'src/stores/characterStore';
 import { RouterNames } from 'src/router/routes';
 import CharacterCreateModal from 'src/components/CharacterCreateModal.vue';
 import CustomTable from 'src/components/CustomTable.vue';
 
+const { t } = useI18n();
 const router = useRouter();
 
 const characterStore = useCharacterStore();
 const { characters } = storeToRefs(characterStore);
 
-const columns: QTableColumn[] = [
+const columns = computed<QTableColumn[]>(() => [
   {
     field: 'name',
-    label: 'Name',
+    label: t('character.name'),
     name: 'name'
   },
   {
     field: 'alias',
-    label: 'Alias',
+    label: t('character.alias'),
     name: 'alias'
   },
   {
     field: 'description',
-    label: 'Description',
+    label: t('character.description'),
     name: 'description'
   },
   {
     field: '',
-    label: 'Actions',
+    label: t('common.table.action'),
     name: 'actions'
   },
-];
+]);
 
 const isShowCreateModal = ref<boolean>(false);
 

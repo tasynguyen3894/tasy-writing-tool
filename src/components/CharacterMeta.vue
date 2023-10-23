@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>Meta</div>
+    <div>{{ t('character.character_extra') }}</div>
     <div><q-btn icon="add" flat @click="startCreateExtra()" /></div>
     <CustomTable
       :rows="metas"
@@ -21,15 +21,17 @@
   />
 </template>
 <script setup lang="ts">
-import { watch, ref } from 'vue';
+import { watch, ref, computed } from 'vue';
 import { QTableColumn } from 'quasar';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { ICharacterExtraRead, ICharacterExtraModify } from 'src/models/CharacterExtra';
 import ModifyCharacterExtra from './ModifyCharacterExtra.vue';
 import { useCharacterStore } from 'src/stores/characterStore';
 import CustomTable from 'src/components/CustomTable.vue';
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const props = withDefaults(defineProps<{
@@ -45,23 +47,23 @@ const emits = defineEmits<{
 
 const characterStore = useCharacterStore();
 
-const columns: QTableColumn[] = [
+const columns = computed<QTableColumn[]>(() => [
   {
     name: 'key',
-    label: 'Key',
+    label: t('character.key'),
     field: 'key'
   },
   {
     name: 'value',
-    label: 'Value',
+    label: t('character.value'),
     field: 'value'
   },
   {
     name: 'actions',
-    label: 'Actions',
+    label: t('common.table.action'),
     field: ''
   }
-]
+]);
 
 const data = ref<ICharacterExtraModify>({
   key: '',
