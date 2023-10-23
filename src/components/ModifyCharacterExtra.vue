@@ -11,13 +11,14 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Cancel" v-close-popup />
-        <q-btn flat label="Submit" :disable="required(extra.key) !== true" color="primary" @click="submit()" />
+        <q-btn flat :label="t('common.form.cancel')" v-close-popup />
+        <q-btn flat :label="t('common.form.submit')" :disable="required(extra.key) !== true" color="primary" @click="submit()" />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { ref, watch } from 'vue';
 
 import { ICharacterExtraModify } from 'src/models/CharacterExtra';
@@ -32,6 +33,8 @@ const emits = defineEmits<{
   (e: 'update:modelValue', value: boolean): void,
   (e: 'submit', value: ICharacterExtraModify): void
 }>();
+
+const { t } = useI18n();
 
 const isShow = ref<boolean>(props.modelValue);
 const extra = ref<ICharacterExtraModify>(props.data || {

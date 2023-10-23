@@ -10,6 +10,14 @@ export default {
   object_detail: 'chi tiết đối tượng',
   group_detail: 'chi tiết nhóm',
   write_chapter: 'soạn thảo nội dung',
+  form: {
+    create: 'Tạo',
+    update: 'Cập nhật',
+    delete: 'Xóa',
+    cancel: 'Hủy',
+    submit: 'Xác nhận',
+    add: 'Thêm'
+  },
   table: {
     action: 'Thao tác',
     record_per_page: 'Số dòng trên một trang:'

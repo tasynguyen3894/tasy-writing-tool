@@ -32,12 +32,12 @@
     <div class="q-pt-md" align="right">
       <q-btn
         v-if="props.hasRemove"
-        label="Remove"
+        :label="t('common.form.delete')"
         flat
         @click="remove()"
       />
       <q-btn
-        label="Submit"
+        :label="(props.data && props.data.id) ? t('common.form.update') : t('common.form.create')"
         color="primary"
         :disable="character.alias.length === 0 || character.name.length === 0"
         @click="submit()"
@@ -47,14 +47,16 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 
 import { ICharacterCreate } from 'src/models/Character';
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const props = withDefaults(defineProps<{
-  data?: ICharacterCreate,
+  data?: ICharacterCreate & { id?: string },
   hasRemove?: boolean
 }>(), {
   hasRemove: false

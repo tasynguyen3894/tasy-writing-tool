@@ -18,12 +18,12 @@
     <div class="q-pt-md" align="right">
       <q-btn
         v-if="props.hasRemove"
-        label="Remove"
+        :label="t('common.form.delete')"
         flat
         @click="remove()"
       />
       <q-btn
-        label="Submit"
+        :label="(props.data && props.data.id) ? t('common.form.update') : t('common.form.create')"
         color="primary"
         :disable="group.title.length === 0"
         @click="submit()"
@@ -34,13 +34,15 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { IGroupCreate } from 'src/models/Group';
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const props = withDefaults(defineProps<{
-  data?: IGroupCreate,
+  data?: IGroupCreate & { id?: string },
   hasRemove?: boolean
 }>(), {
   hasRemove: false

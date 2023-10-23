@@ -13,7 +13,10 @@ export default {
   form: {
     create: 'Create',
     update: 'Update',
-    delete: 'Delete'
+    delete: 'Delete',
+    cancel: 'Cancel',
+    submit: 'Submit',
+    add: 'Add'
   },
   table: {
     action: 'Action',

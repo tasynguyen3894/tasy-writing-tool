@@ -38,10 +38,10 @@
     </q-card-section>
     <q-card-actions align="right" class="text-primary">
       <template v-if="props.data.id" >
-        <q-btn @click="remove()" flat label="Remove" />
+        <q-btn @click="remove()" flat :label="t('common.form.delete')" />
       </template>
       <q-btn
-        :label="chapterData.id ? 'Update' : 'Create'"
+        :label="chapterData.id ? t('common.form.update') : t('common.form.create')"
         color="primary"
         @click="submit()"
         :disable="chapterData.status.length === 0 || chapterData.title.length === 0 || chapterData.content.length === 0"

@@ -66,15 +66,15 @@
       </q-card-section>
 
     <q-card-actions align="right" class="text-primary">
-      <q-btn flat label="Cancel" v-close-popup />
-      <q-btn flat label="Add" v-close-popup @click="selectVariable()" />
+      <q-btn flat :label="t('common.form.cancel')" v-close-popup />
+      <q-btn flat :label="t('common.form.add')" v-close-popup @click="selectVariable()" />
     </q-card-actions>
   </q-card>
 </q-dialog>
 </template>
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { computed, ref, watch } from 'vue';
 
 import { VariableAttribute } from 'src/util/helper';
 import { findVariableValue, VariableType, parseHTMLString } from 'src/util/editor';
