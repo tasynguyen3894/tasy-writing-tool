@@ -1,38 +1,38 @@
 <template>
   <div>
-    <div>Information</div>
+    <div>{{ t('object.information') }}</div>
     <q-input
       filled
       v-model="object.name"
-      label="Object name"
+      :label="t('object.name')"
       lazy-rules
       :rules="[ val => val && val.length > 0 || 'Please type something']"
     />
     <q-input
       filled
       v-model="object.type"
-      label="Object type"
+      :label="t('object.type')"
       lazy-rules
       :rules="[ val => val && val.length > 0 || 'Please type something']"
     />
     <q-input
       filled
       v-model="object.alias"
-      label="Object alias"
+      :label="t('object.alias')"
       lazy-rules
       :rules="[ val => val && val.length > 0 || 'Please type something']"
     />
     <q-input
       filled
       v-model="object.hint"
-      label="Object hint"
+      :label="t('object.hint')"
       lazy-rules
       bottom-slots
     />
     <q-input
       filled
       v-model="object.description"
-      label="Object description"
+      :label="t('object.description')"
       type="textarea"
       lazy-rules
     />

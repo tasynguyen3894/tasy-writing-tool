@@ -17,42 +17,44 @@
   <ObjectCreateModal v-model="isShowCreateModal" />
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { QTableColumn } from 'quasar';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import { useObjectStore } from 'src/stores/objectStore';
 import ObjectCreateModal from 'src/components/ObjectCreateModal.vue';
 import { RouterNames } from 'src/router/routes';
 import CustomTable from 'src/components/CustomTable.vue';
 
+const { t } = useI18n();
 const router = useRouter();
 const objectrStore = useObjectStore();
 const { objects } = storeToRefs(objectrStore);
 
-const columns: QTableColumn[] = [
+const columns = computed<QTableColumn[]>(() => [
   {
     field: 'name',
-    label: 'Name',
+    label: t('object.name'),
     name: 'name'
   },
   {
     field: 'type',
-    label: 'Type',
+    label: t('object.type'),
     name: 'type'
   },
   {
     field: 'description',
-    label: 'Description',
+    label: t('object.description'),
     name: 'description'
   },
   {
     field: '',
-    label: 'Action',
+    label: t(('common.table.action')),
     name: 'actions'
   }
-];
+]);
 
 const isShowCreateModal = ref<boolean>(false);
 

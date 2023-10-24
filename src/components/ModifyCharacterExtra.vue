@@ -2,7 +2,7 @@
   <q-dialog v-model="isShow">
     <q-card style="min-width: 350px">
       <q-card-section class="row items-center">
-        {{ t('character.character_extra') }}
+        {{ props.type === 'character' ? t('character.character_extra') : t('object.object_extra') }}
       </q-card-section>
 
       <q-card-section class="q-pt-none">
@@ -24,10 +24,13 @@ import { ref, watch } from 'vue';
 import { ICharacterExtraModify } from 'src/models/CharacterExtra';
 import { required } from 'src/util/helper';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: boolean,
-  data: ICharacterExtraModify | undefined
-}>();
+  data: ICharacterExtraModify | undefined,
+  type?: 'character' | 'object'
+}>(), {
+  type: 'character'
+});
 
 const emits = defineEmits<{
   (e: 'update:modelValue', value: boolean): void,
