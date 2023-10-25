@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div>Group</div>
+    <div>{{ t('group.group') }}</div>
     <q-input
       filled
       v-model="group.title"
-      label="Group name"
+      :label="t('group.name')"
       lazy-rules
       :rules="[ val => val && val.length > 0 || 'Please type something']"
     />
     <q-input
       filled
       v-model="group.description"
-      label="Group description"
+      :label="t('group.description')"
       type="textarea"
       lazy-rules
     />

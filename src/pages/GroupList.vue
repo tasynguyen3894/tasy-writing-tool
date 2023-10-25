@@ -17,38 +17,40 @@
   <GroupCreateModal v-model="isShowCreateModal" />
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { QTableColumn } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { useGroupStore } from 'src/stores/groupStore';
 import GroupCreateModal from 'src/components/GroupCreateModal.vue';
 import { RouterNames } from 'src/router/routes';
 import CustomTable from 'src/components/CustomTable.vue';
 
+const { t } = useI18n();
 const router = useRouter();
 
 const groupStore = useGroupStore();
 const { groups } = storeToRefs(groupStore);
 
-const columns: QTableColumn[] = [
+const columns = computed<QTableColumn[]>(() => [
   {
     field: 'title',
-    label: 'Title',
+    label: t('group.name'),
     name: 'title'
   },
   {
     field: 'description',
-    label: 'Description',
+    label: t('group.description'),
     name: 'description'
   },
   {
     field: '',
-    label: 'Actions',
+    label: t('common.table.action'),
     name: 'actions'
   },
-];
+]);
 
 const isShowCreateModal = ref<boolean>(false);
 

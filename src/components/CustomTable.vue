@@ -5,6 +5,9 @@
     :pagination="pagination"
     :rows-per-page-label="recordPerPage"
   >
+    <template #body-cell-status="props">
+      <slot name="body-cell-status" v-bind="props" ></slot>
+    </template>
     <template #body-cell-actions="props">
       <slot name="body-cell-actions" v-bind="props" ></slot>
     </template>

@@ -2,7 +2,7 @@ export default {
   overview: 'overview',
   character: 'character',
   object: 'object',
-  chapter: 'chapter',
+  chapter: 'Chapter',
   group: 'group',
   exit: 'exit',
   character_detail: 'character detail',

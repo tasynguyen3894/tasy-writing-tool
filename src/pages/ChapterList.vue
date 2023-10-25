@@ -7,6 +7,11 @@
       :rows="chapters"
       :columns="columns"
     >
+      <template #body-cell-status="props">
+        <q-td :props="props">
+          {{ t('chapter.status.' + props.row.status, props.row.status) }}
+        </q-td>
+      </template>
       <template #body-cell-actions="props">
         <q-td :props="props">
           <q-btn icon="edit" flat size="0.7em" @click="edit(props.row.id)" />

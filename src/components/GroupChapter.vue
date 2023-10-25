@@ -1,11 +1,16 @@
 <template>
   <div v-if="group">
-    <div>Chapter</div>
+    <div style="text-transform: capitalize;">{{ t('common.chapter') }}</div>
     <div><q-btn icon="add" flat @click="isShow = true" /></div>
     <q-table
       :rows="groupChapters"
       :columns="columns"
     >
+      <template #body-cell-status="props">
+        <q-td :props="props">
+          {{ t('chapter.status.' + props.row.status, props.row.status) }}
+        </q-td>
+      </template>
       <template #body-cell-actions="props">
         <q-td :props="props">
           <q-btn icon="delete" flat size="0.7em" @click="removeChapter(props.row.id)" />
@@ -19,6 +24,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { QTableColumn, useQuasar } from 'quasar';
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -33,34 +39,35 @@ const props = defineProps<{
   groupId: string
 }>();
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const groupStore = useGroupStore();
 const chapterStore = useChapterStore();
 const { chapters } = storeToRefs(chapterStore);
 
-const columns: QTableColumn[] = [
+const columns = computed<QTableColumn[]>(() => [
   {
     field: 'title',
-    label: 'Title',
+    label: t('chapter.attribute.title'),
     name: 'title'
   },
   {
     field: 'status',
-    label: 'Status',
+    label: t('chapter.attribute.status'),
     name: 'status'
   },
   {
     field: 'description',
-    label: 'Description',
+    label: t('chapter.attribute.description'),
     name: 'description',
   },
   {
     field: '',
-    label: 'Action',
+    label: t('common.table.action'),
     name: 'actions'
   }
-];
+]);
 
 const isShow = ref<boolean>(false);
 

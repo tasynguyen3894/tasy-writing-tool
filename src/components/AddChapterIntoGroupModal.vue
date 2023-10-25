@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 
 import { useChapterStore } from 'src/stores/chapterStore';
@@ -18,6 +19,7 @@ const emits = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>();
 
+const { t } = useI18n();
 const $q = useQuasar();
 const groupStore = useGroupStore();
 const chapterStore = useChapterStore();
@@ -72,12 +74,12 @@ function addChapter() {
   <q-dialog v-model="isShow">
     <q-card style="min-width: 750px">
       <q-card-section>
-        <div class="text-h6">Add chapter</div>
+        <div class="text-h6">{{ t('group.add_chapter') }}</div>
       </q-card-section>
       <q-card-section>
         <div class="chapter-content">
           <q-select
-            label="Chapters"
+            :label="t('common.chapter')"
             v-model="chapterId"
             :options="chapterOptions"
             map-options

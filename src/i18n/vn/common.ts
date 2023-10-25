@@ -2,7 +2,7 @@ export default {
   overview: 'tổng quan',
   character: 'nhân vật',
   object: 'đối tượng',
-  chapter: 'tập',
+  chapter: 'Tập',
   group: 'nhóm',
   exit: 'thoát',
   character_detail: 'chi tiết nhân vật',
