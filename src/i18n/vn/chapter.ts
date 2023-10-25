@@ -8,7 +8,9 @@ export default {
   },
   editor: {
     letter: 'Số ký tự',
-    word: 'Số từ'
+    word: 'Số từ',
+    add_variable: 'Thêm thông tin động',
+    variable_type: 'Loại thông tin'
   },
   status: {
     publish: 'Công khai',

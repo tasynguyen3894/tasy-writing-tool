@@ -1,7 +1,7 @@
 export default {
   overview: 'overview',
-  character: 'character',
-  object: 'object',
+  character: 'Character',
+  object: 'Object',
   chapter: 'Chapter',
   group: 'group',
   exit: 'exit',

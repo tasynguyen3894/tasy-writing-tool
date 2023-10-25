@@ -37,23 +37,26 @@
   <q-dialog v-model="isShowCharacter">
     <q-card style="min-width: 350px">
       <q-card-section>
-        <div class="text-h6">Add variable info</div>
+        <div class="text-h6">{{ t('chapter.editor.add_variable') }}</div>
       </q-card-section>
       <q-card-section class="q-pt-none">
         <q-select
           v-model="variableType"
-          :options="[VariableType.character, VariableType.object]"
-          label="Variable type"
+          :options="variableOptions"
+          option-label="label"
+          option-value="value"
+          :label="t('chapter.editor.variable_type')"
         />
         <q-select
+          v-if="variableType"
           v-model="variableSelected"
           :options="variableType === VariableType.character ? props.characters : props.objects"
-          label="Character"
+          :label="variableType === VariableType.character ? t('common.character') : t('common.object')"
           option-label="name"
         />
         <template v-if="variableSelected">
           <q-select
-            label="Meta"
+            :label="t('character.character_extra')"
             v-model="metaSelected"
             :options="metaOptions"
             option-value="value"
@@ -168,6 +171,7 @@ const props = withDefaults(defineProps<ChapterEditorProps>(), {
   toolbars: () => [],
   wordCount: false
 });
+
 const emits = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>();
@@ -178,7 +182,7 @@ const editor = ref<string>('');
 const editorRawRef = ref<HTMLElement | null>(null);
 const isShowCharacter = ref<boolean>(false);
 const currentRange = ref<Range | null>(null);
-const variableType = ref<string>(VariableType.character);
+const variableType = ref<string>();
 const variableSelected = ref<Variable | undefined>(undefined);
 const metaSelected = ref<{ label: string, value: string } | undefined>(undefined);
 const savedVariables = ref<SavedVariable[]>([]);
@@ -195,6 +199,19 @@ const metaOptions = computed<{ label: string, value: string }[]>(() => {
   }
   return [];
 });
+
+const variableOptions = computed<{ label: string, value: string }[]>(() => {
+  return [
+    {
+      label: t('common.character'),
+      value: VariableType.character
+    },
+    {
+      label: t('common.object'),
+      value: VariableType.object
+    }
+  ]
+})
 
 watch(variableSelected, () => {
   if(variableSelected.value) {

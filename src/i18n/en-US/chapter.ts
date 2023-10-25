@@ -8,7 +8,9 @@ export default {
   },
   editor: {
     letter: 'Letter(s)',
-    word: 'Word(s)'
+    word: 'Word(s)',
+    add_variable: 'Add variable',
+    variable_type: 'Variable type'
   },
   status: {
     publish: 'Publish',
