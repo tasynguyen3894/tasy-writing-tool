@@ -1,5 +1,3 @@
-
-
 export function get(key: string): any {
   return window.Store.run({ type: 'get', payload: { key } })
 }

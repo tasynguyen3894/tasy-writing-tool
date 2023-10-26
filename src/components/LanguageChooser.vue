@@ -28,9 +28,13 @@
 import { useI18n } from 'vue-i18n';
 import CountryFlag from 'vue-country-flag-next';
 
+import { set } from 'src/util/storage';
+import { STORAGE_LANGUAGE } from 'boot/i18n';
+
 const { locale } = useI18n();
 
 function changeLocale(lang: 'en-US' | 'vn') {
   locale.value = lang;
+  set(STORAGE_LANGUAGE, lang);
 }
 </script>
