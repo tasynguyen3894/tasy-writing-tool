@@ -47,7 +47,8 @@ export const GroupMethods: string[] = [
   Routes.RemoveGroup,
   Routes.UpdateGroup,
   Routes.GroupAddChapter,
-  Routes.GroupRemoveChapter
+  Routes.GroupRemoveChapter,
+  Routes.GroupUpdateChapterOrder
 ];
 
 export const ConfigMethods: string[] = [
@@ -154,6 +155,9 @@ export class ApiRouter {
 
         case Routes.GroupRemoveChapter:
           return GroupApiInstance.removeChapter(payload as { groupId: string, chapterId: string });
+
+        case Routes.GroupUpdateChapterOrder:
+          return GroupApiInstance.updateChapterOrder(payload as { groupId: string, chapterId: string, order: number });
       }
     }
     if(ConfigMethods.includes(method)) {

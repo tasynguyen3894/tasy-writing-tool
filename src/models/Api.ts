@@ -24,5 +24,6 @@ export enum Routes {
   UpdateGroup = 'UpdateGroup',
   RemoveGroup = 'RemoveGroup',
   GroupAddChapter = 'GroupAddChapter',
-  GroupRemoveChapter = 'GroupRemoveChapter'
+  GroupRemoveChapter = 'GroupRemoveChapter',
+  GroupUpdateChapterOrder = 'GroupUpdateChapterOrder'
 }

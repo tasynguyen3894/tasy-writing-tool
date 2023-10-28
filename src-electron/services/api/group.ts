@@ -102,6 +102,39 @@ export class GroupApi extends BaseApi {
     })
   }
 
+  public updateChapterOrder(payload: {
+    groupId: string,
+    chapterId: string,
+    order: number
+  }): Promise<boolean> {
+    if(!this.connection) {
+      return Promise.resolve(false);
+    }
+
+    const connection = this.connection;
+    return new Promise((resolve) => {
+      const GroupChapterModel = modelFactory(connection).getModel(ModelName.GroupChapter);
+      if(GroupChapterModel) {
+        const { groupId, chapterId, order } = payload;
+        GroupChapterModel
+          .where({
+            group_id: groupId,
+            chapter_id: chapterId
+          })
+          .fetch({ require: false })
+          .then((existedGroupChapter: any) => {
+            if(existedGroupChapter) {
+              existedGroupChapter.save({ order }).then(() => {
+                resolve(true);
+              });
+            } else {
+              resolve(false)
+            }
+          });
+      }
+    })
+  }
+
   public addChapter(payload: {
     groupId: string,
     chapterId: string
