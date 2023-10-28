@@ -12,7 +12,10 @@ export interface IGroupReadDB extends IGroup {
   id: string
 }
 export interface IGroupRead extends IGroupReadDB {
-  chapterIds: string[]
+  chapters: {
+    id: string,
+    order?: number | null
+  }[]
 }
 
 export type IGroupCreate = IGroup;

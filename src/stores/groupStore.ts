@@ -74,7 +74,10 @@ export const useGroupStore = defineStore('group', () => {
 
                 return {
                   ...group,
-                  chapterIds: [...group.chapterIds, chapterId]
+                  chapterIds: [...group.chapters, {
+                    id: chapterId,
+                    order: null
+                  }]
                 }
               })
               resolve(true);
@@ -101,7 +104,7 @@ export const useGroupStore = defineStore('group', () => {
 
                 return {
                   ...group,
-                  chapterIds: group.chapterIds.filter(id => id !== chapterId)
+                  chapters: group.chapters.filter(({ id }) => id !== chapterId)
                 }
               })
               resolve(true);

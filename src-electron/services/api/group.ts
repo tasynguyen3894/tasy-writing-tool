@@ -193,16 +193,22 @@ export class GroupApi extends BaseApi {
           const result: IGroupRead[] = [];
           if(res.models.length > 0) {
             res.models.forEach(item => {
-              const chapterIds: string[] = [];
+              const chapters: {
+                id: string,
+                order?: number | null
+              }[] = [];
               item.related('chapterIds').models.forEach((chapter: any) => {
-                chapterIds.push(chapter.get('chapter_id'))
+                chapters.push({
+                  id: chapter.get('chapter_id'),
+                  order: chapter.get('order')
+                })
               })
               result.push({
                 id: item.get('id'),
                 title: item.get('title'),
                 description: item.get('description'),
                 parent_id: item.get('parent_id') || null,
-                chapterIds
+                chapters
               });
             });
           }

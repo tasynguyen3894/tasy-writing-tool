@@ -76,7 +76,7 @@ const group = computed<IGroupRead | undefined>(() => {
 })
 
 const groupChapters = computed<IChapterRead[]>(() => {
-  return chapters.value.filter(({ id }) => group.value && group.value.chapterIds.includes(id) ? true : false);
+  return chapters.value.filter(({ id }) => group.value && group.value.chapters.some(chapter => id !== chapter.id) ? true : false);
 });
 
 function handleRemove(chapterId: string) {
