@@ -123,6 +123,7 @@ export class GroupApi extends BaseApi {
           })
           .fetch({ require: false })
           .then((existedGroupChapter: any) => {
+            console.log(existedGroupChapter, payload)
             if(existedGroupChapter) {
               existedGroupChapter.save({ order }).then(() => {
                 resolve(true);

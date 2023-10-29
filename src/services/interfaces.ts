@@ -37,6 +37,7 @@ export type IGetGroupService = () => {
   updateGroup: Update<IGroupUpdate, IGroupRead>;
   addChapter: Custom<[groupId: string, chapter: string], boolean>;
   removeChapter: Custom<[groupId: string, chapter: string], boolean>;
+  orderChapter: Custom<[groupId: string, chapter: string, order: number], boolean>;
 }
 
 export type IGetChapterService = () => {

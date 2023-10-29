@@ -74,6 +74,9 @@ export const getGroupService: IGetGroupService = () => {
     removeChapter(projectId: string, groupId: string, chapterId: string) {
       return window.Native.api({  method: Routes.GroupRemoveChapter, payload: { groupId, chapterId }, path: projectId });
     },
+    orderChapter(projectId: string, groupId: string, chapterId: string, order: number) {
+      return window.Native.api({  method: Routes.GroupUpdateChapterOrder, payload: { groupId, chapterId, order }, path: projectId });
+    }
   }
 }
 

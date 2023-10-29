@@ -95,7 +95,7 @@ type GroupRemoveChapterApi = ApiCalling<{
 }, boolean>;
 
 type GroupOrderChapterApi = ApiCalling<{
-  method: Routes.GroupRemoveChapter,
+  method: Routes.GroupUpdateChapterOrder,
   payload: {
     groupId: string,
     chapterId: string,

@@ -137,6 +137,36 @@ export const useGroupStore = defineStore('group', () => {
     });
   }
 
+  function updateChapterOrder(groupId: string, chapterId: string, order: number): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if(projectStore.projectPath) {
+        groupService.orderChapter(projectStore.projectPath, groupId, chapterId, order)
+          .then((result: boolean) => {
+            groups.value = groups.value.map(group => {
+              if(group.id === groupId) {
+                return {
+                  ...group,
+                  chapters: group.chapters.map(chapter => {
+                    if(chapter.id !== chapterId) {
+                      return chapter;
+                    }
+                    return {
+                      ...chapter,
+                      order
+                    }
+                  })
+                }
+              }
+              return group;
+            })
+            resolve(result);
+          }).catch(error => reject(error))
+      } else {
+        return Promise.resolve();
+      }
+    });
+  }
+
   return {
     groups,
     init,
@@ -145,6 +175,7 @@ export const useGroupStore = defineStore('group', () => {
     remove,
     update,
     addChapter,
-    removeChapter
+    removeChapter,
+    updateChapterOrder
   }
 })

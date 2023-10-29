@@ -11,9 +11,9 @@
           {{ t('chapter.status.' + props.row.status, props.row.status) }}
         </q-td>
       </template>
-      <template #body-cell-actions="props">
-        <q-td :props="props">
-          <q-btn icon="delete" flat size="0.7em" @click="removeChapter(props.row.id)" />
+      <template #body-cell-actions="cellProps">
+        <q-td :props="cellProps">
+          <q-btn icon="delete" flat size="0.7em" @click="removeChapter(cellProps.row.id)" />
         </q-td>
       </template>
     </q-table>
@@ -76,7 +76,7 @@ const group = computed<IGroupRead | undefined>(() => {
 })
 
 const groupChapters = computed<IChapterRead[]>(() => {
-  return chapters.value.filter(({ id }) => group.value && group.value.chapters.some(chapter => id !== chapter.id) ? true : false);
+  return chapters.value.filter(({ id }) => group.value && group.value.chapters.some(chapter => id === chapter.id) ? true : false);
 });
 
 function handleRemove(chapterId: string) {
