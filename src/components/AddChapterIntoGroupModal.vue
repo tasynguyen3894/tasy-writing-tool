@@ -36,7 +36,7 @@ const chapterOptions = computed<{ label: string, value: string }[]>(() => {
   const currentGroup = group.value;
 
   return chapters.value
-    .filter(chaper => !currentGroup.chapterIds.includes(chaper.id))
+    .filter(chaper => !currentGroup.chapters.some(groupChapter => groupChapter.id === chaper.id))
     .map(chapter => ({
       label: chapter.title,
       value: chapter.id

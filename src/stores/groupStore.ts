@@ -74,7 +74,7 @@ export const useGroupStore = defineStore('group', () => {
 
                 return {
                   ...group,
-                  chapterIds: [...group.chapters, {
+                  chapters: [...group.chapters, {
                     id: chapterId,
                     order: null
                   }]

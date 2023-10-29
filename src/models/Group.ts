@@ -14,7 +14,7 @@ export interface IGroupReadDB extends IGroup {
 export interface IGroupRead extends IGroupReadDB {
   chapters: {
     id: string,
-    order?: number | null
+    order: number | null
   }[]
 }
 

@@ -5,6 +5,7 @@
     <q-table
       :rows="groupChapters"
       :columns="columns"
+      :rows-per-page-options="[0]"
     >
       <template #body-cell-status="props">
         <q-td :props="props">
@@ -75,8 +76,24 @@ const group = computed<IGroupRead | undefined>(() => {
   return groupStore.findGroup(props.groupId);
 })
 
-const groupChapters = computed<IChapterRead[]>(() => {
-  return chapters.value.filter(({ id }) => group.value && group.value.chapters.some(chapter => id === chapter.id) ? true : false);
+const groupChapters = computed<Array<IChapterRead & { order: number | null }>>(() => {
+  if(!group.value) {
+    return [];
+  }
+
+  const result: Array<IChapterRead & { order: number | null }> = []; 
+
+  group.value.chapters.forEach(groupChapter => {
+    const chapter = chapters.value.find(chapter => chapter.id === groupChapter.id);
+    if(chapter) {
+      result.push({
+        ...chapter,
+        order: groupChapter.order
+      });
+    }
+  })
+
+  return result.sort((a, b) => { return (a.order || -1) > (b.order || -1) ? 1 : -1; });
 });
 
 function handleRemove(chapterId: string) {
