@@ -1,7 +1,10 @@
 <template>
   <div v-if="group">
     <div style="text-transform: capitalize;">{{ t('common.chapter') }}</div>
-    <div><q-btn icon="add" flat @click="isShow = true" /></div>
+    <div>
+      <q-btn icon="add" flat @click="isShow = true" />
+      <q-btn icon="sort" flat @click="openSortModal()" />
+    </div>
     <q-table
       :rows="groupChapters"
       :columns="columns"
@@ -18,9 +21,14 @@
         </q-td>
       </template>
     </q-table>
+    
     <AddChapterIntoGroupModal
       v-model="isShow"
       :group-id="props.groupId"
+    />
+    <SortChapterModal
+      v-model="isShowSortModal"
+      :sort-items="sortableItems"
     />
   </div>
 </template>
@@ -30,11 +38,13 @@ import { QTableColumn, useQuasar } from 'quasar';
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
+
 import { IChapterRead } from 'src/models/Chapter';
 import { useChapterStore } from 'src/stores/chapterStore';
 import { useGroupStore } from 'src/stores/groupStore';
 import { IGroupRead } from 'src/models/Group';
 import AddChapterIntoGroupModal from 'src/components/AddChapterIntoGroupModal.vue';
+import SortChapterModal, { SortItem } from 'src/components/SortChapterModal.vue';
 
 const props = defineProps<{
   groupId: string
@@ -46,6 +56,7 @@ const $q = useQuasar();
 const groupStore = useGroupStore();
 const chapterStore = useChapterStore();
 const { chapters } = storeToRefs(chapterStore);
+
 
 const columns = computed<QTableColumn[]>(() => [
   {
@@ -71,10 +82,13 @@ const columns = computed<QTableColumn[]>(() => [
 ]);
 
 const isShow = ref<boolean>(false);
+const isShowSortModal = ref<boolean>(false);
 
 const group = computed<IGroupRead | undefined>(() => {
   return groupStore.findGroup(props.groupId);
-})
+});
+
+const sortableItems = ref<SortItem[]>([]);
 
 const groupChapters = computed<Array<IChapterRead & { order: number | null }>>(() => {
   if(!group.value) {
@@ -100,6 +114,17 @@ function handleRemove(chapterId: string) {
   groupStore.removeChapter(props.groupId, chapterId).then(() => {
     $q.notify('Deleted');
   })
+}
+
+function openSortModal() {
+  sortableItems.value = groupChapters.value.map(item => {
+    return {
+      id: item.id,
+      title: item.title,
+      order: item.order ? item.order : -1
+    }
+  });
+  isShowSortModal.value = true;
 }
 
 function removeChapter(chapterId: string) {
