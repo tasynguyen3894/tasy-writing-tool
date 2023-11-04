@@ -15,6 +15,8 @@
     "test:unit:ci": "vitest run"
   },
   "dependencies": {
+    "@commitlint/cli": "^18.2.0",
+    "@commitlint/config-conventional": "^18.1.0",
     "@quasar/extras": "^1.16.4",
     "bookshelf": "^1.2.0",
     "electron-builder": "^24.6.3",
@@ -43,6 +45,7 @@
     "@typescript-eslint/parser": "^5.10.0",
     "@vue/test-utils": "^2.4.1",
     "autoprefixer": "^10.4.2",
+    "devmoji": "^2.3.0",
     "electron": "^26.0.0",
     "electron-packager": "^17.1.1",
     "eslint": "^8.10.0",
@@ -50,11 +53,16 @@
     "eslint-plugin-vue": "^9.0.0",
     "prettier": "^2.5.1",
     "typescript": "^4.5.4",
-    "vitest": "^0.34.0"
+    "vitest": "^0.34.0",
+    "yorkie": "^2.0.0"
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
+  },
+  "gitHooks": {
+    "commit-msg": "commitlint",
+    "prepare-commit-msg": "devmoji -e --lint"
   }
 }
