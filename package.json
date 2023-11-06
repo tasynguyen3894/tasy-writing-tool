@@ -62,7 +62,6 @@
     "yarn": ">= 1.21.1"
   },
   "gitHooks": {
-    "commit-msg": "commitlint",
     "prepare-commit-msg": "devmoji -e --lint"
   }
 }
