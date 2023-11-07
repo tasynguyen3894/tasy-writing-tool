@@ -196,7 +196,7 @@ export class GroupApi extends BaseApi {
             res.models.forEach(item => {
               const chapters: {
                 id: string,
-                order?: number | null
+                order: number | null
               }[] = [];
               item.related('chapterIds').models.forEach((chapter: any) => {
                 chapters.push({

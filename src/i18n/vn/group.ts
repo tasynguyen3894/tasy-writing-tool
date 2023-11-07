@@ -2,5 +2,6 @@ export default {
   group: 'Nhóm',
   name: 'Tên',
   description: 'Chi tiết',
-  add_chapter: 'Thêm tập'
+  add_chapter: 'Thêm tập',
+  sort: 'Sắp xếp'
 }

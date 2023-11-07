@@ -4,7 +4,7 @@
   >
     <q-card style="min-width: 350px">
       <q-card-section>
-        <div class="text-h6">{{ t('chapter.editor.add_variable') }}</div>
+        <div class="text-h6">{{ t('group.sort') }}</div>
       </q-card-section>
       <q-card-section class="q-pt-none">
         <DraggableComponent
@@ -23,7 +23,7 @@
 
       <q-card-actions align="right" class="text-primary">
         <q-btn flat :label="t('common.form.cancel')" v-close-popup />
-        <q-btn flat :label="t('common.form.add')" v-close-popup />
+        <q-btn flat :label="t('group.sort')" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -62,6 +62,10 @@ watch(() => props.modelValue, () => {
     isShow.value = props.modelValue;
   }
 });
+
+watch(() => props.sortItems, (() => {
+  sortableItems.value = props.sortItems;
+}))
 
 watch(isShow, () => {
   emits('update:modelValue', isShow.value);
