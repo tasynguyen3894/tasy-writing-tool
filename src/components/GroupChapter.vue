@@ -29,6 +29,7 @@
     <SortChapterModal
       v-model="isShowSortModal"
       :sort-items="sortableItems"
+      @submit="handleSort"
     />
   </div>
 </template>
@@ -136,5 +137,16 @@ function removeChapter(chapterId: string) {
   }).onOk(() => {
     handleRemove(chapterId)
   });
+}
+
+function handleSort(items: SortItem[]) {
+  const sortChapterPromises: Promise<boolean>[] = [];
+  items.forEach((item, index) => {
+    sortChapterPromises.push(groupStore.updateChapterOrder(props.groupId, item.id, index + 1));
+  });
+  Promise.all(sortChapterPromises).then(() => {
+    $q.notify('Sorted!');
+    isShowSortModal.value = false;
+  })
 }
 </script>

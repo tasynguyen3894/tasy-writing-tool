@@ -23,7 +23,7 @@
 
       <q-card-actions align="right" class="text-primary">
         <q-btn flat :label="t('common.form.cancel')" v-close-popup />
-        <q-btn flat :label="t('group.sort')" v-close-popup />
+        <q-btn flat :label="t('group.sort')" @click="submit()" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -48,7 +48,8 @@ const props = withDefaults(defineProps<{
 });
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
+  (e: 'update:modelValue', value: boolean): void,
+  (e: 'submit', value: SortItem[]): void
 }>();
 
 const { t } = useI18n();
@@ -70,6 +71,10 @@ watch(() => props.sortItems, (() => {
 watch(isShow, () => {
   emits('update:modelValue', isShow.value);
 });
+
+function submit() {
+  emits('submit', sortableItems.value);
+}
 </script>
 <style lang="scss" scoped>
 .sortable {
