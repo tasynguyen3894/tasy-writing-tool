@@ -122,7 +122,7 @@ function remove(id: string) {
 
 function handleRemove(id: string) {
   characterStore.removeExtra(props.characterId, id).then(() => {
-    $q.notify('Deleted');
+    $q.notify(t('common.form.deleted'));
   });
 }
 </script>

@@ -23,6 +23,7 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { useObjectStore } from 'src/stores/objectStore';
 import { IOBjectUpdate, IObjectRead } from 'src/models/Object';
@@ -30,6 +31,7 @@ import ObjectMeta from 'src/components/ObjectMeta.vue';
 import ObjectForm from 'src/components/ObjectForm.vue';
 import { RouterNames } from 'src/router/routes';
 
+const { t } = useI18n();
 const $q = useQuasar();
 const route = useRoute();
 const router = useRouter();
@@ -46,7 +48,7 @@ const object = computed<IObjectRead | undefined>(() => {
 function remove() {
   if(object.value) {
     objectStore.removeObject(object.value.id).then(() => {
-      $q.notify('Deleted');
+      $q.notify(t('common.form.deleted'));
       router.push(({ name: RouterNames.ProjectObjectPage }));
     });
   }

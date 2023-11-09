@@ -22,6 +22,7 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { useGroupStore } from 'src/stores/groupStore';
 import GroupForm from 'src/components/GroupForm.vue';
@@ -29,6 +30,7 @@ import { RouterNames } from 'src/router/routes';
 import { IGroupCreate, IGroupRead } from 'src/models/Group';
 import GroupChapter from 'src/components/GroupChapter.vue';
 
+const { t } = useI18n();
 const $q = useQuasar();
 const route = useRoute();
 const router = useRouter();
@@ -45,7 +47,7 @@ const group = computed<IGroupRead | undefined>(() => {
 function remove() {
   if(group.value) {
     groupStore.remove(group.value.id).then(() => {
-      $q.notify('Deleted');
+      $q.notify(t('common.form.deleted'));
       router.push(({ name: RouterNames.ProjectCharacterPage }));
     });
   }

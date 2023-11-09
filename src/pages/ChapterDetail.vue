@@ -15,11 +15,13 @@
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import WriteChapterForm, { Chapter } from 'src/components/WriteChapterForm.vue';
 import { useChapterStore } from 'src/stores/chapterStore';
 import { RouterNames } from 'src/router/routes';
 
+const { t } = useI18n();
 const $q = useQuasar();
 const router = useRouter();
 const route = useRoute();
@@ -46,7 +48,7 @@ const chapterData = computed<Chapter & { id: string } | undefined>(() => {
 function remove() {
   if(chapterData.value) {
     chapterStore.remove(chapterData.value.id).then(() => {
-      $q.notify('Deleted');
+      $q.notify(t('common.form.deleted'));
       router.push(({ name: RouterNames.ProjectChapterPage }));
     });
   }

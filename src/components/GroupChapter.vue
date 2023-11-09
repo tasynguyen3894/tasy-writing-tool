@@ -113,7 +113,7 @@ const groupChapters = computed<Array<IChapterRead & { order: number | null }>>((
 
 function handleRemove(chapterId: string) {
   groupStore.removeChapter(props.groupId, chapterId).then(() => {
-    $q.notify('Deleted');
+    $q.notify(t('common.form.deleted'));
   })
 }
 

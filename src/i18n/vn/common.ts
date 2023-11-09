@@ -16,7 +16,8 @@ export default {
     delete: 'Xóa',
     cancel: 'Hủy',
     submit: 'Xác nhận',
-    add: 'Thêm'
+    add: 'Thêm',
+    deleted: 'Đã xóa'
   },
   table: {
     action: 'Thao tác',

@@ -16,7 +16,8 @@ export default {
     delete: 'Delete',
     cancel: 'Cancel',
     submit: 'Submit',
-    add: 'Add'
+    add: 'Add',
+    deleted: 'Deleted'
   },
   table: {
     action: 'Action',

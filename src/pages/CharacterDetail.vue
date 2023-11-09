@@ -23,6 +23,7 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { useCharacterStore } from 'src/stores/characterStore';
 import { ICharacterCreate, ICharacterRead } from 'src/models/Character';
@@ -30,6 +31,7 @@ import CharacterMeta from 'src/components/CharacterMeta.vue';
 import CharacterForm from 'src/components/CharacterForm.vue';
 import { RouterNames } from 'src/router/routes';
 
+const { t } = useI18n();
 const $q = useQuasar();
 const route = useRoute();
 const router = useRouter();
@@ -46,7 +48,7 @@ const character = computed<ICharacterRead | undefined>(() => {
 function remove() {
   if(character.value) {
     characterStore.removeCharacter(character.value.id).then(() => {
-      $q.notify('Deleted');
+      $q.notify(t('common.form.deleted'));
       router.push(({ name: RouterNames.ProjectCharacterPage }));
     });
   }
