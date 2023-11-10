@@ -12,11 +12,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { useObjectStore } from 'src/stores/objectStore';
 import { IObjectCreate } from 'src/models/Object';
 import ObjectForm from 'src/components/ObjectForm.vue';
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const props = withDefaults(defineProps<{
@@ -51,7 +53,7 @@ function submit(data: IObjectCreate) {
     });
   } else {
     objectStore.createObject({...data}).then(() => {
-      $q.notify('Created');
+      $q.notify(t('common.form.created'));
       isShow.value = false;
     });
   }

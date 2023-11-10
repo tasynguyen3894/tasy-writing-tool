@@ -12,11 +12,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { useGroupStore } from 'src/stores/groupStore';
 import { IGroupCreate } from 'src/models/Group';
 import GroupForm from 'src/components/GroupForm.vue';
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const props = withDefaults(defineProps<{
@@ -45,7 +47,7 @@ watch(isShow, () => {
 
 function submit(data: IGroupCreate) {
   groupStore.create({...data}).then(() => {
-    $q.notify('Created');
+    $q.notify(t('common.form.created'));
     isShow.value = false;
   });
 }

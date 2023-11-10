@@ -14,11 +14,13 @@
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import WriteChapterForm, { Chapter } from 'src/components/WriteChapterForm.vue';
 import { useChapterStore } from 'src/stores/chapterStore';
 import { RouterNames } from 'src/router/routes';
 
+const { t } = useI18n();
 const $q = useQuasar();
 const router = useRouter();
 
@@ -40,7 +42,7 @@ function submit(data: Chapter) {
     status: data.status,
     tags: data.tags
   }).then(() => {
-    $q.notify('Created');
+    $q.notify(t('common.form.created'));
     router.push({
       name: RouterNames.ProjectChapterPage
     })
