@@ -56,7 +56,7 @@ function remove() {
 function submit(data: IGroupCreate) {
   if(group.value) {
     groupStore.update(group.value.id, {...data}).then(() => {
-      $q.notify('Updated');
+      $q.notify(t('common.form.updated'));
     })
   }
 }

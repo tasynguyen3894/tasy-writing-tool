@@ -63,7 +63,7 @@ function submit(data: ICharacterCreate) {
       });
     } else {
       characterStore.updateCharacter(character.value.id, {...data}).then(() => {
-        $q.notify('Updated');
+        $q.notify(t('common.form.updated'));
       })
     }
   }

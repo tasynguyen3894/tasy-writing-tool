@@ -44,7 +44,7 @@ function stopEdit() {
 function updateConfigKey() {
   useProjectStore().updateConfig(props.configKey, content.value).then(() => {
     stopEdit();
-    $q.notify('Updated');
+    $q.notify(t('common.form.updated'));
   });
 }
 </script>

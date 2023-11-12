@@ -95,7 +95,7 @@ function submit(value: ICharacterExtraModify) {
       character_id: props.characterId
     }).then(() => {
       isShowModal.value = false;
-      $q.notify(value.id ? 'Updated' : t('common.form.created'));
+      $q.notify(value.id ? t('common.form.updated') : t('common.form.created'));
     })
   }
 }

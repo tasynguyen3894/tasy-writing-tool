@@ -18,7 +18,8 @@ export default {
     submit: 'Xác nhận',
     add: 'Thêm',
     deleted: 'Đã xóa',
-    created: 'Đã tạo mới'
+    created: 'Đã tạo mới',
+    updated: 'Đã cập nhật'
   },
   table: {
     action: 'Thao tác',

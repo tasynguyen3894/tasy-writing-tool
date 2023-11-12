@@ -66,7 +66,7 @@ function submit(data: Chapter) {
         tags: data.tags
       }
     ).then(() => {
-      $q.notify('Updated');
+      $q.notify(t('common.form.updated'));
       router.push({
         name: RouterNames.ProjectChapterPage
       })

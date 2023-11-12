@@ -63,7 +63,7 @@ function submit(data: IOBjectUpdate) {
       });
     } else {
       objectStore.updateObject(object.value.id, {...data}).then(() => {
-        $q.notify('Updated');
+        $q.notify(t('common.form.updated'));
       })
     }
   }

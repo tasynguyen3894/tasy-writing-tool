@@ -23,6 +23,7 @@
 import { ref, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { useCharacterStore } from 'src/stores/characterStore';
 import { useObjectStore } from 'src/stores/objectStore';
@@ -40,6 +41,7 @@ const emits = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>();
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const { characters } = storeToRefs(useCharacterStore());
@@ -94,7 +96,7 @@ function exportChapter() {
       isExporting.value = true;
       chapterStore.exportChapter(id, url).then(result => {
         isShow.value = false;
-        $q.notify('Updated');
+        $q.notify(t('common.form.updated'));
       }).finally(() => {
         isExporting.value = false;
       })
