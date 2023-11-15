@@ -19,7 +19,8 @@ export default {
     add: 'Thêm',
     deleted: 'Đã xóa',
     created: 'Đã tạo mới',
-    updated: 'Đã cập nhật'
+    updated: 'Đã cập nhật',
+    sorted: 'Đã cập nhật'
   },
   table: {
     action: 'Thao tác',

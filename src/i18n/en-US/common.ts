@@ -19,7 +19,8 @@ export default {
     add: 'Add',
     deleted: 'Deleted',
     created: 'Created',
-    updated: 'Updated'
+    updated: 'Updated',
+    sorted: 'Sorted'
   },
   table: {
     action: 'Action',

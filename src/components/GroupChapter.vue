@@ -145,7 +145,7 @@ function handleSort(items: SortItem[]) {
     sortChapterPromises.push(groupStore.updateChapterOrder(props.groupId, item.id, index + 1));
   });
   Promise.all(sortChapterPromises).then(() => {
-    $q.notify('Sorted!');
+    $q.notify(t('common.form.sorted'));
     isShowSortModal.value = false;
   })
 }
