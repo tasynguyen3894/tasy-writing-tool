@@ -4,6 +4,7 @@
   "description": "A Quasar Project",
   "productName": "Quasar App",
   "author": "tasynguyen3894 <thaisang.nguyen3894@gmail.com>",
+  "repository": "https://github.com/tasynguyen3894/tasy-writing-tool",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
@@ -19,7 +20,6 @@
     "@commitlint/config-conventional": "^18.1.0",
     "@quasar/extras": "^1.16.4",
     "bookshelf": "^1.2.0",
-    "electron-builder": "^24.6.3",
     "electron-store": "^8.1.0",
     "html-to-docx": "^1.8.0",
     "jsdom": "^22.1.0",
@@ -54,7 +54,8 @@
     "prettier": "^2.5.1",
     "typescript": "^4.5.4",
     "vitest": "^0.34.0",
-    "yorkie": "^2.0.0"
+    "yorkie": "^2.0.0",
+    "electron-builder": "^24.6.3"
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",
