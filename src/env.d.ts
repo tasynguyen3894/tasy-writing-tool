@@ -7,3 +7,5 @@ declare namespace NodeJS {
     VUE_ROUTER_BASE: string | undefined;
   }
 }
+
+declare const APP_VERSION: string;

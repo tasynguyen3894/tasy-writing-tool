@@ -1,4 +1,5 @@
-import { app, BrowserWindow, nativeTheme, ipcMain, autoUpdater } from 'electron';
+import { app, BrowserWindow, nativeTheme, ipcMain } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import os from 'os';
 
@@ -10,7 +11,8 @@ import { get, set, remove } from './services/storage';
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
 
-
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 try {
   if (platform === 'win32' && nativeTheme.shouldUseDarkColors === true) {
@@ -140,4 +142,6 @@ app.on('activate', () => {
   if (mainWindow === undefined) {
     createWindow();
   }
+
+  autoUpdater.checkForUpdates();
 });

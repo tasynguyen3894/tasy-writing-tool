@@ -70,7 +70,9 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       // env: {},
-      // rawDefine: {}
+      rawDefine: {
+        APP_VERSION: JSON.stringify(process.env.npm_package_version)
+      },
       // ignorePublicFolder: true,
       // minify: false,
       // polyfillModulePreload: true,
