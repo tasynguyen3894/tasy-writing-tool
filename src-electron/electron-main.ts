@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme, ipcMain } from 'electron';
+import { app, BrowserWindow, nativeTheme, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import os from 'os';
@@ -130,7 +130,57 @@ function createWindow() {
   });
 }
 
-app.whenReady().then(createWindow);
+function showMessage(type: string, message: string) {
+  if(mainWindow) {
+    mainWindow.webContents.send('updateMessage', {
+      message,
+      type
+    });
+  }
+}
+
+/*New Update Available*/
+autoUpdater.on('update-available', () => {
+  showMessage('update-available', `Installing new update version...`)
+  autoUpdater.downloadUpdate();
+});
+
+autoUpdater.on('update-not-available', () => {
+  showMessage('update-not-available', `No update available. Current version ${app.getVersion()}`);
+});
+
+/*Download Completion Message*/
+autoUpdater.on('update-downloaded', () => {
+  showUpdateRestart(app.getVersion())
+  // showMessage('update-downloaded', `Update downloaded. Current version ${app.getVersion()}`);
+  showMessage('update-downloaded', '');
+});
+
+function showUpdateRestart(message: string) {
+  if(mainWindow) {
+    const dialogOpts: Parameters<typeof dialog.showMessageBox>[0] = {
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Application Update',
+      message,
+      detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+    }
+  
+    dialog.showMessageBox(mainWindow, dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) autoUpdater.quitAndInstall()
+    })
+  }
+}
+
+autoUpdater.on('error', (info) => {
+  showMessage('error', info.message);
+});
+
+
+app.whenReady().then(() => {
+  createWindow();
+  autoUpdater.checkForUpdates()
+});
 
 app.on('window-all-closed', () => {
   if (platform !== 'darwin') {

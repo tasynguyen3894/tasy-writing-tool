@@ -54,6 +54,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+    <UpdateVersion />
   </q-layout>
 </template>
 <script setup lang="ts">
@@ -67,6 +68,7 @@ import { get } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
 import { detectProjectPath } from 'src/util/helper';
 import LanguageChooser from 'src/components/LanguageChooser.vue';
+import UpdateVersion from 'src/components/UpdateVersion.vue'
 import { usePageTitle } from 'src/hooks/usePageTitle';
 
 export interface MenuItem {

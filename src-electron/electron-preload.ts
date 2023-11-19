@@ -48,3 +48,9 @@ contextBridge.exposeInMainWorld(
    run: (args: any) => ipcRenderer.invoke('storage', args)
   }
 )
+
+contextBridge.exposeInMainWorld('UpdateVerion', {
+  updateMessage: (callback: any) => {
+    ipcRenderer.on('updateMessage', callback);
+  }
+});

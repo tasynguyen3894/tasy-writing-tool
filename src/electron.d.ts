@@ -236,6 +236,9 @@ export {};
 
 declare global {
   interface Window {
+    UpdateVerion: {
+      updateMessage: (a: any) => Promise<any>
+    },
     Native: {
       api: (a: Api) => Promise<any>,
       project: (a: ProjectType) => any,
