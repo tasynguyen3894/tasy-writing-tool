@@ -2,19 +2,19 @@
   <q-dialog v-model="isShow" persistent>
     <q-card style="min-width: 750px">
       <q-card-section>
-        <div class="text-h6">Export chapter</div>
+        <div class="text-h6">{{ t('chapter.export.title') }}</div>
       </q-card-section>
       <q-card-section>
         <div class="chapter-content">
-          <div>Chapter content:</div>
+          <div>{{ t('chapter.export.content') }}:</div>
           <div class="chapter-content__preview">
             <div v-html="content"></div>
           </div>
         </div>
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" v-close-popup />
-        <q-btn flat label="Export" @click="exportChapter()" :loading="isExporting" />
+        <q-btn flat :label="t('common.form.cancel')" v-close-popup />
+        <q-btn flat :label="t('chapter.export.export')" @click="exportChapter()" :loading="isExporting" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -96,7 +96,7 @@ function exportChapter() {
       isExporting.value = true;
       chapterStore.exportChapter(id, url).then(result => {
         isShow.value = false;
-        $q.notify(t('common.form.updated'));
+        $q.notify(t('chapter.export.exported'));
       }).finally(() => {
         isExporting.value = false;
       })

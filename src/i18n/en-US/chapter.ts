@@ -20,5 +20,11 @@ export default {
   title: {
     create: 'Write new chapter',
     update: 'Update chapter',
+  },
+  export: {
+    title: 'Export chapter',
+    content: 'Content',
+    export: 'Export',
+    exported: 'Exported'
   }
 }

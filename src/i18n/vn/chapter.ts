@@ -20,5 +20,11 @@ export default {
   title: {
     create: 'Viết chương mới',
     update: 'Cập nhật chương',
+  },
+  export: {
+    title: 'Xuất file nội dung',
+    content: 'Nội dung',
+    export: 'Xuất file',
+    exported: 'Đã xuất file'
   }
 }
