@@ -7,18 +7,11 @@
         <div class="text-h6">{{ t('group.sort') }}</div>
       </q-card-section>
       <q-card-section class="q-pt-none">
-        <DraggableComponent
-          v-model="sortableItems"
-          @start="drag=true" 
-          @end="drag=false" 
-          item-key="id"
-        >
-          <template #item="{element}">
-            <div class="sortable__item">
-              {{ element.title }}
-            </div>
-          </template>
-        </DraggableComponent>
+        <VueDraggable ref="el" v-model="sortableItems">
+          <div class="sortable__item" v-for="item in sortableItems" :key="item.id">
+            {{ item.title }}
+          </div>
+        </VueDraggable>
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
@@ -31,7 +24,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import DraggableComponent from 'vuedraggable';
+import { VueDraggable } from 'vue-draggable-plus'
 
 export interface SortItem {
   id: string,
@@ -54,7 +47,6 @@ const emits = defineEmits<{
 
 const { t } = useI18n();
 
-const drag = ref<boolean>(false);
 const isShow = ref<boolean>(props.modelValue);
 const sortableItems = ref<SortItem[]>(props.sortItems);
 
@@ -80,6 +72,10 @@ function submit() {
 .sortable {
   &__item {
     cursor: grab;
+    background: #c4c1c1;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
   }
 }
 </style>
