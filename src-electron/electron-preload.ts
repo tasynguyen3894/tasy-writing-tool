@@ -40,6 +40,7 @@ contextBridge.exposeInMainWorld(
    project: (args: any) => ipcRenderer.invoke('project', args),
    api: (args: any) => ipcRenderer.invoke('api', args),
    export: () => ipcRenderer.invoke('export'),
+   exportGroup: () => ipcRenderer.invoke('export_group')
   }
 );
 

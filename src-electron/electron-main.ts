@@ -4,7 +4,7 @@ import path from 'path';
 import os from 'os';
 
 import { selectProject, projectIsSetup, setup, getProjectData } from './services/project';
-import { selectExportDirectory } from './services/export';
+import { selectExportDirectory, selectExportGroupDirectory } from './services/export';
 import { ApiHandler } from './services/api';
 import { get, set, remove } from './services/storage';
 
@@ -89,6 +89,10 @@ function createWindow() {
 
   ipcMain.handle('export', (event, e: any) => {
     return selectExportDirectory(mainWindow);
+  })
+
+  ipcMain.handle('export_group', (event, e: any) => {
+    return selectExportGroupDirectory(mainWindow);
   })
 
   ipcMain.handle('project', (event, e: ProjectEvent) => {

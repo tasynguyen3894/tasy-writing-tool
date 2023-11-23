@@ -242,7 +242,8 @@ declare global {
     Native: {
       api: (a: Api) => Promise<any>,
       project: (a: ProjectType) => any,
-      export: () => Promise<any>
+      export: () => Promise<any>,
+      exportGroup: () => Promise<any>
     },
     Store: any
   }

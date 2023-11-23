@@ -20,3 +20,19 @@ export function selectExportDirectory(mainWindow: BrowserWindow | undefined) {
   });
 }
 
+export function selectExportGroupDirectory(mainWindow: BrowserWindow | undefined) {
+  return new Promise((resolve, reject) => {
+    if(mainWindow) {
+      dialog.showOpenDialog(mainWindow, {
+        properties: ['openDirectory']
+      }).then(result => {
+        resolve(result)
+      }).catch(err => {
+        reject(err)
+      })
+    } else {
+      reject('not found window');
+    }
+  });
+}
+
