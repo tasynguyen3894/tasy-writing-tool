@@ -10,11 +10,13 @@
       <template #body-cell-actions="props">
         <q-td :props="props">
           <q-btn icon="edit" flat size="0.7em" @click="edit(props.row.id)" />
+          <q-btn icon="description" flat size="0.7em" @click="openExportConfigDialog(props.row.id)" />
         </q-td>
       </template>
     </CustomTable>
   </q-page>
   <GroupCreateModal v-model="isShowCreateModal" />
+  <GroupExportModal v-model="isShowExportModal" :group-id="groupId" />
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
@@ -27,6 +29,7 @@ import { useGroupStore } from 'src/stores/groupStore';
 import GroupCreateModal from 'src/components/GroupCreateModal.vue';
 import { RouterNames } from 'src/router/routes';
 import CustomTable from 'src/components/CustomTable.vue';
+import GroupExportModal from 'src/components/GroupExportModal.vue';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -53,6 +56,8 @@ const columns = computed<QTableColumn[]>(() => [
 ]);
 
 const isShowCreateModal = ref<boolean>(false);
+const isShowExportModal = ref<boolean>(false);
+const groupId = ref<string>();
 
 function edit(id: string) {
   router.push({
@@ -61,5 +66,10 @@ function edit(id: string) {
       id
     }
   })
+}
+
+function openExportConfigDialog(id: string) {
+  isShowExportModal.value = true;
+  groupId.value = id;
 }
 </script>
