@@ -7,7 +7,7 @@ import { BaseApi } from './base';
 import { fetchCharacter } from './db/character';
 import { fetchObject } from './db/object';
 import { findVariableValue } from 'src/util/editor';
-import { getChapter } from './db/chapter';
+import { getChapter, exportChapter } from './db/chapter';
 import { getConfig } from './db/config';
 import { ConfigKey } from 'src/models/Config';
 
@@ -137,72 +137,21 @@ export class ChapterApi extends BaseApi {
         fetchObject(connection).then(objects => {
           getConfig(connection, ConfigKey.author).then(config => {
             const author = config ? config.value : '';
-            getChapter(connection, id).then(chapter => {
-              if(chapter) {
-                const jsdom = require('jsdom');
-                const { JSDOM } = jsdom;
-                const dom = new JSDOM(`<!DOCTYPE html>` + chapter.content)
-                dom.window.document.querySelectorAll(`[data-variable]`).forEach((node: Element) => {
-                  const variable = node.getAttribute('data-variable');
-                  if(variable) {
-                    node.textContent = findVariableValue(characters, objects, variable);
-                  }
-                });
-                const lines: string[] = [];
-                const firstLine: string[] = [];
-  
-                dom.window.document.body.childNodes.forEach((node: Element) => {
-                  if(node.tagName === 'DIV') {
-                    lines.push(node.innerHTML)
-                  } else {
-                    if(node.nodeType === 3 && node.nodeValue) {
-                      firstLine.push(node.nodeValue);
-                    } else {
-                      firstLine.push(node.outerHTML);
-                    }
-                  }
-                });
-                const chapterHtmlContent: string = [firstLine.join(''), ...lines].map(line => {
-                  return '<p>' + line + '</p>';
-                }).join('');
-                const HTMLtoDOCX = require('html-to-docx');
-                const docxContent = `<!DOCTYPE html>
-                  <html lang="en">
-                    <head>
-                        <meta charset="UTF-8" />
-                        <title>Document</title>
-                    </head>
-                    <body>
-                      ${chapterHtmlContent}
-                    </body>
-                  </html>`
-                HTMLtoDOCX(docxContent, null, {
-                  table: {
-                    row: {
-                      cantSplit: true
-                    }
-                  },
-                  title: chapter.title,
-                  description: chapter.description || '',
-                  keywords: chapter.tags || [],
-                  creator: author,
-                  footer: true,
-                  pageNumber: true,
-                }).then((fileBuffer: any) => {
-                  fs.writeFile(path.resolve(pathExport), fileBuffer, (error) => {
-                    if (error) {
-                      resolve(false);
-                    } else {
-                      resolve(true);
-                    }
-                  });
-                })
-              } else {
-                resolve(false);
+            exportChapter(connection, {
+              pathExport,
+              id,
+              characters,
+              objects,
+              config: {
+                author
               }
+            }).then(() => {
+              resolve(true)
+            })
+            .catch(error => {
+              reject(error);
             })
           })
-          
         })
       })
     });
