@@ -7,6 +7,10 @@ import { IChapterReadItem } from 'src/models/Chapter';
 import { ICharacterRead } from 'src/models/Character';
 import { IObjectRead } from 'src/models/Object';
 import { findVariableValue } from 'src/util/editor';
+import { fetchCharacter } from './character';
+import { fetchObject } from './object';
+import { ConfigKey } from 'src/models/Config';
+import { getConfig } from './config';
 
 export function getChapter(connection: Knex, id: string): Promise<IChapterReadItem | undefined> {
   const ChapterModel = modelFactory(connection).getModel(ModelName.Chapter);
@@ -35,15 +39,49 @@ export function getChapter(connection: Knex, id: string): Promise<IChapterReadIt
   });
 }
 
+export type ExportPrepareData = {
+  characters: ICharacterRead[],
+  objects: IObjectRead[],
+  config: { [key: string]: string }
+}
+
+export function prepareForExport(connection: Knex): Promise<ExportPrepareData> {
+  return new Promise((resolve, reject) => {
+    Promise.allSettled([
+      fetchCharacter(connection),
+      fetchObject(connection),
+      getConfig(connection, ConfigKey.author)
+    ]).then(([promiseCharacterResult, promiseObjectResult, promiseConfigResult]) => {
+      const exportParameter: ExportPrepareData = {
+        characters: [],
+        objects: [],
+        config: {
+          author: ''
+        }
+      };
+
+      if(promiseCharacterResult.status === 'fulfilled') {
+        exportParameter.characters = promiseCharacterResult.value;
+      }
+      if(promiseObjectResult.status === 'fulfilled') {
+        exportParameter.objects = promiseObjectResult.value;
+      }
+      if(promiseConfigResult.status === 'fulfilled' && promiseConfigResult.value) {
+        exportParameter.config.author = promiseConfigResult.value.value;
+      }
+      resolve(exportParameter);
+    }).catch(error => {
+      reject(error);
+    })
+  })
+}
+
 export function exportChapter(
   connection: Knex,
   data: {
     id: string,
-    pathExport: string,
-    characters: ICharacterRead[],
-    objects: IObjectRead[],
-    config: { [key: string]: string }
-  }
+    pathExport: string
+  } & ExportPrepareData
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     const { config, id, pathExport, characters, objects  } = data;

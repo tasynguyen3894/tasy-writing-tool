@@ -1,6 +1,7 @@
 import Bookshelf from 'bookshelf';
 
 import { getGroupChapterModel } from './GroupChapter';
+import { getChapterModel } from './Chapter';
 
 export function getGroupModel(bookshelf: Bookshelf): Bookshelf.Model<any> {
   class GroupModel extends bookshelf.Model<any> {
@@ -9,6 +10,9 @@ export function getGroupModel(bookshelf: Bookshelf): Bookshelf.Model<any> {
     }
     chapterIds() {
       return this.hasMany(getGroupChapterModel(bookshelf))
+    }
+    chapters() {
+      return this.belongsToMany(getChapterModel(bookshelf), 'group_chapter')
     }
   }
   return new GroupModel();

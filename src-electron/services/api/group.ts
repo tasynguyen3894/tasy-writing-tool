@@ -151,7 +151,7 @@ export class GroupApi extends BaseApi {
         getGroup(connection, groupId)
       ]).then(([chapter, group]) => {
         if(chapter && group) {
-          const GroupChapterModel = modelFactory(this.connection).getModel(ModelName.GroupChapter);
+                    const GroupChapterModel = modelFactory(this.connection).getModel(ModelName.GroupChapter);
           if(GroupChapterModel) {
             GroupChapterModel.where({
               group_id: groupId,
@@ -220,5 +220,15 @@ export class GroupApi extends BaseApi {
         resolve([]);
       }
     })
+  }
+
+  public exportGroup(payload: { id: string, pathExport: string }): Promise<boolean> {
+    if(!this.connection) {
+      return Promise.resolve(false);
+    }
+    const connection = this.connection;
+    return new Promise(((resovle, reject) => {
+      resovle(true)
+    }));
   }
 }

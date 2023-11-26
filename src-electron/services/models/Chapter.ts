@@ -2,13 +2,13 @@ import Bookshelf from 'bookshelf';
 
 import { ICharacterExtraRead } from './CharacterExtra';
 
-export function getChapterModel(bookshelf: Bookshelf): Bookshelf.Model<any> {
+export function getChapterModel(bookshelf: Bookshelf) {
   class ChapterModel extends bookshelf.Model<any> {
     get tableName() {
       return 'chapter';
     }
   }
-  return new ChapterModel();
+  return ChapterModel;
 }
 
 export interface IChapter {

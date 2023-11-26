@@ -4,15 +4,14 @@ import { modelFactory, ModelName } from 'src-electron/services/models';
 import { IGroupReadDB } from 'src/models/Group';
 import { IGroupChapterRead } from 'src/models/GroupChapter';
 
-export function getGroup(connection: Knex, id: string): Promise<IGroupReadDB | undefined> {
+export function getGroup(connection: Knex, id: string, joins: 'chapters' | 'chapterIds'[] = []): Promise<IGroupReadDB | undefined> {
   const GroupModel = modelFactory(connection).getModel(ModelName.Group);
 
   if(!GroupModel) {
     return Promise.resolve(undefined);
   }
-  
   return new Promise((resolve, reject) => {
-    GroupModel.where({ id }).fetch({ require: false }).then((group: any) => {
+    GroupModel.where({ id }).fetch({ reuired: false, withRelated: joins }).then((group: any) => {
       if(group) {
         resolve({
           id: group.get('id'),

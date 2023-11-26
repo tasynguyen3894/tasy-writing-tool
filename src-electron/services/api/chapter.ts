@@ -7,7 +7,7 @@ import { BaseApi } from './base';
 import { fetchCharacter } from './db/character';
 import { fetchObject } from './db/object';
 import { findVariableValue } from 'src/util/editor';
-import { getChapter, exportChapter } from './db/chapter';
+import { exportChapter, prepareForExport } from './db/chapter';
 import { getConfig } from './db/config';
 import { ConfigKey } from 'src/models/Config';
 
@@ -133,27 +133,24 @@ export class ChapterApi extends BaseApi {
     
     return new Promise((resolve, reject) => {
       const { id, pathExport } = payload;
-      fetchCharacter(connection).then(characters => {
-        fetchObject(connection).then(objects => {
-          getConfig(connection, ConfigKey.author).then(config => {
-            const author = config ? config.value : '';
-            exportChapter(connection, {
-              pathExport,
-              id,
-              characters,
-              objects,
-              config: {
-                author
-              }
-            }).then(() => {
-              resolve(true)
-            })
-            .catch(error => {
-              reject(error);
-            })
-          })
+      prepareForExport(connection).then(({
+        characters,
+        objects,
+        config
+      }) => {
+        exportChapter(connection, {
+          pathExport,
+          id,
+          characters,
+          objects,
+          config
+        }).then(() => {
+          resolve(true)
         })
-      })
+        .catch(error => {
+          reject(error);
+        })
+      }).catch(error => reject(error));
     });
   }
 }
