@@ -20,7 +20,9 @@ export default {
     deleted: 'Deleted',
     created: 'Created',
     updated: 'Updated',
-    sorted: 'Sorted'
+    sorted: 'Sorted',
+    confirm: 'Confirm',
+    confirm_delete: 'Would you want to delete this {name}?'
   },
   table: {
     action: 'Action',

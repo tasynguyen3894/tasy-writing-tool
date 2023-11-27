@@ -46,6 +46,7 @@ import { useGroupStore } from 'src/stores/groupStore';
 import { IGroupRead } from 'src/models/Group';
 import AddChapterIntoGroupModal from 'src/components/AddChapterIntoGroupModal.vue';
 import SortChapterModal, { SortItem } from 'src/components/SortChapterModal.vue';
+import { useDeleteModal } from 'src/hooks/useDeleteModal';
 
 const props = defineProps<{
   groupId: string
@@ -53,6 +54,8 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const $q = useQuasar();
+
+const { showDeleteDialog } = useDeleteModal();
 
 const groupStore = useGroupStore();
 const chapterStore = useChapterStore();
@@ -129,14 +132,9 @@ function openSortModal() {
 }
 
 function removeChapter(chapterId: string) {
-  $q.dialog({
-    title: 'Confirm',
-    message: 'Would you want to delete this chapter?',
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    handleRemove(chapterId)
-  });
+  showDeleteDialog(t('common.chapter').toLocaleLowerCase()).then(() => {
+    handleRemove(chapterId);
+  })
 }
 
 function handleSort(items: SortItem[]) {

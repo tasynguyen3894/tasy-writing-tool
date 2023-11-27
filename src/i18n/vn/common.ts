@@ -20,7 +20,9 @@ export default {
     deleted: 'Đã xóa',
     created: 'Đã tạo mới',
     updated: 'Đã cập nhật',
-    sorted: 'Đã cập nhật'
+    sorted: 'Đã cập nhật',
+    confirm: 'Xác nhận',
+    confirm_delete: 'Bạn có muốn xóa {name} này?'
   },
   table: {
     action: 'Thao tác',

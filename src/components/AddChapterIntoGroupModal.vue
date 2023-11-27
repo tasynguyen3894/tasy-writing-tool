@@ -90,8 +90,8 @@ function addChapter() {
         </div>
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" v-close-popup />
-        <q-btn flat label="Add" @click="addChapter()" />
+        <q-btn flat :label="t('common.form.cancel')" v-close-popup />
+        <q-btn flat :label="t('common.form.add')" @click="addChapter()" />
       </q-card-actions>
     </q-card>
   </q-dialog>
