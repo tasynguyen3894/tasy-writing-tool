@@ -30,9 +30,11 @@ import { IObjectExtraRead, IObjectExtraModify } from 'src/models/ObjectExtra';
 import ModifyCharacterExtra from './ModifyCharacterExtra.vue';
 import { useObjectStore } from 'src/stores/objectStore';
 import CustomTable from 'src/components/CustomTable.vue';
+import { useDeleteModal } from 'src/hooks/useDeleteModal';
 
 const { t } = useI18n();
 const $q = useQuasar();
+const { showDeleteDialog } = useDeleteModal();
 
 const props = withDefaults(defineProps<{
   modelValue: IObjectExtraRead[],
@@ -110,14 +112,10 @@ function edit(row: IObjectExtraRead) {
 }
 
 function remove(id: string) {
-  $q.dialog({
-    title: 'Confirm',
-    message: 'Would you want to delete this meta?',
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    handleRemove(id)
-  });
+  showDeleteDialog(t('character.character_extra').toLocaleLowerCase())
+    .then(() => {
+      handleRemove(id);
+    });
 }
 
 function handleRemove(id: string) {

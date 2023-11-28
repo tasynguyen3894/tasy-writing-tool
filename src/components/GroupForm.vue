@@ -33,13 +33,13 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 
 import { IGroupCreate } from 'src/models/Group';
+import { useDeleteModal } from 'src/hooks/useDeleteModal';
 
 const { t } = useI18n();
-const $q = useQuasar();
+const { showDeleteDialog } = useDeleteModal();
 
 const props = withDefaults(defineProps<{
   data?: IGroupCreate & { id?: string },
@@ -72,14 +72,10 @@ function submit() {
 }
 
 function remove() {
-  $q.dialog({
-    title: 'Confirm',
-    message: 'Would you want to delete this group?',
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    handleRemove()
-  });
+  showDeleteDialog(t('common.group').toLocaleLowerCase())
+    .then(() => {
+      handleRemove();
+    });
 }
 
 function handleRemove() {

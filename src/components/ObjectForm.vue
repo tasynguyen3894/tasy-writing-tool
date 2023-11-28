@@ -55,12 +55,12 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
 
 import { IObjectCreate } from 'src/models/Object';
+import { useDeleteModal } from 'src/hooks/useDeleteModal';
 
 const { t } = useI18n();
-const $q = useQuasar();
+const { showDeleteDialog } = useDeleteModal();
 
 const props = withDefaults(defineProps<{
   data?: IObjectCreate & { id?: string },
@@ -99,14 +99,10 @@ function submit() {
 }
 
 function remove() {
-  $q.dialog({
-    title: 'Confirm',
-    message: 'Would you want to delete this object?',
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    handleRemove()
-  });
+  showDeleteDialog(t('common.object').toLocaleLowerCase())
+  .then(() => {
+      handleRemove();
+    });
 }
 
 function handleRemove() {

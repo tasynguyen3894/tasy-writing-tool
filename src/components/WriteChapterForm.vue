@@ -59,6 +59,7 @@ import ChapterEditor, { Variable } from 'src/components/ChapterEditor.vue';
 import { useCharacterStore } from 'src/stores/characterStore';
 import { useObjectStore } from 'src/stores/objectStore';
 import { Status } from 'src/models/Chapter';
+import { useDeleteModal } from 'src/hooks/useDeleteModal';
 
 export interface Chapter {
   id?: string,
@@ -71,6 +72,7 @@ export interface Chapter {
 
 const { t } = useI18n();
 const $q = useQuasar();
+const { showDeleteDialog } = useDeleteModal();
 
 const props = withDefaults(defineProps<{
   data?: Chapter
@@ -162,14 +164,10 @@ function submit() {
 };
 
 function remove() {
-  $q.dialog({
-    title: 'Confirm',
-    message: 'Would you want to delete this chapter?',
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    emits('remove');
-  });
+  showDeleteDialog(t('common.chapter').toLocaleLowerCase())
+  .then(() => {
+      emits('remove');
+    });
 }
 
 </script>

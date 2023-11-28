@@ -48,12 +48,12 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
 
 import { ICharacterCreate } from 'src/models/Character';
+import { useDeleteModal } from 'src/hooks/useDeleteModal';
 
 const { t } = useI18n();
-const $q = useQuasar();
+const { showDeleteDialog } = useDeleteModal();
 
 const props = withDefaults(defineProps<{
   data?: ICharacterCreate & { id?: string },
@@ -90,14 +90,10 @@ function submit() {
 }
 
 function remove() {
-  $q.dialog({
-    title: 'Confirm',
-    message: 'Would you want to delete this meta?',
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    handleRemove()
-  });
+  showDeleteDialog(t('common.character').toLocaleLowerCase())
+    .then(() => {
+      handleRemove();
+    });
 }
 
 function handleRemove() {
