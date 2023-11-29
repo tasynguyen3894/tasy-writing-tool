@@ -50,10 +50,10 @@ import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { ICharacterCreate } from 'src/models/Character';
-import { useDeleteModal } from 'src/hooks/useDeleteModal';
+import { useConfirmModal } from 'src/hooks/useConfirmModal';
 
 const { t } = useI18n();
-const { showDeleteDialog } = useDeleteModal();
+const { showDeleteDialog } = useConfirmModal();
 
 const props = withDefaults(defineProps<{
   data?: ICharacterCreate & { id?: string },

@@ -22,7 +22,8 @@ export default {
     updated: 'Updated',
     sorted: 'Sorted',
     confirm: 'Confirm',
-    confirm_delete: 'Would you want to delete this {name}?'
+    confirm_delete: 'Would you want to delete this {name}?',
+    confirm_update: 'Would you want to update this {name}?'
   },
   table: {
     action: 'Action',

@@ -30,11 +30,11 @@ import { IObjectExtraRead, IObjectExtraModify } from 'src/models/ObjectExtra';
 import ModifyCharacterExtra from './ModifyCharacterExtra.vue';
 import { useObjectStore } from 'src/stores/objectStore';
 import CustomTable from 'src/components/CustomTable.vue';
-import { useDeleteModal } from 'src/hooks/useDeleteModal';
+import { useConfirmModal } from 'src/hooks/useConfirmModal';
 
 const { t } = useI18n();
 const $q = useQuasar();
-const { showDeleteDialog } = useDeleteModal();
+const { showDeleteDialog } = useConfirmModal();
 
 const props = withDefaults(defineProps<{
   modelValue: IObjectExtraRead[],

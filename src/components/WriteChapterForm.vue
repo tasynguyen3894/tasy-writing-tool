@@ -59,7 +59,7 @@ import ChapterEditor, { Variable } from 'src/components/ChapterEditor.vue';
 import { useCharacterStore } from 'src/stores/characterStore';
 import { useObjectStore } from 'src/stores/objectStore';
 import { Status } from 'src/models/Chapter';
-import { useDeleteModal } from 'src/hooks/useDeleteModal';
+import { useConfirmModal } from 'src/hooks/useConfirmModal';
 
 export interface Chapter {
   id?: string,
@@ -71,8 +71,7 @@ export interface Chapter {
 }
 
 const { t } = useI18n();
-const $q = useQuasar();
-const { showDeleteDialog } = useDeleteModal();
+const { showDeleteDialog, showUpdateDialog } = useConfirmModal();
 
 const props = withDefaults(defineProps<{
   data?: Chapter
@@ -149,14 +148,10 @@ function addTag() {
 
 function submit() {
   if(props.data.id) {
-    $q.dialog({
-      title: 'Confirm',
-      message: 'Would you want to update this chapter?',
-      cancel: true,
-      persistent: true
-    }).onOk(() => {
-      emits('submit', chapterData.value);
-    });
+    showUpdateDialog(t('common.chapter').toLocaleLowerCase())
+      .then(() => {
+        emits('submit', {...chapterData.value});
+      });
   } else {
     emits('submit', chapterData.value);
   }

@@ -22,7 +22,8 @@ export default {
     updated: 'Đã cập nhật',
     sorted: 'Đã cập nhật',
     confirm: 'Xác nhận',
-    confirm_delete: 'Bạn có muốn xóa {name} này?'
+    confirm_delete: 'Bạn có muốn xóa {name} này?',
+    confirm_update: 'Bạn có muốn cập nhật {name} này?'
   },
   table: {
     action: 'Thao tác',

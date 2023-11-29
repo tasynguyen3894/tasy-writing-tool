@@ -46,7 +46,7 @@ import { useGroupStore } from 'src/stores/groupStore';
 import { IGroupRead } from 'src/models/Group';
 import AddChapterIntoGroupModal from 'src/components/AddChapterIntoGroupModal.vue';
 import SortChapterModal, { SortItem } from 'src/components/SortChapterModal.vue';
-import { useDeleteModal } from 'src/hooks/useDeleteModal';
+import { useConfirmModal } from 'src/hooks/useConfirmModal';
 
 const props = defineProps<{
   groupId: string
@@ -55,7 +55,7 @@ const props = defineProps<{
 const { t } = useI18n();
 const $q = useQuasar();
 
-const { showDeleteDialog } = useDeleteModal();
+const { showDeleteDialog } = useConfirmModal();
 
 const groupStore = useGroupStore();
 const chapterStore = useChapterStore();

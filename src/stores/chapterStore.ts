@@ -84,7 +84,7 @@ export const useChapterStore = defineStore('chapter', () => {
   function update(id: string, data: IChapterUpdate): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
-        chapterService.updateChapter(projectStore.projectPath, id, data)
+        chapterService.updateChapter(projectStore.projectPath, id, JSON.parse(JSON.stringify(data)))
          .then((result: IChapterReadItem) => {
             chapters.value = chapters.value.map(chapter => {
               if(chapter.id === result.id) {
