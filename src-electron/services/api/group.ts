@@ -1,8 +1,8 @@
 import { IGroupRead, IGroupCreate, IGroupUpdate, IGroupReadDB } from 'src/models/Group';
 import { modelFactory, ModelName } from '../models';
 import { BaseApi } from './base';
-import { getChapter } from './db/chapter';
-import { getGroup } from './db/group';
+import { exportChapterContent, getChapter, prepareForExport } from './db/chapter';
+import { getGroup, getGroupChapters } from './db/group';
 import { IGroupChapterRead } from 'src/models/GroupChapter';
 
 export class GroupApi extends BaseApi {
@@ -228,7 +228,23 @@ export class GroupApi extends BaseApi {
     }
     const connection = this.connection;
     return new Promise(((resovle, reject) => {
-      resovle(true)
+      const { id, pathExport } = payload;
+      prepareForExport(connection)
+        .then(({
+          characters,
+          objects,
+          config
+        }) => {
+          getGroupChapters(connection, {
+            group_id: id
+          })
+          .then(data => {
+            const sortedData = data.sort((a, b) => {
+              return a.order > b.order ? 1 : -1;
+            });
+            resovle(true)
+          })
+        }).catch(error => reject(error));
     }));
   }
 }

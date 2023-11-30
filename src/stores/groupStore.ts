@@ -5,6 +5,7 @@ import { IGroupCreate, IGroupRead, IGroupUpdate } from 'src/models/Group';
 import { useProjectStore } from './projectStore';
 import { useService } from 'src/services/useService';
 import { findItem } from 'src/util/helper';
+import { Routes } from 'src/models/Api';
 
 export const useGroupStore = defineStore('group', () => {
   const groups = ref<IGroupRead[]>([]);
@@ -118,6 +119,19 @@ export const useGroupStore = defineStore('group', () => {
     });
   }
 
+  function exportGroup(id: string, url: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if(projectStore.projectPath) {
+        groupService.exportGroup(projectStore.projectPath, id, url)
+          .then((result) => {
+            resolve(result)
+          })
+      } else {
+        return Promise.resolve(false);
+      }
+    });
+  }
+
   function update(id: string, data: IGroupUpdate): Promise<void> {
     return new Promise((resolve, reject) => {
       if(projectStore.projectPath) {
@@ -176,6 +190,7 @@ export const useGroupStore = defineStore('group', () => {
     update,
     addChapter,
     removeChapter,
-    updateChapterOrder
+    updateChapterOrder,
+    exportGroup
   }
 })

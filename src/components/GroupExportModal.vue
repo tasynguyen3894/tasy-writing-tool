@@ -9,7 +9,7 @@
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
         <q-btn flat :label="t('common.form.cancel')" v-close-popup />
-        <q-btn flat :label="t('chapter.export.export')" @click="exportChapter()" :loading="isExporting" />
+        <q-btn flat :label="t('chapter.export.export')" @click="exportGroup()" :loading="isExporting" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -20,7 +20,7 @@ import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 
-import { useChapterStore } from 'src/stores/chapterStore';
+import { useGroupStore } from 'src/stores/groupStore';
 
 const props = withDefaults(defineProps<{
   modelValue: boolean,
@@ -36,7 +36,7 @@ const emits = defineEmits<{
 const { t } = useI18n();
 const $q = useQuasar();
 
-const chapterStore = useChapterStore();
+const groupStore = useGroupStore();
 
 const isShow = ref<boolean>(props.modelValue);
 const isExporting = ref<boolean>(false);
@@ -56,9 +56,8 @@ watch(isShow, () => {
 function openExportDialog(): Promise<string> {
   return new Promise((resolve, reject) => {
     window.Native.exportGroup().then((data: any) => {
-      console.log(data)
-      if(data.filePaths && data.filePaths.length > 0) {
-        resolve(data.filePaths[0]);
+      if(data.filePath) {
+        resolve(data.filePath);
       }
     }).catch(error => {
       reject(error);
@@ -66,18 +65,15 @@ function openExportDialog(): Promise<string> {
   });
 }
 
-function exportChapter() {
+function exportGroup() {
   if(props.groupId) {
     const id = props.groupId;
     openExportDialog().then(url => {
       isExporting.value = true;
-      console.log(url);
-      // chapterStore.exportChapter(id, url).then(result => {
-      //   isShow.value = false;
-      //   $q.notify(t('chapter.export.exported'));
-      // }).finally(() => {
-      //   isExporting.value = false;
-      // })
+      groupStore.exportGroup(id, url)
+        .then((r) => {
+          console.log(r)
+        })
     })
   }
 }

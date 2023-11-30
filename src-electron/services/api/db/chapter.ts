@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { modelFactory, ModelName } from 'src-electron/services/models';
-import { IChapterReadItem } from 'src/models/Chapter';
+import { IChapterRead, IChapterReadItem } from 'src/models/Chapter';
 import { ICharacterRead } from 'src/models/Character';
 import { IObjectRead } from 'src/models/Object';
 import { findVariableValue } from 'src/util/editor';
@@ -76,6 +76,84 @@ export function prepareForExport(connection: Knex): Promise<ExportPrepareData> {
   })
 }
 
+export function exportChapterContent(data: ExportPrepareData & {
+  chapter: IChapterRead
+}): Promise<string> {
+  return new Promise((resolve, reject) => {
+    try {
+      const { characters, objects, chapter  } = data;
+      const jsdom = require('jsdom');
+      const { JSDOM } = jsdom;
+      const dom = new JSDOM(`<!DOCTYPE html>` + chapter.content)
+      dom.window.document.querySelectorAll(`[data-variable]`).forEach((node: Element) => {
+        const variable = node.getAttribute('data-variable');
+        if(variable) {
+          node.textContent = findVariableValue(characters, objects, variable);
+        }
+      });
+      const lines: string[] = [];
+      const firstLine: string[] = [];
+
+      dom.window.document.body.childNodes.forEach((node: Element) => {
+        if(node.tagName === 'DIV') {
+          lines.push(node.innerHTML)
+        } else {
+          if(node.nodeType === 3 && node.nodeValue) {
+            firstLine.push(node.nodeValue);
+          } else {
+            firstLine.push(node.outerHTML);
+          }
+        }
+      });
+      resolve([firstLine.join(''), ...lines].map(line => {
+        return '<p>' + line + '</p>';
+      }).join(''));
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+export function createFileWord(data: {
+  content: string,
+  title: string,
+  description?: string,
+  tags?: string[],
+  author: string
+}): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const { content, title, description = '', tags = [], author } = data;
+    const HTMLtoDOCX = require('html-to-docx');
+    const docxContent = `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+            <meta charset="UTF-8" />
+            <title>Document</title>
+        </head>
+        <body>
+          ${content}
+        </body>
+      </html>`
+    HTMLtoDOCX(docxContent, null, {
+      table: {
+        row: {
+          cantSplit: true
+        }
+      },
+      title: title,
+      description: description,
+      keywords: tags,
+      creator: author,
+      footer: true,
+      pageNumber: true,
+    })
+    .then((fileBuffer: any) => {
+      resolve(fileBuffer);
+    })
+    .catch((error: Error) => reject(error));
+  })
+}
+
 export function exportChapter(
   connection: Knex,
   data: {
@@ -88,64 +166,29 @@ export function exportChapter(
     const author = config ? config.value : '';
     getChapter(connection, id).then(chapter => {
       if(chapter) {
-        const jsdom = require('jsdom');
-        const { JSDOM } = jsdom;
-        const dom = new JSDOM(`<!DOCTYPE html>` + chapter.content)
-        dom.window.document.querySelectorAll(`[data-variable]`).forEach((node: Element) => {
-          const variable = node.getAttribute('data-variable');
-          if(variable) {
-            node.textContent = findVariableValue(characters, objects, variable);
-          }
-        });
-        const lines: string[] = [];
-        const firstLine: string[] = [];
-
-        dom.window.document.body.childNodes.forEach((node: Element) => {
-          if(node.tagName === 'DIV') {
-            lines.push(node.innerHTML)
-          } else {
-            if(node.nodeType === 3 && node.nodeValue) {
-              firstLine.push(node.nodeValue);
-            } else {
-              firstLine.push(node.outerHTML);
-            }
-          }
-        });
-        const chapterHtmlContent: string = [firstLine.join(''), ...lines].map(line => {
-          return '<p>' + line + '</p>';
-        }).join('');
-        const HTMLtoDOCX = require('html-to-docx');
-        const docxContent = `<!DOCTYPE html>
-          <html lang="en">
-            <head>
-                <meta charset="UTF-8" />
-                <title>Document</title>
-            </head>
-            <body>
-              ${chapterHtmlContent}
-            </body>
-          </html>`
-        HTMLtoDOCX(docxContent, null, {
-          table: {
-            row: {
-              cantSplit: true
-            }
-          },
-          title: chapter.title,
-          description: chapter.description || '',
-          keywords: chapter.tags || [],
-          creator: author,
-          footer: true,
-          pageNumber: true,
-        }).then((fileBuffer: any) => {
-          fs.writeFile(path.resolve(pathExport), fileBuffer, (error) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve();
-            }
+        exportChapterContent({
+          characters,
+          objects,
+          config,
+          chapter
+        }).then(content => {
+          createFileWord({
+            content,
+            title: chapter.title,
+            description: chapter.description,
+            author,
+            tags: chapter.tags
+          }).then((fileBuffer: any) => {
+            fs.writeFile(path.resolve(pathExport), fileBuffer, (error) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve();
+              }
+            });
           });
         })
+        .catch(error => reject(error));
       } else {
         reject('Not found chapter');
       }

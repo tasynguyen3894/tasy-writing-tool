@@ -103,7 +103,15 @@ type GroupOrderChapterApi = ApiCalling<{
   }
 }, boolean>;
 
-type GroupApi = FetchGroupApi | CreateGroupApi | RemoveGroupApi | UpdateGroupApi | GroupAddChapterApi | GroupRemoveChapterApi | GroupOrderChapterApi;
+type ExportGroupApi = ApiCalling<{
+  method: Routes.ExportGroup,
+  payload: {
+    id: string,
+    pathExport: string
+  }
+}, boolean>;
+
+type GroupApi = FetchGroupApi | CreateGroupApi | RemoveGroupApi | UpdateGroupApi | GroupAddChapterApi | GroupRemoveChapterApi | GroupOrderChapterApi | ExportGroupApi;
 
 type FetchCharacterApi = ApiCalling<{
   method: Routes.FetchCharacters,

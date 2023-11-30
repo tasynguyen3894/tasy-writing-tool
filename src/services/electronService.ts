@@ -76,6 +76,9 @@ export const getGroupService: IGetGroupService = () => {
     },
     orderChapter(projectId: string, groupId: string, chapterId: string, order: number) {
       return window.Native.api({  method: Routes.GroupUpdateChapterOrder, payload: { groupId, chapterId, order }, path: projectId });
+    },
+    exportGroup(projectId: string, id: string, pathExport: string) {
+      return window.Native.api({  method: Routes.ExportGroup, payload: { id, pathExport }, path: projectId });
     }
   }
 }

@@ -58,4 +58,31 @@ export function getGroupChapter(connection: Knex, options: FindGroupChapter): Pr
   });
 }
 
+export function getGroupChapters(connection: Knex, options: FindGroupChapter): Promise<IGroupChapterRead[]> {
+  const GroupChapterModel = modelFactory(connection).getModel(ModelName.GroupChapter);
 
+  if(!GroupChapterModel) {
+    return Promise.resolve([]);
+  }
+  
+  return new Promise((resolve, reject) => {
+    GroupChapterModel.where(options).fetchAll({ require: false }).then((groupChapters: any) => {
+      if(groupChapters.models.length > 0) {
+        const result: IGroupChapterRead[] = [];
+        groupChapters.models.forEach((item: any) => {
+          result.push({
+            id: item.get('id'),
+            group_id: item.get('group_id'),
+            chapter_id: item.get('chapter_id'),
+            order: item.get('order')
+          })
+        });
+        resolve(result);
+      } else {
+        resolve([])
+      }
+    }).catch((error: Error) => {
+      reject(error)
+    })
+  });
+}
