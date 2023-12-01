@@ -22,6 +22,7 @@ export default {
     updated: 'Updated',
     sorted: 'Sorted',
     confirm: 'Confirm',
+    exported: 'Exported',
     confirm_delete: 'Would you want to delete this {name}?',
     confirm_update: 'Would you want to update this {name}?'
   },

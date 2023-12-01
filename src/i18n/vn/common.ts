@@ -22,6 +22,7 @@ export default {
     updated: 'Đã cập nhật',
     sorted: 'Đã cập nhật',
     confirm: 'Xác nhận',
+    exported: 'Đã xuất file',
     confirm_delete: 'Bạn có muốn xóa {name} này?',
     confirm_update: 'Bạn có muốn cập nhật {name} này?'
   },

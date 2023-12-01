@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 import { modelFactory, ModelName } from 'src-electron/services/models';
 import { IGroupReadDB } from 'src/models/Group';
 import { IGroupChapterRead } from 'src/models/GroupChapter';
+import { IChapterRead } from 'src/models/Chapter';
 
 export function getGroup(connection: Knex, id: string, joins: 'chapters' | 'chapterIds'[] = []): Promise<IGroupReadDB | undefined> {
   const GroupModel = modelFactory(connection).getModel(ModelName.Group);
@@ -58,7 +59,9 @@ export function getGroupChapter(connection: Knex, options: FindGroupChapter): Pr
   });
 }
 
-export function getGroupChapters(connection: Knex, options: FindGroupChapter): Promise<IGroupChapterRead[]> {
+export function getGroupChapters(connection: Knex, options: FindGroupChapter): Promise<Array<IGroupChapterRead & {
+  chapter: IChapterRead    
+}>> {
   const GroupChapterModel = modelFactory(connection).getModel(ModelName.GroupChapter);
 
   if(!GroupChapterModel) {
@@ -66,15 +69,19 @@ export function getGroupChapters(connection: Knex, options: FindGroupChapter): P
   }
   
   return new Promise((resolve, reject) => {
-    GroupChapterModel.where(options).fetchAll({ require: false }).then((groupChapters: any) => {
+    GroupChapterModel.where(options).fetchAll({ require: false, withRelated: ['chapter'] }).then((groupChapters: any) => {
       if(groupChapters.models.length > 0) {
-        const result: IGroupChapterRead[] = [];
+        const result: Array<IGroupChapterRead & {
+          chapter: IChapterRead    
+        }> = [];
         groupChapters.models.forEach((item: any) => {
+          const { id, content, title, status, description } = item.related('chapter').attributes;
           result.push({
             id: item.get('id'),
             group_id: item.get('group_id'),
             chapter_id: item.get('chapter_id'),
-            order: item.get('order')
+            order: item.get('order'),
+            chapter: { id, content, title, status, description, tags: [] }
           })
         });
         resolve(result);

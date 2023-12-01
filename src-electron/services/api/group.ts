@@ -1,7 +1,10 @@
+import fs from 'fs';
+import path from 'path';
+
 import { IGroupRead, IGroupCreate, IGroupUpdate, IGroupReadDB } from 'src/models/Group';
 import { modelFactory, ModelName } from '../models';
 import { BaseApi } from './base';
-import { exportChapterContent, getChapter, prepareForExport } from './db/chapter';
+import { createFileWord, exportChapterContent, getChapter, prepareForExport } from './db/chapter';
 import { getGroup, getGroupChapters } from './db/group';
 import { IGroupChapterRead } from 'src/models/GroupChapter';
 
@@ -227,7 +230,7 @@ export class GroupApi extends BaseApi {
       return Promise.resolve(false);
     }
     const connection = this.connection;
-    return new Promise(((resovle, reject) => {
+    return new Promise(((resolve, reject) => {
       const { id, pathExport } = payload;
       prepareForExport(connection)
         .then(({
@@ -242,7 +245,35 @@ export class GroupApi extends BaseApi {
             const sortedData = data.sort((a, b) => {
               return a.order > b.order ? 1 : -1;
             });
-            resovle(true)
+            Promise.all(
+              sortedData.map(chapter => {
+                return exportChapterContent({
+                  characters,
+                  objects,
+                  chapter: chapter.chapter,
+                  config
+                })
+              })
+            ).then(contents => {
+              const contentExport = contents.map((content, index) => {
+                return '<h1>' + sortedData[index].chapter.title + '</h1>' + content
+              });
+              createFileWord({
+                content: contentExport.join(''),
+                title: 'Group test',
+                tags: [],
+                description: 'Group test',
+                author: 'Sang'
+              }).then((fileBuffer: any) => {
+                fs.writeFile(path.resolve(pathExport), fileBuffer, (error) => {
+                  if (error) {
+                    reject(error);
+                  } else {
+                    resolve(true);
+                  }
+                });
+              });
+            })
           })
         }).catch(error => reject(error));
     }));

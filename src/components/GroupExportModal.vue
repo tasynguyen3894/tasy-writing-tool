@@ -16,7 +16,6 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 
@@ -72,7 +71,8 @@ function exportGroup() {
       isExporting.value = true;
       groupStore.exportGroup(id, url)
         .then((r) => {
-          console.log(r)
+          $q.notify(t('common.form.exported'));
+          isShow.value = false;
         })
     })
   }
