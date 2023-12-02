@@ -66,7 +66,7 @@ export const getGroupService: IGetGroupService = () => {
       return window.Native.api({  method: Routes.CreateGroup, payload: { data }, path: projectId })
     },
     updateGroup(projectId: string, id: string, data: IGroupUpdate) {
-      return window.Native.api({  method: Routes.UpdateObject, payload: { data, id }, path: projectId })
+      return window.Native.api({  method: Routes.UpdateGroup, payload: { data, id }, path: projectId })
     },
     addChapter(projectId: string, groupId: string, chapterId: string) {
       return window.Native.api({  method: Routes.GroupAddChapter, payload: { groupId, chapterId }, path: projectId });

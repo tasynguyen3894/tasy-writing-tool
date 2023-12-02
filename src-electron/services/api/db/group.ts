@@ -5,7 +5,12 @@ import { IGroupReadDB } from 'src/models/Group';
 import { IGroupChapterRead } from 'src/models/GroupChapter';
 import { IChapterRead } from 'src/models/Chapter';
 
-export function getGroup(connection: Knex, id: string, joins: 'chapters' | 'chapterIds'[] = []): Promise<IGroupReadDB | undefined> {
+export type GroupChapterIdWithOrder = { id: string, order: number }
+
+export function getGroup(connection: Knex, id: string, joins: Array<'chapters' | 'chapterIds'> = []): Promise<IGroupReadDB & {
+  chapterIds: GroupChapterIdWithOrder[],
+  chapters: IChapterRead[]
+} | undefined> {
   const GroupModel = modelFactory(connection).getModel(ModelName.Group);
 
   if(!GroupModel) {
@@ -14,10 +19,35 @@ export function getGroup(connection: Knex, id: string, joins: 'chapters' | 'chap
   return new Promise((resolve, reject) => {
     GroupModel.where({ id }).fetch({ reuired: false, withRelated: joins }).then((group: any) => {
       if(group) {
+        const chapterIds: GroupChapterIdWithOrder[] = [];
+        const chapters: IChapterRead[] = []
+        if(joins.includes('chapterIds')) {
+          group.related('chapterIds').models.forEach((chapter: any) => {
+            chapterIds.push({
+              id: chapter.get('chapter_id'),
+              order: chapter.get('order')
+            })
+          });
+        }
+        if(joins.includes('chapters')) {
+          group.related('chapters').models.forEach((item: any) => {
+            const { content, title, status, description } = item.attributes;
+            chapters.push({ 
+              id: item.attributes.id,
+              content,
+              title,
+              status,
+              description,
+              tags: []
+            })
+          });
+        }
         resolve({
           id: group.get('id'),
           title: group.get('title'),
-          description: group.get('description')
+          description: group.get('description'),
+          chapterIds,
+          chapters
         });
       } else {
         resolve(undefined)

@@ -70,8 +70,10 @@ function exportGroup() {
     openExportDialog().then(url => {
       isExporting.value = true;
       groupStore.exportGroup(id, url)
-        .then((r) => {
-          $q.notify(t('common.form.exported'));
+        .then((result) => {
+          if(result) {
+            $q.notify(t('common.form.exported'));
+          }
           isShow.value = false;
         })
     })

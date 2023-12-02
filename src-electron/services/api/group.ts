@@ -7,12 +7,13 @@ import { BaseApi } from './base';
 import { createFileWord, exportChapterContent, getChapter, prepareForExport } from './db/chapter';
 import { getGroup, getGroupChapters } from './db/group';
 import { IGroupChapterRead } from 'src/models/GroupChapter';
+import { IChapterRead } from 'src/models/Chapter';
 
 export class GroupApi extends BaseApi {
   public create(payload: {
     data: IGroupCreate
   }): Promise<IGroupRead | boolean> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if(this.connection) {
         const { data } = payload;
         this.connection('group').insert(data, ['id', 'title', 'description', 'parent_id'])
@@ -23,7 +24,7 @@ export class GroupApi extends BaseApi {
               resolve(false)
             }
           }).catch(e => {
-            console.log(e)
+            reject(e);
           })
       } else {
         resolve(false);
@@ -238,43 +239,52 @@ export class GroupApi extends BaseApi {
           objects,
           config
         }) => {
-          getGroupChapters(connection, {
-            group_id: id
-          })
-          .then(data => {
-            const sortedData = data.sort((a, b) => {
-              return a.order > b.order ? 1 : -1;
-            });
-            Promise.all(
-              sortedData.map(chapter => {
-                return exportChapterContent({
-                  characters,
-                  objects,
-                  chapter: chapter.chapter,
-                  config
+          getGroup(connection, id, ['chapterIds', 'chapters']).then(groupWithChapters => {
+            if(groupWithChapters) {
+              let sortedData: { chapter: IChapterRead, order: number }[] = [];
+              groupWithChapters.chapterIds.forEach(chapterWithOrder => {
+                const chapter = groupWithChapters.chapters.find(item => item.id === chapterWithOrder.id);
+                if(chapter) {
+                  sortedData.push({
+                    chapter,
+                    order: chapterWithOrder.order
+                  });
+                }
+              });
+              sortedData = sortedData.sort((a, b) => {
+                return a.order > b.order ? 1 : -1;
+              });
+              Promise.all(
+                sortedData.map(chapter => {
+                  return exportChapterContent({
+                    characters,
+                    objects,
+                    chapter: chapter.chapter,
+                    config
+                  })
                 })
-              })
-            ).then(contents => {
-              const contentExport = contents.map((content, index) => {
-                return '<h1>' + sortedData[index].chapter.title + '</h1>' + content
-              });
-              createFileWord({
-                content: contentExport.join(''),
-                title: 'Group test',
-                tags: [],
-                description: 'Group test',
-                author: 'Sang'
-              }).then((fileBuffer: any) => {
-                fs.writeFile(path.resolve(pathExport), fileBuffer, (error) => {
-                  if (error) {
-                    reject(error);
-                  } else {
-                    resolve(true);
-                  }
+              ).then(contents => {
+                const contentExport = contents.map((content, index) => {
+                  return '<h2>' + sortedData[index].chapter.title + '</h2>' + content
                 });
-              });
-            })
-          })
+                createFileWord({
+                  content: '<h1>' + groupWithChapters.title + '</h1>' + contentExport.join(''),
+                  title: groupWithChapters.title,
+                  tags: [],
+                  description: groupWithChapters.description,
+                  author: config.author || ''
+                }).then((fileBuffer: any) => {
+                  fs.writeFile(path.resolve(pathExport), fileBuffer, (error) => {
+                    if (error) {
+                      reject(error);
+                    } else {
+                      resolve(true);
+                    }
+                  });
+                });
+              })
+            }
+          });
         }).catch(error => reject(error));
     }));
   }

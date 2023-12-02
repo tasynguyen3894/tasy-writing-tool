@@ -139,7 +139,10 @@ export const useGroupStore = defineStore('group', () => {
           .then((result: IGroupRead) => {
             groups.value = groups.value.map(group => {
               if(group.id === result.id) {
-                return result;
+                return {
+                  ...result,
+                  chapters: group.chapters
+                };
               }
               return group;
             })
