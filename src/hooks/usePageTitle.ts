@@ -20,7 +20,7 @@ const RouteNameInI18n: { [key: string]: string } = {
 export function usePageTitle() {
   const route = useRoute();
   const { t } = useI18n();
-  const title = ref<string>('');
+  const title = ref<string>(route.name?.toString() || '');
 
   const pageTitle = computed<string>(() => {
     if(RouteNameInI18n[title.value]) {
