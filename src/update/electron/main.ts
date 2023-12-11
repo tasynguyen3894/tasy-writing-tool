@@ -1,45 +1,60 @@
-import { BrowserWindow, IpcMain } from 'electron';
+import { BrowserWindow, IpcMain, dialog } from 'electron';
 import { AppUpdater } from 'electron-updater';
 
-import { createDispatcher } from './dispatcher';
+import { createDispatcher, Dispatcher } from './dispatcher';
 import { createUpdater } from './updater';
 import { EventType, EVENT_INVOKE_KEY, HandlerType } from '../util/constant';
 
-let isSetup = false;
+export class ApplicationAutoUpdater {
+  protected autoUpdater: AppUpdater;
+  protected appWindow: BrowserWindow;
+  protected ipcMain: IpcMain;
+  protected dispatcher: Dispatcher;
 
-export function setupAutoUpdate(autoUpdater: AppUpdater, appWindow: BrowserWindow, ipcMain: IpcMain, option: {
-  autoUpdate: boolean
-}) {
-  if(!isSetup) {
-    isSetup = true;
-    // Register hook
-    const dispatcher = createDispatcher(appWindow);
-    const updater = createUpdater(autoUpdater);
+  constructor(autoUpdater: AppUpdater, appWindow: BrowserWindow, ipcMain: IpcMain) {
+    this.autoUpdater = autoUpdater;
+    this.appWindow = appWindow;
+    this.ipcMain = ipcMain;
+    this.dispatcher = createDispatcher(this.appWindow);
+  }
 
-    autoUpdater.on('update-available', () => {
-      dispatcher.dispatch(EventType.updateAvailable);
+  changeAppWindow(appWindow: BrowserWindow) {
+    this.appWindow = appWindow;
+    this.dispatcher = createDispatcher(appWindow);
+  }
+  
+  setup() {
+    const updater = createUpdater(this.autoUpdater);
+
+    this.autoUpdater.on('update-available', () => {
+      this.dispatcher.dispatch(EventType.updateAvailable);
     });
 
-    autoUpdater.on('update-not-available', () => {
-      dispatcher.dispatch(EventType.updateNotAvailable);
+    this.autoUpdater.on('update-not-available', () => {
+      this.dispatcher.dispatch(EventType.updateNotAvailable);
     });
 
-    autoUpdater.on('update-downloaded', () => {
-      dispatcher.dispatch(EventType.updateDownloaded);
+    this.autoUpdater.on('update-downloaded', () => {
+      this.dispatcher.dispatch(EventType.updateDownloaded);
     });
 
-    autoUpdater.on('error', () => {
-      dispatcher.dispatch(EventType.error);
+    this.autoUpdater.on('error', (info) => {
+      this.dispatcher.dispatch(EventType.error, {
+        message: info.message
+      });
     });
 
-    ipcMain.handle(EVENT_INVOKE_KEY, (_, type: string) => {
-      if(type === HandlerType.checkForUpdates) {
-        return updater.checkForUpdates();
-      }
-      if(type === HandlerType.downloadUpdate) {
-        return updater.downloadUpdates();
+    this.ipcMain.handle(EVENT_INVOKE_KEY, (_, type: string) => {
+      switch (type) {
+        case HandlerType.checkForUpdates:
+          return updater.checkForUpdates();
+        case HandlerType.downloadUpdate:
+          return updater.downloadUpdates();
+        case HandlerType.quitAndInstall:
+          return updater.quitAndInstall();
+        default:
+          break;
       }
     })
   }
 }
-

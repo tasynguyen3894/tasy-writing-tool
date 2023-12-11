@@ -1,12 +1,17 @@
 import { BrowserWindow } from 'electron';
 
-import { ELECONTRON_WINDOW_KEY } from '../util/constant';
+import { EVENT_MESSAGE_KEY } from '../util/constant';
 
-export function createDispatcher(appWindow: BrowserWindow) {
+export type Dispatcher = {
+  dispatch(type: string, value?: { [key: string]: any }): void
+}
+
+export function createDispatcher(appWindow: BrowserWindow): Dispatcher  {
   return {
-    dispatch(messageType: string) {
-      appWindow.webContents.send(ELECONTRON_WINDOW_KEY, {
-        type: messageType
+    dispatch(messageType: string, value = {}) {
+      appWindow.webContents.send(EVENT_MESSAGE_KEY, {
+        type: messageType,
+        value
       });
     }
   }

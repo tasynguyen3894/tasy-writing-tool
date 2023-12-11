@@ -1,8 +1,9 @@
 import { AppUpdater, UpdateCheckResult } from 'electron-updater';
 
 export interface Updater {
-  downloadUpdates(): Promise<UpdateCheckResult | null>
+  downloadUpdates(): Promise<string[]>
   checkForUpdates(): Promise<UpdateCheckResult | null>
+  quitAndInstall(): void
 }
 
 export function createUpdater(autoUpdater: AppUpdater): Updater {
@@ -11,11 +12,16 @@ export function createUpdater(autoUpdater: AppUpdater): Updater {
   }
   
   function downloadUpdates() {
-    return autoUpdater.checkForUpdates();
+    return autoUpdater.downloadUpdate();
+  }
+
+  function quitAndInstall() {
+    return autoUpdater.quitAndInstall();
   }
 
   return {
     downloadUpdates,
-    checkForUpdates
+    checkForUpdates,
+    quitAndInstall
   }
 }
