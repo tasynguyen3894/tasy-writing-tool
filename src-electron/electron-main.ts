@@ -7,6 +7,7 @@ import { selectProject, projectIsSetup, setup, getProjectData } from './services
 import { selectExportDirectory, selectExportGroupDirectory } from './services/export';
 import { ApiHandler } from './services/api';
 import { get, set, remove } from './services/storage';
+import { ApplicationAutoUpdater } from 'src/update/electron/main';
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -72,6 +73,10 @@ function createWindow() {
   });
 
   mainWindow.loadURL(process.env.APP_URL);
+
+  const applicationUpdater = new ApplicationAutoUpdater(autoUpdater, mainWindow, ipcMain);
+
+  applicationUpdater.setup();
 
   ipcMain.handle('storage', (event, e: StorageEvent) => {
     if(e.type === 'get') {
@@ -143,22 +148,26 @@ function showMessage(type: string, message: string) {
   }
 }
 
-/*New Update Available*/
-autoUpdater.on('update-available', () => {
-  showMessage('update-available', `Installing new update version...`)
-  autoUpdater.downloadUpdate();
-});
+// /*New Update Available*/
+// autoUpdater.on('update-available', () => {
+//   showMessage('update-available', `Installing new update version...`)
+//   autoUpdater.downloadUpdate();
+// });
 
-autoUpdater.on('update-not-available', () => {
-  showMessage('update-not-available', `No update available. Current version ${app.getVersion()}`);
-});
+// autoUpdater.on('update-not-available', () => {
+//   showMessage('update-not-available', `No update available. Current version ${app.getVersion()}`);
+// });
 
-/*Download Completion Message*/
-autoUpdater.on('update-downloaded', () => {
-  showUpdateRestart(app.getVersion())
-  // showMessage('update-downloaded', `Update downloaded. Current version ${app.getVersion()}`);
-  showMessage('update-downloaded', '');
-});
+// /*Download Completion Message*/
+// autoUpdater.on('update-downloaded', () => {
+//   showUpdateRestart(app.getVersion())
+//   // showMessage('update-downloaded', `Update downloaded. Current version ${app.getVersion()}`);
+//   showMessage('update-downloaded', '');
+// });
+
+// autoUpdater.on('error', (info) => {
+//   showMessage('error', info.message);
+// });
 
 function showUpdateRestart(message: string) {
   if(mainWindow) {
@@ -176,14 +185,11 @@ function showUpdateRestart(message: string) {
   }
 }
 
-autoUpdater.on('error', (info) => {
-  showMessage('error', info.message);
-});
 
 
 app.whenReady().then(() => {
   createWindow();
-  autoUpdater.checkForUpdates()
+  // autoUpdater.checkForUpdates()
 });
 
 app.on('window-all-closed', () => {
@@ -197,5 +203,5 @@ app.on('activate', () => {
     createWindow();
   }
 
-  autoUpdater.checkForUpdates();
+  // autoUpdater.checkForUpdates();
 });
