@@ -10,6 +10,11 @@ export default {
   object_detail: 'object detail',
   group_detail: 'group detail',
   write_chapter: 'Write a chapter',
+  update_version: {
+    title: 'Update new version',
+    message: 'Do you want to install and update?',
+    installing: 'Installing new update version...'
+  },
   form: {
     create: 'Create',
     update: 'Update',

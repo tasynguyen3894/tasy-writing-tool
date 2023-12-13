@@ -10,6 +10,11 @@ export default {
   object_detail: 'chi tiết đối tượng',
   group_detail: 'chi tiết nhóm',
   write_chapter: 'soạn thảo nội dung',
+  update_version: {
+    title: 'Cập nhật phiên bản mới',
+    message: 'Bạn có muốn cập nhật phiên bản mới?',
+    installing: 'Đang tải xuống bản cập nhật...'
+  },
   form: {
     create: 'Tạo',
     update: 'Cập nhật',

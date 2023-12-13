@@ -6,10 +6,12 @@
 <script lang="ts" setup>
 import { watch, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 import { useAutoUpdater } from 'src/update/frontend/plugin';
 import { UpdateState } from 'src/update/util/constant';
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const {
@@ -27,7 +29,7 @@ onMounted(() => {
 
 const updattingVersionMessage = computed<string>(() => {
   if(updateState.value === UpdateState.downloading) {
-    return 'Installing new update version...';
+    return t('common.update_version.installing');
   }
   if(updateErrorMessage.value) {
     return updateErrorMessage.value;
@@ -40,10 +42,11 @@ watch([updateIsAvailable, updateState], () => {
     downloadUpdate();
   } else if(updateState.value === UpdateState.downloaded) {
     $q.dialog({
-        title: 'Update',
-        message: 'Do you want to install and update?',
+        title: t('common.update_version.title'),
+        message: t('common.update_version.message'),
         persistent: true,
-        cancel: true,
+        ok: t('common.form.update'),
+        cancel: t('common.form.cancel')
       }).onOk(() => {
         quitAndInstall();
       });
