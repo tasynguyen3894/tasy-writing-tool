@@ -28,12 +28,15 @@
  * }
  */
 const { contextBridge, ipcRenderer } = require('electron');
+const { setupPreload } = require('src/update/electron/preload');
 
 contextBridge.exposeInMainWorld(
   'electron', {
    ping: () => ipcRenderer.invoke('ping')
   }
 )
+
+setupPreload(contextBridge, ipcRenderer);
 
 contextBridge.exposeInMainWorld(
   'Native', {

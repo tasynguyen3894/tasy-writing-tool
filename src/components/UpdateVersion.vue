@@ -1,28 +1,65 @@
 <template>
-  <div class="update-verion" v-if="updateVersionMessage.length > 0">
-    <span>{{ updateVersionMessage }}</span>
+  <div class="update-verion" v-if="updattingVersionMessage.length > 0">
+    <span>{{ updattingVersionMessage }}</span>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { watch, computed, onMounted } from 'vue';
+import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
-const updateVersionMessage = ref<string>('');
+import { useAutoUpdater } from 'src/update/frontend/plugin';
+import { UpdateState } from 'src/update/util/constant';
+
+const { t } = useI18n();
+const $q = useQuasar();
+
+const {
+  updateIsAvailable,
+  updateState,
+  downloadUpdate,
+  updateErrorMessage,
+  quitAndInstall,
+  checkForUpdates
+} = useAutoUpdater();
 
 onMounted(() => {
-  window.UpdateVerion.updateMessage(updateMessage);
+  checkForUpdates();
+})
+
+const updattingVersionMessage = computed<string>(() => {
+  if(updateState.value === UpdateState.downloading) {
+    return t('common.update_version.installing');
+  }
+  if(updateErrorMessage.value) {
+    return updateErrorMessage.value;
+  }
+  return '';
 });
 
-function updateMessage(_: any, { message, type }: { message: string, type: string }) {
-  if(type !== 'update-not-available') {
-    updateVersionMessage.value = message;
+watch([updateIsAvailable, updateState], () => {
+  if( updateState.value === UpdateState.notUpdate  && updateIsAvailable.value === true) {
+    downloadUpdate();
+  } else if(updateState.value === UpdateState.downloaded) {
+    $q.dialog({
+        title: t('common.update_version.title'),
+        message: t('common.update_version.message'),
+        persistent: true,
+        ok: t('common.form.update'),
+        cancel: t('common.form.cancel')
+      }).onOk(() => {
+        quitAndInstall();
+      });
   }
-}
+})
 </script>
 <style scoped lang="scss">
 .update-verion {
-  position: fixed;
+  position: absolute;
   bottom: 0px;
   width: 100%;
+  z-index: 99999;
+  color: #FFF;
   > span {
     padding: 2px;
     padding-right: 10px;
