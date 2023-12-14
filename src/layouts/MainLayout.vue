@@ -1,13 +1,8 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated :class="$q.dark.isActive ? 'bg-primary' : 'bg-black'">
-      <q-toolbar>
-        <q-toolbar-title >
-          <div>Tasy Writing Tool</div>
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-header>
-    
+    <LayoutHeader
+      title="Tasy Writing Tool"
+    />
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -24,6 +19,7 @@
 
 <script setup lang="ts">
 import UpdateVersion from 'src/components/UpdateVersion.vue';
+import LayoutHeader from 'src/layouts/LayoutHeader.vue';
 
 const appVersion = APP_VERSION;
 </script>

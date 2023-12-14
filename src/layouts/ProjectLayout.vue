@@ -1,18 +1,9 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated :class="$q.dark.isActive ? 'bg-primary' : 'bg-black'">
-      <q-toolbar>
-        <q-btn flat @click="leftDrawerOpen = !leftDrawerOpen" round dense icon="menu" />
-        <q-toolbar-title >
-          <div class="title-container">
-            <div class="title-container__title">{{ pageTitle }}</div>
-            <div class="title-container__dropdown">
-              <LanguageChooser />
-            </div>
-          </div>
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-header>
+    <LayoutHeader
+      :title="pageTitle"
+      @clickToHeader="leftDrawerOpen = !leftDrawerOpen"
+    />
     <q-drawer
       v-model="leftDrawerOpen"
       :width="200"
@@ -67,7 +58,7 @@ import { useProjectStore } from 'src/stores/projectStore';
 import { get } from 'src/util/storage';
 import { PROJECT_PATH_KEY } from 'src/util/constant';
 import { detectProjectPath } from 'src/util/helper';
-import LanguageChooser from 'src/components/LanguageChooser.vue';
+import LayoutHeader from 'src/layouts/LayoutHeader.vue';
 import UpdateVersion from 'src/components/UpdateVersion.vue'
 import { usePageTitle } from 'src/hooks/usePageTitle';
 
@@ -86,7 +77,6 @@ const projectStore = useProjectStore();
 
 const leftDrawerOpen = ref(false);
 
-const title = ref<string>('Application');
 const items = ref<MenuItem[]>([
   {
     router: RouterNames.ProjectOverviewPage,
