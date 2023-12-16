@@ -2,6 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <LayoutHeader
       :title="pageTitle"
+      hasToggleButton
       @clickToHeader="leftDrawerOpen = !leftDrawerOpen"
     />
     <q-drawer

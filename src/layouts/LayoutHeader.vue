@@ -1,7 +1,7 @@
 <template>
   <q-header elevated :class="$q.dark.isActive ? 'bg-primary' : 'bg-black'">
     <q-toolbar>
-      <q-btn flat @click="emits('clickToHeader')" round dense icon="menu" />
+      <q-btn v-if="props.hasToggleButton" flat @click="emits('clickToHeader')" round dense icon="menu" />
       <q-toolbar-title >
         <div class="title-container">
           <div class="title-container__title">{{ props.title }}</div>
@@ -19,7 +19,8 @@ import { useQuasar } from 'quasar';
 import LanguageChooser from 'src/components/LanguageChooser.vue';
 
 const props = defineProps<{
-  title: string
+  title: string,
+  hasToggleButton?: boolean
 }>();
 
 const emits = defineEmits<{
