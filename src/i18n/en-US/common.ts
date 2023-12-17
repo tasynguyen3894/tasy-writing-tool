@@ -5,6 +5,7 @@ export default {
   chapter: 'Chapter',
   group: 'group',
   exit: 'exit',
+  setting: 'Setting',
   character_detail: 'character detail',
   chapter_detail: 'chapter detail',
   object_detail: 'object detail',

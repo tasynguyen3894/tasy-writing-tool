@@ -3,6 +3,7 @@ export default {
   character: 'Nhân vật',
   object: 'Đối tượng',
   chapter: 'Tập',
+  setting: 'Cài đặt',
   group: 'nhóm',
   exit: 'thoát',
   character_detail: 'chi tiết nhân vật',
