@@ -14,7 +14,9 @@ export default {
   update_version: {
     title: 'Cập nhật phiên bản mới',
     message: 'Bạn có muốn cập nhật phiên bản mới?',
-    installing: 'Đang tải xuống bản cập nhật...'
+    installing: 'Đang tải xuống bản cập nhật...',
+    available: 'Có bản cập nhập mới',
+    update: 'Cập nhật',
   },
   form: {
     create: 'Tạo',

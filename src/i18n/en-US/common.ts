@@ -14,7 +14,9 @@ export default {
   update_version: {
     title: 'Update new version',
     message: 'Do you want to install and update?',
-    installing: 'Installing new update version...'
+    installing: 'Installing new update version...',
+    available: 'New version available',
+    update: 'Update',
   },
   form: {
     create: 'Create',

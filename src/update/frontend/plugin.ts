@@ -9,8 +9,7 @@ export type AutoUpdaterProvide = {
   quitAndInstall(): void,
   updateState: Ref<UpdateState>,
   updateIsAvailable: Ref<boolean | undefined>,
-  updateErrorMessage: Ref<string | undefined>,
-  debugs: Ref<string[]>
+  updateErrorMessage: Ref<string | undefined>
 }
 
 export function useAutoUpdater() {
