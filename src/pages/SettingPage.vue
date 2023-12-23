@@ -1,8 +1,8 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <div style="text-align: center;">
+    <div style="text-align: center;"  v-if="updateIsAvailable">
       <div>{{ t('common.update_version.available') }}</div>
-      <q-btn v-if="label" :label="label" @click="updateVersion()" :loading="updateState === UpdateState.downloading" />
+      <q-btn :label="label" @click="updateVersion()" :loading="updateState === UpdateState.downloading" />
     </div>
   </q-page>
 </template>
