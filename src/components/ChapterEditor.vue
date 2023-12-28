@@ -45,6 +45,8 @@
           :options="variableOptions"
           option-label="label"
           option-value="value"
+          map-options
+          emit-value
           :label="t('chapter.editor.variable_type')"
         />
         <q-select
@@ -289,7 +291,6 @@ function handlePaste(e: ClipboardEvent) {
     const doc = parseHTMLString(e.clipboardData.getData('text/html'));
     doc.querySelectorAll(`body *`).forEach(node => {
       for (let i = 0; i < node.attributes.length; i++) {
-        console.log(node.attributes[i].name)
         if(!([VariableAttribute.content, VariableAttribute.variable] as string[]).includes(node.attributes[i].name)) {
           node.removeAttribute(node.attributes[i].name);
         }
