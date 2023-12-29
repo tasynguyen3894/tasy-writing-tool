@@ -6,6 +6,7 @@
         <div class="title-container">
           <div class="title-container__title">{{ props.title }}</div>
           <div class="title-container__dropdown">
+            <SettingButton :is-in-project="useProjectStore().projectPath !== null" />
             <LanguageChooser />
           </div>
         </div>
@@ -17,6 +18,8 @@
 import { useQuasar } from 'quasar';
 
 import LanguageChooser from 'src/components/LanguageChooser.vue';
+import SettingButton from 'src/components/SettingButton.vue';
+import { useProjectStore } from 'src/stores/projectStore';
 
 const props = defineProps<{
   title: string,
@@ -34,7 +37,7 @@ const $q = useQuasar();
   text-transform: capitalize;
   &__title {
     display: inline-block;
-    width: calc(100% - 95px);
+    width: calc(100% - 150px);
   }
   &__dropdown {
     display: inline-block;

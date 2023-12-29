@@ -103,12 +103,7 @@ const items = ref<MenuItem[]>([
     router: RouterNames.ProjectGroupPage,
     label: 'group',
     icon: 'apps'
-  },
-  {
-    router: RouterNames.ProjectSettingPage,
-    label: 'setting',
-    icon: 'settings'
-  },
+  }
 ]);
 
 
