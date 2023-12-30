@@ -6,6 +6,7 @@ export default {
   setting: 'Cài đặt',
   group: 'nhóm',
   exit: 'thoát',
+  back: 'Trở lại',
   character_detail: 'chi tiết nhân vật',
   chapter_detail: 'chi tiết tập',
   object_detail: 'chi tiết đối tượng',

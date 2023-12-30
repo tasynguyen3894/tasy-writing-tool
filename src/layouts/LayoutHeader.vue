@@ -6,7 +6,7 @@
         <div class="title-container">
           <div class="title-container__title">{{ props.title }}</div>
           <div class="title-container__dropdown">
-            <SettingButton :is-in-project="useProjectStore().projectPath !== null" />
+            <SettingButton />
             <LanguageChooser />
           </div>
         </div>
@@ -19,7 +19,6 @@ import { useQuasar } from 'quasar';
 
 import LanguageChooser from 'src/components/LanguageChooser.vue';
 import SettingButton from 'src/components/SettingButton.vue';
-import { useProjectStore } from 'src/stores/projectStore';
 
 const props = defineProps<{
   title: string,

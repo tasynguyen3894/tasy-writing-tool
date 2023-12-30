@@ -15,7 +15,8 @@ const RouteNameInI18n: { [key: string]: string } = {
   [RouterNames.ProjectGroupPage]: 'group',
   [RouterNames.ProjectObjectDetailPage]: 'object_detail',
   [RouterNames.ProjectGroupDetailPage]: 'group_detail',
-  [RouterNames.ProjectSettingPage]: 'setting'
+  [RouterNames.ProjectSettingPage]: 'setting',
+  [RouterNames.HomePage]: 'Tasy Writing Tool'
 }
 
 export function usePageTitle() {

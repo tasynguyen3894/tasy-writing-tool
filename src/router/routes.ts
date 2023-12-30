@@ -27,9 +27,9 @@ const routes: RouteRecordRaw[] = [
         name: RouterNames.HomePage
       },
       {
-        path: '/non-project-settings',
+        path: '/settings',
         component: () => import('pages/SettingPage.vue'),
-        name: RouterNames.NonProjectSettingPage
+        name: RouterNames.ProjectSettingPage
       },
     ],
   },
@@ -41,11 +41,6 @@ const routes: RouteRecordRaw[] = [
         path: '',
         component: () => import('pages/ProjectOvervierPage.vue'),
         name: RouterNames.ProjectOverviewPage
-      },
-      {
-        path: '/settings',
-        component: () => import('pages/SettingPage.vue'),
-        name: RouterNames.ProjectSettingPage
       },
       {
         path: '/characters',

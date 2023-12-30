@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <LayoutHeader
-      title="Tasy Writing Tool"
+      :title="pageTitle"
     />
     <q-page-container>
       <router-view />
@@ -20,7 +20,9 @@
 <script setup lang="ts">
 import UpdateVersion from 'src/components/UpdateVersion.vue';
 import LayoutHeader from 'src/layouts/LayoutHeader.vue';
+import { usePageTitle } from 'src/hooks/usePageTitle';
 
+const { pageTitle } = usePageTitle();
 const appVersion = APP_VERSION;
 </script>
 <style scoped lang="scss">

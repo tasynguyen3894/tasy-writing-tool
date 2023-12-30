@@ -4,6 +4,9 @@
       <div>{{ t('common.update_version.available') }}</div>
       <q-btn :label="label" @click="updateVersion()" :loading="updateState === UpdateState.downloading" />
     </div>
+    <div>
+      <q-btn :label="t('common.back')" :to="{ name: useProjectStore().projectPath !== null ? RouterNames.ProjectOverviewPage : RouterNames.HomePage }" />
+    </div>
   </q-page>
 </template>
 <script lang="ts" setup>
@@ -11,6 +14,8 @@ import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
 import { useAutoUpdater, UpdateState } from 'src/update';
+import { useProjectStore } from 'src/stores/projectStore';
+import { RouterNames } from 'src/router/routes';
 
 const { t } = useI18n();
 
