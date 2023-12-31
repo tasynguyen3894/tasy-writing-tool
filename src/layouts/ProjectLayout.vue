@@ -46,7 +46,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <UpdateVersion />
+    <UpdateVersion v-if="isAutoUpdateApplication" />
   </q-layout>
 </template>
 <script setup lang="ts">
@@ -57,7 +57,7 @@ import { useI18n } from 'vue-i18n';
 import { RouterNames } from 'src/router/routes';
 import { useProjectStore } from 'src/stores/projectStore';
 import { get } from 'src/util/storage';
-import { PROJECT_PATH_KEY } from 'src/util/constant';
+import { PROJECT_PATH_KEY, TURN_ON_AUTO_DOWNLOAD_UPDATE } from 'src/util/constant';
 import { detectProjectPath } from 'src/util/helper';
 import LayoutHeader from 'src/layouts/LayoutHeader.vue';
 import UpdateVersion from 'src/components/UpdateVersion.vue'
@@ -77,6 +77,7 @@ const route = useRoute();
 const projectStore = useProjectStore();
 
 const leftDrawerOpen = ref(false);
+const isAutoUpdateApplication = ref<boolean>(false);
 
 const items = ref<MenuItem[]>([
   {
@@ -120,6 +121,10 @@ onMounted(() => {
         });
       }
     })
+
+  get(TURN_ON_AUTO_DOWNLOAD_UPDATE).then(result => {
+    isAutoUpdateApplication.value = result === 'true';
+  })
 });
 
 function toggleLeftDrawer() {

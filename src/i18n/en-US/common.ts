@@ -17,7 +17,10 @@ export default {
     message: 'Do you want to install and update?',
     installing: 'Installing new update version...',
     available: 'New version available',
+    non_available: 'New version is not available',
     update: 'Update',
+    check_for_update: 'Check for the new update',
+    auto_download_new_version: 'Auto download new version'
   },
   form: {
     create: 'Create',

@@ -17,7 +17,10 @@ export default {
     message: 'Bạn có muốn cập nhật phiên bản mới?',
     installing: 'Đang tải xuống bản cập nhật...',
     available: 'Có bản cập nhập mới',
+    non_available: 'Chưa tìm thấy bản cập nhật mới',
     update: 'Cập nhật',
+    check_for_update: 'Tìm bản cập nhật mới',
+    auto_download_new_version: 'Tự động cập nhật phiên bản mới'
   },
   form: {
     create: 'Tạo',

@@ -52,6 +52,7 @@ export function createApplicationUpdater(): Plugin {
         return window[ELECONTRON_WINDOW_KEY][EVENT_INVOKE_KEY](HandlerType.downloadUpdate);
       }
       function checkForUpdates() {
+        updateIsAvailable.value = undefined;
         return window[ELECONTRON_WINDOW_KEY][EVENT_INVOKE_KEY](HandlerType.checkForUpdates);
       }
       function quitAndInstall() {

@@ -1,4 +1,4 @@
-export function get(key: string): any {
+export function get(key: string): Promise<any> {
   return window.Store.run({ type: 'get', payload: { key } })
 }
 

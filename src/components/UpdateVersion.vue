@@ -23,6 +23,7 @@ const {
   checkForUpdates
 } = useAutoUpdater();
 
+
 onMounted(() => {
   checkForUpdates();
 })
