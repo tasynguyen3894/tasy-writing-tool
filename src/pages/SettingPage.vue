@@ -15,7 +15,7 @@
             {{ updateIsAvailable ? t('common.update_version.available') : t('common.update_version.non_available') }}
           </template>
           <template #right>
-            <q-btn flat color="primary" :label="label" @click="updateIsAvailable ? updateVersion() : checkForUpdates()" :loading="updateState === UpdateState.downloading" />
+            <q-btn flat color="primary" :label="label" @click="updateIsAvailable ? updateVersion() : handleCheckForUpdate()" :loading="actionButtonLoading" />
           </template>
         </LeftRightFormRow>
         <div class="q-pt-md" align="right">
@@ -41,6 +41,7 @@ const { t } = useI18n();
 const { updateIsAvailable, updateState, downloadUpdate, checkForUpdates } = useAutoUpdater();
 
 const turnOnAutoDownload = ref<boolean>(false);
+const isCheckingUpdate = ref<boolean>(false);
 
 const label = computed<string | undefined>(() => {
   if(updateState.value === UpdateState.downloading) {
@@ -52,6 +53,13 @@ const label = computed<string | undefined>(() => {
   return t('common.update_version.check_for_update');
 });
 
+const actionButtonLoading = computed<boolean>(() => {
+  if(updateIsAvailable.value) {
+    return updateState.value === UpdateState.downloading;
+  }
+  return isCheckingUpdate.value;
+});
+
 onMounted(() => {
   get(TURN_ON_AUTO_DOWNLOAD_UPDATE).then(result => {
     turnOnAutoDownload.value = result === 'true';
@@ -61,6 +69,18 @@ onMounted(() => {
 watch(turnOnAutoDownload, () => {
   set(TURN_ON_AUTO_DOWNLOAD_UPDATE, turnOnAutoDownload.value ? 'true' : 'false');
 });
+
+watch(updateIsAvailable, () => {
+  if(updateIsAvailable.value === undefined) {
+    isCheckingUpdate.value = true;
+  }
+  return false;
+});
+
+function handleCheckForUpdate() {
+  isCheckingUpdate.value = true;
+  checkForUpdates();
+}
 
 function updateVersion() {
   downloadUpdate();

@@ -1,8 +1,8 @@
 {
   "name": "write-tools",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "productName": "Tasy Writing Tool",
   "author": "tasynguyen3894 <thaisang.nguyen3894@gmail.com>",
   "repository": "https://github.com/tasynguyen3894/tasy-writing-tool",
   "private": true,
