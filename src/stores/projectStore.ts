@@ -19,7 +19,7 @@ const configTitleByKey = {
 export const useProjectStore = defineStore('project', () => {
   const project = ref<string>('');
   const author = ref<string>('');
-  const projectPath = ref<string | null>(null);
+  const projectPath = ref<string | undefined>(undefined);
   const configService = useService().getConfigService();
 
   function init(newProjectPath: string, newProject: string, newAuthor: string) {
@@ -35,7 +35,7 @@ export const useProjectStore = defineStore('project', () => {
 
   function reset() {
     remove(PROJECT_PATH_KEY);
-    projectPath.value = null;
+    projectPath.value = undefined;
     author.value = '';
     project.value = '';
   }

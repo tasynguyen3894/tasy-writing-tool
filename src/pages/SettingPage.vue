@@ -19,7 +19,7 @@
           </template>
         </LeftRightFormRow>
         <div class="q-pt-md" align="right">
-          <q-btn :label="t('common.back')" :to="{ name: useProjectStore().projectPath !== null ? RouterNames.ProjectOverviewPage : RouterNames.HomePage }" />
+          <q-btn :label="t('common.back')" :to="{ name: useProjectStore().projectPath !== undefined ? RouterNames.ProjectOverviewPage : RouterNames.HomePage }" />
         </div>
       </q-card-section>
     </q-card>
