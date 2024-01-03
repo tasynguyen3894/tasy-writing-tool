@@ -6,6 +6,9 @@ export function setupPreload(context: Electron.ContextBridge, ipcRenderer: Elect
   context.exposeInMainWorld(ELECONTRON_WINDOW_KEY, {
     [EVENT_MESSAGE_KEY]: (callback: any) => {
       ipcRenderer.on(EVENT_MESSAGE_KEY, callback);
+      return () => {
+        ipcRenderer.removeListener(EVENT_MESSAGE_KEY, callback)
+      }
     },
     [EVENT_INVOKE_KEY](args: any) {
       ipcRenderer.invoke(EVENT_INVOKE_KEY, args)
