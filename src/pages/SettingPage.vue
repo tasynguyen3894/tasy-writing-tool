@@ -73,8 +73,9 @@ watch(turnOnAutoDownload, () => {
 watch(updateIsAvailable, () => {
   if(updateIsAvailable.value === undefined) {
     isCheckingUpdate.value = true;
+  } else {
+    isCheckingUpdate.value = false;
   }
-  return false;
 });
 
 function handleCheckForUpdate() {
