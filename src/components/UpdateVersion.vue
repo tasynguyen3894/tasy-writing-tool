@@ -8,8 +8,7 @@ import { watch, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 
-import { useAutoUpdater } from 'src/update/frontend/plugin';
-import { UpdateState } from 'src/update/util/constant';
+import { useAutoUpdater, UpdateState } from 'vue-electron-updater/vue';
 
 const { t } = useI18n();
 const $q = useQuasar();

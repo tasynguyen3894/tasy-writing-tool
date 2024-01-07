@@ -8,7 +8,7 @@ import { onMounted } from 'vue';
 
 import { STORAGE_LANGUAGE } from 'src/boot/i18n';
 import { get } from 'src/util/storage';
-import { useAutoUpdater } from 'src/update/frontend/plugin';
+import { useAutoUpdater } from 'vue-electron-updater/vue';
 
 
 const { locale } = useI18n();

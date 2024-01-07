@@ -28,7 +28,7 @@
  * }
  */
 const { contextBridge, ipcRenderer } = require('electron');
-const { setupPreload } = require('src/update/electron/preload');
+const { setupPreload } = require('vue-electron-updater/preload');
 
 contextBridge.exposeInMainWorld(
   'electron', {

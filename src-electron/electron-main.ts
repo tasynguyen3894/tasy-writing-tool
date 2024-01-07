@@ -1,4 +1,5 @@
-import { app, BrowserWindow, nativeTheme, ipcMain, dialog } from 'electron';
+import { app, nativeTheme, ipcMain, dialog, BrowserWindow } from 'electron';
+// import { BrowserWindow } from '@electron/remote';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import os from 'os';
@@ -7,7 +8,7 @@ import { selectProject, projectIsSetup, setup, getProjectData } from './services
 import { selectExportDirectory, selectExportGroupDirectory } from './services/export';
 import { ApiHandler } from './services/api';
 import { get, set, remove } from './services/storage';
-import { ApplicationAutoUpdater } from 'src/update/electron/main';
+import { ApplicationAutoUpdater } from 'vue-electron-updater/main';
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -67,6 +68,7 @@ function createWindow() {
     useContentSize: true,
     webPreferences: {
       contextIsolation: true,
+      sandbox: false,
       // More info: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/electron-preload-script
       preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD),
     },
@@ -76,7 +78,9 @@ function createWindow() {
 
   const applicationUpdater = new ApplicationAutoUpdater(autoUpdater, mainWindow, ipcMain);
 
-  applicationUpdater.setup();
+  applicationUpdater.setup({
+    isDev: process.env.DEBUGGING ? true : false
+  });
 
   ipcMain.handle('storage', (event, e: StorageEvent) => {
     if(e.type === 'get') {

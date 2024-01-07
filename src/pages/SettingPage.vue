@@ -29,7 +29,7 @@
 import { useI18n } from 'vue-i18n';
 import { computed, onMounted, ref, watch } from 'vue';
 
-import { useAutoUpdater, UpdateState } from 'src/update';
+import { useAutoUpdater, UpdateState } from 'vue-electron-updater/vue';
 import { useProjectStore } from 'src/stores/projectStore';
 import { RouterNames } from 'src/router/routes';
 import { get, set } from 'src/util/storage';
