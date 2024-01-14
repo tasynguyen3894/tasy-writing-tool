@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="row">
+    <div class="row container">
       <div class="col-12">
         <div class="text-h3">
           <EditableConfig :text="project" :config-key="ConfigKey.project" />
@@ -9,8 +9,8 @@
           <EditableConfig :text="author" :config-key="ConfigKey.author" />
         </div>
       </div>
+      <ProjectStats />
     </div>
-    <ProjectStats />
   </q-page>
 </template>
 <script lang="ts" setup>
@@ -24,3 +24,8 @@ import { ConfigKey } from 'src/models/Config';
 const projectStore = useProjectStore();
 const { project, author } = storeToRefs(projectStore);
 </script>
+<style>
+.container {
+  padding: 10px;
+}
+</style>
