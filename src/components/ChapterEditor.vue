@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{'full-screen-container': isFullScreen}">
     <div v-if="props.label">
       <div class="text-h6">{{ props.label }}</div>
     </div>
@@ -10,6 +10,7 @@
           <q-btn v-bind="btnBind(toolbar)" @click="format(toolbar)" />
         </template>
       </q-btn-group>
+      <q-btn style="float: right;" :icon="isFullScreen ? 'fullscreen_exit' : 'fullscreen'" @click="toggleFullScreen()" />
       <div>
         <q-chip
           v-for="variable in savedVariables"
@@ -189,6 +190,7 @@ const variableSelected = ref<Variable | undefined>(undefined);
 const metaSelected = ref<{ label: string, value: string } | undefined>(undefined);
 const savedVariables = ref<SavedVariable[]>([]);
 const numberOfWord = ref<WordCount>({ letters: 0, words: 0 });
+const isFullScreen = ref<boolean>(false);
 
 const metaOptions = computed<{ label: string, value: string }[]>(() => {
   if(variableSelected.value) {
@@ -289,7 +291,7 @@ function handlePaste(e: ClipboardEvent) {
   if(e.clipboardData) {
     e.preventDefault();
     const doc = parseHTMLString(e.clipboardData.getData('text/html'));
-    doc.querySelectorAll(`body *`).forEach(node => {
+    doc.querySelectorAll('body *').forEach(node => {
       for (let i = 0; i < node.attributes.length; i++) {
         if(!([VariableAttribute.content, VariableAttribute.variable] as string[]).includes(node.attributes[i].name)) {
           node.removeAttribute(node.attributes[i].name);
@@ -430,7 +432,7 @@ function addVariable(variable: string) {
     currentRange.value.deleteContents();
     const textNode = document.createTextNode('\u00a0');
     const element = document.createElement('span');
-    element.innerHTML = ``;
+    element.innerHTML = '';
     element.setAttribute(VariableAttribute.variable, variable);
     element.setAttribute(VariableAttribute.content, name);
     currentRange.value.insertNode(textNode);
@@ -444,6 +446,10 @@ function addVariable(variable: string) {
 
 function findVariable(variable: string): string {
   return findVariableValue(props.characters, props.objects, variable);
+}
+
+function toggleFullScreen() {
+  isFullScreen.value = !isFullScreen.value;
 }
 </script>
 <style lang="scss" scoped>
@@ -463,7 +469,20 @@ function findVariable(variable: string): string {
   min-height: 100px;
   max-height: 300px;
   overflow-y: scroll; 
-  overflow: hidden;
+  overflow: auto;
   padding: 10px;
+}
+
+.full-screen-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #FFF;
+  z-index: 9999;
+  left: 0;
+  height: 100vh;
+  .editor {
+    max-height: calc(100vh - 100px);
+  }
 }
 </style>
