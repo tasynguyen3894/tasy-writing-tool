@@ -57,8 +57,7 @@ import { useI18n } from 'vue-i18n';
 import { RouterNames } from 'src/router/routes';
 import { useProjectStore } from 'src/stores/projectStore';
 import { get } from 'src/util/storage';
-import { PROJECT_PATH_KEY, TURN_ON_AUTO_DOWNLOAD_UPDATE } from 'src/util/constant';
-import { detectProjectPath } from 'src/util/helper';
+import { TURN_ON_AUTO_DOWNLOAD_UPDATE } from 'src/util/constant';
 import LayoutHeader from 'src/layouts/LayoutHeader.vue';
 import UpdateVersion from 'src/components/UpdateVersion.vue'
 import { usePageTitle } from 'src/hooks/usePageTitle';
@@ -109,27 +108,10 @@ const items = ref<MenuItem[]>([
 
 
 onMounted(() => {
-  get(PROJECT_PATH_KEY)
-    .then((projectPathInStore: any) => {
-      if(projectPathInStore && projectStore.project === '') {
-        detectProjectPath(projectPathInStore).then((res: any) => {
-          if(res) {
-            projectStore.getDataProject(projectPathInStore).then(() => {
-              router.push({ name: RouterNames.ProjectOverviewPage });
-            });
-          }
-        });
-      }
-    })
-
   get(TURN_ON_AUTO_DOWNLOAD_UPDATE).then(result => {
     isAutoUpdateApplication.value = result === 'true';
   })
 });
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
 
 function redirectTo(routeName: RouterNames) {
   router.push({ name: routeName })

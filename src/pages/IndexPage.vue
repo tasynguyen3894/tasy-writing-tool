@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
@@ -21,8 +21,6 @@ import DialogSetupProject, { ProjectInfo } from 'src/components/DialogSetupProje
 import { useProjectStore } from  'src/stores/projectStore';
 import { RouterNames } from 'src/router/routes';
 
-import { get } from 'src/util/storage';
-import { PROJECT_PATH_KEY } from 'src/util/constant';
 import { detectProjectPath } from 'src/util/helper';
 
 const { t } = useI18n();
@@ -35,14 +33,6 @@ const projectIsSetUp = ref<boolean>(false);
 const projectPath = ref<string>('');
 const isShowSetup = ref<boolean>(false);
 
-onMounted(() => {
-  get(PROJECT_PATH_KEY)
-    .then((projectPathInStore: any) => {
-      if(projectPathInStore) {
-        setupProject(projectPathInStore);
-      }
-    })
-})
 
 function setupProject(projectPathToDetect: string) {
   detectProjectPath(projectPathToDetect).then((res: any) => {

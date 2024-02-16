@@ -1,5 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 
+import { useProjectStore } from 'src/stores/projectStore';
+
 export enum RouterNames {
   HomePage = 'HomePage',
   ProjectOverviewPage = 'ProjectOverviewPage',
@@ -20,6 +22,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    beforeEnter: (_, __, next) => {
+      if(useProjectStore().projectPath !== '') {
+        next({ name: RouterNames.ProjectOverviewPage })
+      } else {
+        next();
+      }
+    },
     children: [
       {
         path: '',
@@ -36,6 +45,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/project',
     component: () => import('layouts/ProjectLayout.vue'),
+    beforeEnter: (_, __, next) => {
+      if(useProjectStore().projectPath === '') {
+        next({ name: RouterNames.HomePage })
+      } else {
+        next();
+      }
+    },
     children: [
       {
         path: '',
