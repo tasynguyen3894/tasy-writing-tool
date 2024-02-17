@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!checkedCurrentProject">Loading...</div>
+  <LoadingScreen v-if="!checkedCurrentProject" />
   <router-view v-else />
 </template>
 
@@ -12,6 +12,7 @@ import { STORAGE_LANGUAGE } from 'src/boot/i18n';
 import { get } from 'src/util/storage';
 import { useAutoUpdater } from 'vue-electron-updater/vue';
 import { useCheckCurrentProject } from 'src/hooks/useCheckCurrentProject';
+import LoadingScreen from 'src/components/LoadingScreen.vue';
 
 
 const { locale } = useI18n();
