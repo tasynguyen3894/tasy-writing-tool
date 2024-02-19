@@ -29,6 +29,7 @@
  */
 const { contextBridge, ipcRenderer } = require('electron');
 const { setupPreload } = require('vue-electron-updater/preload');
+const { setupSearchInPagePreload } = require('./findInPage/preload');
 
 contextBridge.exposeInMainWorld(
   'electron', {
@@ -37,6 +38,7 @@ contextBridge.exposeInMainWorld(
 )
 
 setupPreload(contextBridge, ipcRenderer);
+setupSearchInPagePreload(contextBridge, ipcRenderer);
 
 contextBridge.exposeInMainWorld(
   'Native', {

@@ -10,6 +10,8 @@ import { ApiHandler } from './services/api';
 import { get, set, remove } from './services/storage';
 import { ApplicationAutoUpdater } from 'vue-electron-updater/main';
 
+import { SearchInPage } from './findInPage';
+
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
 
@@ -75,6 +77,10 @@ function createWindow() {
   });
 
   mainWindow.loadURL(process.env.APP_URL);
+  
+  const searchInPage = new SearchInPage(mainWindow, ipcMain);
+
+  searchInPage.setup();
 
   const applicationUpdater = new ApplicationAutoUpdater(autoUpdater, mainWindow, ipcMain);
 
@@ -143,15 +149,6 @@ function createWindow() {
   });
 }
 
-function showMessage(type: string, message: string) {
-  if(mainWindow) {
-    mainWindow.webContents.send('updateMessage', {
-      message,
-      type
-    });
-  }
-}
-
 // /*New Update Available*/
 // autoUpdater.on('update-available', () => {
 //   showMessage('update-available', `Installing new update version...`)
@@ -172,23 +169,6 @@ function showMessage(type: string, message: string) {
 // autoUpdater.on('error', (info) => {
 //   showMessage('error', info.message);
 // });
-
-function showUpdateRestart(message: string) {
-  if(mainWindow) {
-    const dialogOpts: Parameters<typeof dialog.showMessageBox>[0] = {
-      type: 'info',
-      buttons: ['Restart', 'Later'],
-      title: 'Application Update',
-      message,
-      detail: 'A new version has been downloaded. Restart the application to apply the updates.'
-    }
-  
-    dialog.showMessageBox(mainWindow, dialogOpts).then((returnValue) => {
-      if (returnValue.response === 0) autoUpdater.quitAndInstall()
-    })
-  }
-}
-
 
 
 app.whenReady().then(() => {
