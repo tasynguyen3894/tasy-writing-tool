@@ -247,6 +247,9 @@ declare global {
     UpdateVerion: {
       updateMessage: (a: any) => Promise<any>
     },
+    SearchInPage: {
+      SEARCH_IN_PAGE_KEY: (args: { type: 'startSearch' | 'searchNext' | 'searchPrev' | 'stopSearch', value?: string }) => Promise<void | number>
+    },
     Native: {
       api: (a: Api) => Promise<any>,
       project: (a: ProjectType) => any,
